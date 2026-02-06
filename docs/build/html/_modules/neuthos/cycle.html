@@ -1,0 +1,999 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>neuthos.cycle &mdash; neuthos 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            neuthos
+              <img src="../../_static/neuthos_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">neuthos</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">neuthos</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">neuthos.cycle</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for neuthos.cycle</h1><div class="highlight"><pre>
+<span></span><span class="c1"># src/neuthos/cycle.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+
+<div class="viewcode-block" id="Cycle">
+<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.cycle.Cycle">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Cycle</span><span class="p">:</span>
+    <span class="c1"># --- cycle inputs ---</span>
+    <span class="n">nassembly_with_reflectors</span><span class="p">:</span> <span class="nb">int</span>                  <span class="c1"># total number of assemblies including reflectors</span>
+    <span class="n">polarisoption</span><span class="p">:</span> <span class="nb">int</span>                              <span class="c1"># 0 uses literature assumptions for nubar/sigma_f/Er, 1 uses Polaris output for nubar and Er, 2 uses Polaris ouput only for Chi, 3 uses Polaris output for nubar, Er and Chi</span>
+    <span class="n">nsteps</span><span class="p">:</span> <span class="nb">int</span>                                     <span class="c1"># number of depletion steps in the cycle</span>
+    <span class="n">asspower</span> <span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>                          <span class="c1"># assembly power in MW (used only if polarisoption is 0 or 1)</span>
+    <span class="n">groups</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>                              <span class="c1"># number of energy groups in Polaris finegroup output (default: 252) - input is ignored if polarisoption is 0 or 1</span>
+    <span class="n">interpoption</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>                      <span class="c1"># whether to perform power interpolation (default: False) - input is ignored if polarisoption is 0 or 1 </span>
+    <span class="n">interpolnodes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>                       <span class="c1"># number of nodes to use for power interpolation (default: None) -- option only possible for pin power source</span>
+
+    <span class="c1"># --- computed / parsed outputs ---</span>
+    <span class="n">cycleinfopow</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">cycleinfodays</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">cycleinfoexp</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">coolant_density</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">assyaxial</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>                <span class="c1"># List of tuples (type, assy_type, axial_config)</span>
+    <span class="n">assyradial</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>                     <span class="c1"># List of tuples (x_index, y_index, value)</span>
+    <span class="n">polariswidth</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>                                  <span class="c1"># Energy group widths for Polaris</span>
+    <span class="n">lattype</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>  <span class="c1"># List of tuples (latfeat)</span>
+    <span class="n">refllat</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>                                         <span class="c1"># List of reflector lattice types</span>
+    <span class="n">fuellat</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>                                         <span class="c1"># List of fuel lattice types</span>
+    <span class="n">latburn</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>                                       <span class="c1"># Burnup levels for lattice composition</span>
+    <span class="n">latcomp</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>                                       <span class="c1"># List of tuples (latcomp)</span>
+    <span class="n">assyexp</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>                        <span class="c1"># List of tuples (x_index, y_index, assigned_depletion_index)</span>
+    <span class="n">corevol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>                                                           <span class="c1"># Core volume in cm3</span>
+    <span class="n">avgpowdens</span><span class="p">:</span> <span class="nb">float</span>  <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>                                                       <span class="c1"># Average power density in MW/cm3</span>
+    <span class="n">exposure</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>                                                 <span class="c1"># 3D array (naxial, nassembly_with_reflectors, nsteps) of assembly exposure values</span>
+    <span class="n">asspowerdata</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>       <span class="c1"># List of tuples (step, x_index, y_index, axial_plane, power_value)</span>
+    <span class="n">pinpowerdata</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span> <span class="c1"># List of tuples (step, i_index, j_index, k_index, x_index, y_index, power_value)</span>
+    <span class="n">pinpowerdatainterp</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span> <span class="c1"># List of tuples (step, i_index, j_index, k_index, x_index, y_index, power_value) for interpolated power values</span>
+
+    <span class="c1"># PARCS related methods</span>
+
+<div class="viewcode-block" id="Cycle.extract_cycle_info">
+<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.cycle.Cycle.extract_cycle_info">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_cycle_info</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> 
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extract general cycle information from a PARCS depletion summary file.</span>
+<span class="sd">        The information extracted includes power levels, days, and exposure for each step in the cycle.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Extracting cycle information from file: </span><span class="si">{</span><span class="n">filepath</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">file_content</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+        <span class="n">file_content_statepoint</span> <span class="o">=</span> <span class="n">file_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;   PT   RE     Keff  Power  AxOff     Pz    Pxy   Pxyz   PPin    Days B(GW/T)    Bmax   Beta  notch    ppm  Tf(K)  Tm(K)  d(g/cc) void(%) Xe(1/cc)  Sm(1/cc)     Fdh      Fq    CHFR&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  
+        <span class="n">file_content_end</span> <span class="o">=</span> <span class="n">file_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;_______________________________________________________________________________&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">summary_content</span> <span class="o">=</span> <span class="n">file_content</span><span class="p">[</span><span class="n">file_content_statepoint</span><span class="p">:</span><span class="n">file_content_end</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)[:]</span>
+        <span class="c1">#print(summary_content)</span>
+
+        <span class="c1"># Loop through the lines to extract the numerical data</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">summary_content</span><span class="p">:</span>
+            <span class="c1"># Split the line into columns</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="c1"># Ignore header lines and process only rows with numerical data</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># avoid empty lines</span>
+                <span class="k">if</span> <span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>  <span class="c1"># The first value in a valid row should be a number</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">cycleinfopow</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">cycleinfodays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">9</span><span class="p">]))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">cycleinfoexp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">cols</span><span class="p">[</span><span class="mi">10</span><span class="p">]))</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The cycle Power Levels are:&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cycleinfopow</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The cycle corresponding days are:&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cycleinfodays</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The cycle corresponding exposure are:&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cycleinfoexp</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Cycle.extract_coolant_info">
+<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.cycle.Cycle.extract_coolant_info">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_coolant_info</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>  <span class="n">geom</span><span class="p">:</span> <span class="s2">&quot;Geometry&quot;</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extracts coolant information that varies during the cycle from a PARCS cycle summary file.</span>
+<span class="sd">        The information extracted includes coolant density for each assembly in the core, including reflector assemblies.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Extra: extracting coolant information&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coolant_density</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">file_content</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+        <span class="n">file_content_end</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cycleinfopow</span><span class="p">)):</span>
+            <span class="n">file_content_statepoint</span> <span class="o">=</span> <span class="n">file_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;   PT   RE     Keff  Power  AxOff     Pz    Pxy   Pxyz   PPin    Days B(GW/T)    Bmax   Beta  notch    ppm  Tf(K)  Tm(K)  d(g/cc) void(%) Xe(1/cc)  Sm(1/cc)     Fdh      Fq    CHFR&#39;</span><span class="p">,</span> <span class="n">file_content_end</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">file_content_end</span> <span class="o">=</span> <span class="n">file_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;   PT   RE     Keff  Power  AxOff     Pz    Pxy   Pxyz   PPin    Days B(GW/T)    Bmax   Beta  notch    ppm  Tf(K)  Tm(K)  d(g/cc) void(%) Xe(1/cc)  Sm(1/cc)     Fdh      Fq    CHFR&#39;</span><span class="p">,</span> <span class="n">file_content_statepoint</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">statepoint_content</span> <span class="o">=</span> <span class="n">file_content</span><span class="p">[</span><span class="n">file_content_statepoint</span><span class="p">:</span><span class="n">file_content_end</span><span class="p">]</span>
+            
+            <span class="c1"># Process the statepoint_content </span>
+            <span class="c1"># Find the beginning of the section &quot;DCO 3D MAP&quot;</span>
+            <span class="n">density_section_start</span> <span class="o">=</span> <span class="n">statepoint_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;DCO 3D MAP&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">density_section_start</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Sezione &#39;DCO&#39; non trovata&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Each subsection features 10 assemblies, there is one header and one empty line between subsections</span>
+            <span class="n">complete_boxes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nassembly_with_reflectors</span> <span class="o">//</span> <span class="mi">10</span>
+            <span class="n">partial_columns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nassembly_with_reflectors</span> <span class="o">%</span> <span class="mi">10</span>
+            <span class="n">section_boundary</span> <span class="o">=</span> <span class="p">(</span><span class="n">complete_boxes</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">geom</span><span class="o">.</span><span class="n">naxial</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">partial_columns</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">geom</span><span class="o">.</span><span class="n">naxial</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+
+            <span class="n">density_section</span> <span class="o">=</span> <span class="n">statepoint_content</span><span class="p">[</span><span class="n">density_section_start</span><span class="p">:]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)[:(</span><span class="n">section_boundary</span><span class="p">)]</span>
+            
+            <span class="c1"># Initialize an empty list to hold the matrix rows</span>
+            <span class="n">matrix</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">final</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">geom</span><span class="o">.</span><span class="n">naxial</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nassembly_with_reflectors</span><span class="p">))</span>
+            
+            <span class="c1"># Loop through the lines to extract the numerical data</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">density_section</span><span class="p">:</span>
+                <span class="c1"># Split the line into columns</span>
+                <span class="n">cols</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                <span class="c1"># Ignore header lines and process only rows with numerical data</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># avoid empty lines</span>
+                    <span class="k">if</span> <span class="n">cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>  <span class="c1"># The first value in a valid row should be a number</span>
+                        <span class="c1"># Extract the numerical values starting from the second column</span>
+                        <span class="n">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span>
+                        <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="n">numbers</span><span class="p">:</span>
+                            <span class="n">matrix</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+            <span class="c1"># Reshape the flattened data into a naxial x nassembly_with_reflectors matrix</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">complete_boxes</span><span class="p">):</span>
+                <span class="n">final</span><span class="p">[:,(</span><span class="n">j</span><span class="o">*</span><span class="mi">10</span><span class="p">):((</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="mi">10</span><span class="p">)]</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">matrix</span><span class="p">[</span><span class="n">j</span><span class="o">*</span><span class="n">geom</span><span class="o">.</span><span class="n">naxial</span><span class="o">*</span><span class="mi">10</span><span class="p">:(</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">geom</span><span class="o">.</span><span class="n">naxial</span><span class="o">*</span><span class="mi">10</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">geom</span><span class="o">.</span><span class="n">naxial</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">partial_columns</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># CHECK WHY THIS IS NOT WORKING</span>
+                <span class="n">final</span><span class="p">[:,</span><span class="n">complete_boxes</span><span class="p">:</span><span class="n">complete_boxes</span><span class="o">+</span><span class="n">partial_columns</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">matrix</span><span class="p">[</span><span class="n">complete_boxes</span><span class="o">*</span><span class="n">geom</span><span class="o">.</span><span class="n">naxial</span><span class="o">*</span><span class="mi">10</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span><span class="n">complete_boxes</span><span class="o">*</span><span class="n">geom</span><span class="o">.</span><span class="n">naxial</span><span class="o">*</span><span class="mi">10</span><span class="o">+</span><span class="n">partial_columns</span><span class="o">*</span><span class="n">geom</span><span class="o">.</span><span class="n">naxial</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">geom</span><span class="o">.</span><span class="n">naxial</span><span class="p">,</span><span class="n">partial_columns</span><span class="p">))</span>
+            <span class="c1"># save the matrix in a dictionary with the corresponding i </span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">coolant_density</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">final</span></div>
+
+
+<div class="viewcode-block" id="Cycle.extract_assyaxial">
+<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.cycle.Cycle.extract_assyaxial">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_assyaxial</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extracts assembly axial configuration from a PARCS assembly geometry file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Extracting assembly axial configuration ...&#39;</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;assy_type &quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s1">&#39;FUEL&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="n">parts</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                    <span class="n">assy_type</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="n">assy_geom</span><span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">:]:</span>
+                        <span class="k">if</span> <span class="s1">&#39;*&#39;</span> <span class="ow">in</span> <span class="n">part</span><span class="p">:</span>
+                            <span class="n">count</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">)</span>
+                            <span class="n">assy_geom</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)]</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">count</span><span class="p">))</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">continue</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">assyaxial</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="s1">&#39;FUEL&#39;</span><span class="p">,</span><span class="n">assy_type</span><span class="p">,</span> <span class="n">assy_geom</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+                <span class="k">elif</span> <span class="s1">&#39;REFL&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span> 
+                    <span class="n">parts</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                    <span class="n">assy_type</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="n">assy_geom</span><span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">:]:</span>
+                        <span class="k">if</span> <span class="s1">&#39;*&#39;</span> <span class="ow">in</span> <span class="n">part</span><span class="p">:</span>
+                            <span class="n">count</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">)</span>
+                            <span class="n">assy_geom</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)]</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">count</span><span class="p">))</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">continue</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">assyaxial</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="s1">&#39;REFL&#39;</span><span class="p">,</span> <span class="n">assy_type</span><span class="p">,</span> <span class="n">assy_geom</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span> <span class="c1"># NOTE: reverse the list to have the latttice from top to bottom, REASON: burnup profiles are provided from top to bottom</span></div>
+
+
+<div class="viewcode-block" id="Cycle.extract_assyradial">
+<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.cycle.Cycle.extract_assyradial">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_assyradial</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">:</span> <span class="s2">&quot;Geometry&quot;</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extracts assembly radial configuration from a PARCS regular coremap input file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Extracting assembly radial configuration ...&#39;</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        
+        <span class="n">data_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">cases</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;rad_conf.*?file&#39;</span><span class="p">,</span> <span class="n">data_str</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span>
+        <span class="n">cases</span> <span class="o">=</span> <span class="p">[</span><span class="n">case</span> <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="n">cases</span> <span class="k">if</span> <span class="s2">&quot;rad_conf&quot;</span> <span class="ow">in</span> <span class="n">case</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">cases</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No radial configuration found.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Number of radial configurations found: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cases</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="n">cases</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">case</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">x_index</span><span class="o">=</span> <span class="mi">0</span>
+            <span class="n">y_indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">geom</span><span class="o">.</span><span class="n">nass</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">geom</span><span class="o">.</span><span class="n">nass</span><span class="o">+</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()))</span>
+                <span class="n">x_index</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">for</span> <span class="n">y_index</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">y_indices</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">assyradial</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">x_index</span><span class="p">,</span> <span class="n">y_index</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Cycle.extract_exposure">
+<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.cycle.Cycle.extract_exposure">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_exposure</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">:</span> <span class="s2">&quot;Geometry&quot;</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Extracts assembly exposure data from a PARCS depletion summary file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># initialize exposure array</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exposure</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="n">geom</span><span class="o">.</span><span class="n">naxial</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">nassembly_with_reflectors</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">nsteps</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span>
+        <span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Extracting assembly exposure data ...&#39;</span><span class="p">)</span>
+
+        <span class="c1"># take all the assemblies</span>
+        <span class="n">assy</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">assyradial</span>
+        <span class="n">assy_sel</span><span class="o">=</span> <span class="p">[]</span>
+        <span class="n">j</span><span class="o">=</span> <span class="mi">1</span>
+        <span class="c1"># remove from this list the assemblies that have value = 0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">assy</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">assy</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">assy_sel</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">assy</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">assy</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">j</span><span class="p">))</span>  <span class="c1"># assign to each assembly a number going from 1 to the number of assemblies remaining in the list</span>
+                <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="c1"># save the list class property</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assyexp</span><span class="o">=</span> <span class="n">assy_sel</span>
+
+        <span class="c1"># open file for assembly exposure</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+            <span class="n">found_exposure</span><span class="o">=</span> <span class="kc">False</span>
+            <span class="n">found_matrix</span><span class="o">=</span> <span class="kc">False</span>
+            <span class="n">i</span><span class="o">=</span> <span class="mi">0</span>
+            <span class="n">k</span><span class="o">=</span> <span class="mi">0</span>
+            <span class="n">n</span><span class="o">=</span> <span class="mi">0</span>
+            <span class="n">m</span><span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="s1">&#39; EXP 3D MAP 1.0E+00&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">found_exposure</span><span class="o">==</span> <span class="kc">False</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">found_matrix</span><span class="o">==</span> <span class="kc">False</span><span class="p">):</span>
+                <span class="n">found_exposure</span><span class="o">=</span> <span class="kc">True</span>
+                <span class="n">i</span><span class="o">=</span> <span class="mi">0</span> <span class="c1"># line index </span>
+                <span class="n">k</span><span class="o">=</span> <span class="mi">0</span> <span class="c1"># column shifter</span>
+                <span class="n">n</span><span class="o">=</span> <span class="mi">0</span> <span class="c1"># block index</span>
+                <span class="n">m</span><span class="o">+=</span><span class="mi">1</span> <span class="c1"># burnup step index</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;found exposure!&#39;</span><span class="p">)</span>
+            
+            <span class="k">elif</span> <span class="p">(</span><span class="n">found_exposure</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">found_matrix</span><span class="o">==</span> <span class="kc">False</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;k lb&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">):</span>
+                <span class="n">found_matrix</span><span class="o">=</span> <span class="kc">True</span>
+                <span class="n">i</span><span class="o">=</span> <span class="mi">0</span>
+
+            <span class="k">elif</span> <span class="p">(</span><span class="n">found_exposure</span><span class="o">==</span> <span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">found_matrix</span><span class="o">==</span> <span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">i</span><span class="o">&lt;</span><span class="n">geom</span><span class="o">.</span><span class="n">naxial</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="n">k</span><span class="o">&lt;</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nassembly_with_reflectors</span><span class="o">-</span><span class="mi">1</span><span class="p">)):</span>
+                <span class="n">parts</span><span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">exposure</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">n</span> <span class="o">+</span> <span class="n">k</span><span class="p">,</span><span class="n">m</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span> <span class="o">+</span> <span class="n">k</span><span class="p">])</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">elif</span> <span class="p">(</span><span class="n">found_exposure</span><span class="o">==</span> <span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">found_matrix</span><span class="o">==</span> <span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">i</span><span class="o">==</span><span class="n">geom</span><span class="o">.</span><span class="n">naxial</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="n">k</span><span class="o">&lt;</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nassembly_with_reflectors</span><span class="o">-</span><span class="mi">1</span><span class="p">)):</span>
+                <span class="n">found_matrix</span><span class="o">=</span> <span class="kc">False</span>
+                <span class="n">i</span><span class="o">=</span> <span class="mi">0</span>
+                <span class="n">n</span> <span class="o">+=</span> <span class="mi">10</span>
+                <span class="n">k</span><span class="o">=</span> <span class="mi">9</span>
+
+            <span class="k">elif</span> <span class="p">(</span><span class="n">found_exposure</span><span class="o">==</span> <span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">found_matrix</span><span class="o">==</span> <span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">i</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="n">k</span><span class="o">==</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nassembly_with_reflectors</span><span class="o">+</span><span class="mi">8</span><span class="p">)):</span> <span class="c1"># ERROR: it should be +8 not + 9</span>
+                <span class="n">found_exposure</span><span class="o">=</span> <span class="kc">False</span>
+                <span class="n">found_matrix</span><span class="o">=</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="Cycle.extract_asspower">
+<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.cycle.Cycle.extract_asspower">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_asspower</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">:</span> <span class="s2">&quot;Geometry&quot;</span><span class="p">,</span> <span class="n">out</span><span class="p">:</span> <span class="s2">&quot;Outputs&quot;</span><span class="p">,</span> <span class="n">folderpath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Extracts assembly power data from a PARCS depletion summary file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The average power density is:&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">corevol</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">nfuelpins</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">geom</span><span class="o">.</span><span class="n">pin_radius</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">geom</span><span class="o">.</span><span class="n">active_height</span><span class="p">)</span>        <span class="c1"># cm3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">avgpowdens</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">asspower</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corevol</span><span class="p">)</span>                                              <span class="c1"># W/cm3</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">avgpowdens</span><span class="p">)</span>                                                                       <span class="c1"># W/cm3</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The axial mesh heights are:&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">geom</span><span class="o">.</span><span class="n">meshheight</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The power level vector is:&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cycleinfopow</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Extracting assembly power data ...&#39;</span><span class="p">)</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># timestep counter for printing </span>
+        <span class="n">d</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># assembly counter for printing</span>
+
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">folderpath</span><span class="p">):</span>
+            <span class="c1"># check files which contain parcs_pin in the name</span>
+            <span class="k">if</span> <span class="s2">&quot;.parcs_3dpw&quot;</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+
+                <span class="c1"># open the file and save all the lines</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folderpath</span><span class="p">,</span> <span class="n">file</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+                <span class="c1"># find all the lines in the file between two time cases</span>
+                <span class="n">data_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">cases</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?=Time Step:)&#39;</span><span class="p">,</span> <span class="n">data_str</span><span class="p">)</span>
+                <span class="n">cases</span> <span class="o">=</span> <span class="p">[</span><span class="n">case</span> <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="n">cases</span> <span class="k">if</span> <span class="s2">&quot;Time Step:&quot;</span> <span class="ow">in</span> <span class="n">case</span><span class="p">]</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">cases</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No power found.&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">c</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;... Extracting Timesteps ... &#39;</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="n">cases</span><span class="p">:</span>
+
+                    <span class="n">lines</span> <span class="o">=</span> <span class="n">case</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">time_info_vec</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                    <span class="n">case_number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time_info_vec</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>  <span class="c1"># save timestep point (burnup point)</span>
+
+                    <span class="c1"># find all the lines in the file between two time cases</span>
+                    <span class="n">subcases</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?=Distribution at Plane)&#39;</span><span class="p">,</span> <span class="n">case</span><span class="p">)</span>
+                    <span class="n">subcases</span> <span class="o">=</span> <span class="p">[</span><span class="n">subcase</span> <span class="k">for</span> <span class="n">subcase</span> <span class="ow">in</span> <span class="n">subcases</span> <span class="k">if</span> <span class="s2">&quot;Distribution at Plane&quot;</span> <span class="ow">in</span> <span class="n">subcase</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">cases</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No power found.&quot;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">d</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;... Extracting Timestep ...  &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+
+                    <span class="k">for</span> <span class="n">subcase</span> <span class="ow">in</span> <span class="n">subcases</span><span class="p">:</span>
+
+                        <span class="n">lines</span> <span class="o">=</span> <span class="n">subcase</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                        <span class="n">axial_plane_vec</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                        <span class="n">axial_plane</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">axial_plane_vec</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>  <span class="c1"># axial plane power distribution</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;... Extracting Axial Plane ...  &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">axial_plane</span><span class="p">))</span>
+                        <span class="c1"># Skip cases where k = 0 as they do not correspond to an axial layer</span>
+                        <span class="n">y_indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[:]))</span>
+                        <span class="n">y_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">y_indices</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                        <span class="c1"># print(cls.mesheight[axial_plane-1])</span>
+                        <span class="c1"># print(&#39;daje&#39;)</span>
+                        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="n">geom</span><span class="o">.</span><span class="n">nass</span><span class="o">+</span><span class="mi">1</span><span class="p">]:</span>
+                            <span class="n">values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()))</span>
+                            <span class="c1">#center the array values in a bigger array of size y_indices to get the correct position in the array</span>
+                            <span class="c1">#note: this is necessary because the output file does not contain the zero values</span>
+                            <span class="n">x_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">values</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+                            <span class="n">centered_values</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y_indices</span><span class="p">))</span>
+                            <span class="n">start_index</span> <span class="o">=</span> <span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">y_indices</span><span class="p">))</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">))</span> <span class="o">//</span> <span class="mi">2</span>
+                            <span class="n">centered_values</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">start_index</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)]</span> <span class="o">=</span> <span class="n">values</span>
+                            <span class="n">y_indices_new</span> <span class="o">=</span> <span class="p">[</span><span class="n">y</span> <span class="k">for</span> <span class="n">y</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">y_indices</span><span class="p">,</span> <span class="n">centered_values</span><span class="p">)</span> <span class="k">if</span> <span class="n">val</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
+                            <span class="k">for</span> <span class="n">y_index</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">y_indices_new</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">asspowerdata</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">case_number</span><span class="p">,</span> <span class="n">x_index</span><span class="p">,</span> <span class="n">y_index</span><span class="p">,</span> <span class="n">axial_plane</span><span class="p">,</span> <span class="n">value</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">avgpowdens</span><span class="o">*</span><span class="n">geom</span><span class="o">.</span><span class="n">nfuelpins</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">geom</span><span class="o">.</span><span class="n">pin_radius</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">geom</span><span class="o">.</span><span class="n">meshheight</span><span class="p">[</span><span class="n">axial_plane</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cycleinfopow</span><span class="p">[</span><span class="n">case_number</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">100</span><span class="p">)))</span> 
+                                                                                                                                                                                                       
+        <span class="c1"># SANITY CHECK: total power (check for one burnup step)</span>
+        <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nsteps</span><span class="p">):</span>
+            <span class="n">total_power</span><span class="o">=</span> <span class="mi">0</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">power</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">asspowerdata</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">power</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="p">(</span><span class="n">step</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)):</span>
+                    <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">total_power</span> <span class="o">+=</span> <span class="n">power</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+            
+            <span class="n">outpath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">base_dir</span><span class="p">,</span> <span class="s1">&#39;sanity_checks/ass_source&#39;</span><span class="p">))</span>
+            <span class="n">outpath</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">outpath</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;sanity_check_ass_&#39;</span><span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">step</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.txt&#39;</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Total power: </span><span class="si">{</span><span class="n">total_power</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Count: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Cycle.extract_pinpower">
+<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.cycle.Cycle.extract_pinpower">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_pinpower</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">:</span> <span class="s2">&quot;Geometry&quot;</span><span class="p">,</span> <span class="n">out</span><span class="p">:</span> <span class="s2">&quot;Outputs&quot;</span><span class="p">,</span> <span class="n">folderpath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The average power density is:&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">corevol</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">nfuelpins</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">geom</span><span class="o">.</span><span class="n">pin_radius</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">geom</span><span class="o">.</span><span class="n">active_height</span><span class="p">)</span>        <span class="c1"># cm3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">avgpowdens</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">asspower</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corevol</span><span class="p">)</span>                                              <span class="c1"># W/cm3</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">avgpowdens</span><span class="p">)</span>                                                                       <span class="c1"># W/cm3</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The power level vector is:&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cycleinfopow</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Extracting pin power data ...&#39;</span><span class="p">)</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># assembly counter for printing </span>
+
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">folderpath</span><span class="p">):</span>
+            <span class="c1"># check files which contain parcs_pin in the name</span>
+            <span class="k">if</span> <span class="s2">&quot;.parcs_pin&quot;</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
+
+            <span class="c1"># open the file and save all the lines</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">folderpath</span><span class="p">,</span> <span class="n">file</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+            <span class="c1"># find all the lines in the file between two cases</span>
+                <span class="n">data_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="n">cases</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(?=Case:)&#39;</span><span class="p">,</span> <span class="n">data_str</span><span class="p">)</span>
+                <span class="n">cases</span> <span class="o">=</span> <span class="p">[</span><span class="n">case</span> <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="n">cases</span> <span class="k">if</span> <span class="s2">&quot;Case:&quot;</span> <span class="ow">in</span> <span class="n">case</span><span class="p">]</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">cases</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No power found.&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">c</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;... Extracting non-dummy assembly n. &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+
+                <span class="k">for</span> <span class="n">case</span> <span class="ow">in</span> <span class="n">cases</span><span class="p">:</span>
+                    <span class="n">lines</span> <span class="o">=</span> <span class="n">case</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">case_info</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                    <span class="n">case_number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">case_info</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># save burnup point</span>
+                    <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">case_info</span><span class="p">[</span><span class="mi">9</span><span class="p">])</span>            <span class="c1"># save x core index - check this (there is a different naming between Parcs and our coordinates system)</span>
+                    <span class="n">j</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">case_info</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span>            <span class="c1"># save y core index - check this (there is a different naming between Parcs and our coordinates system)</span>
+                    <span class="n">k</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">case_info</span><span class="p">[</span><span class="mi">10</span><span class="p">])</span>           <span class="c1"># save z core index</span>
+                    
+                    <span class="c1"># Skip cases where k = 0 as they do not correspond to an axial layer but to average, and k = 1 and k = 41 as they correspond to reflectors</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">k</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">k</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">k</span> <span class="o">==</span> <span class="n">geom</span><span class="o">.</span><span class="n">naxial</span><span class="p">):</span>
+                        <span class="k">continue</span>
+                    <span class="n">y_indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[:]))</span>
+                    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">:]:</span>
+                        <span class="n">values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()))</span>
+                        <span class="n">x_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">values</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+                        <span class="k">for</span> <span class="n">y_index</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">y_indices</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">pinpowerdata</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">case_number</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">x_index</span><span class="p">,</span> <span class="n">y_index</span><span class="p">,</span> <span class="n">value</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">avgpowdens</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="mf">0.4677</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">geom</span><span class="o">.</span><span class="n">meshheight</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cycleinfopow</span><span class="p">[</span><span class="n">case_number</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">100</span><span class="p">),</span><span class="n">value</span><span class="p">))</span> <span class="c1"># ALTERNATIVE using node volume considering the whole assembly cls.nodevolume[k-1]/225</span>
+
+        <span class="c1"># SANITY CHECK </span>
+        <span class="n">outpath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">base_dir</span><span class="p">,</span> <span class="s1">&#39;sanity_checks/pin_source&#39;</span><span class="p">))</span>
+        <span class="n">outpath</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">total_power</span><span class="o">=</span> <span class="mi">0</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nsteps</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">power</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pinpowerdata</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">power</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="p">(</span><span class="n">step</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)):</span>
+                    <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">total_power</span> <span class="o">+=</span> <span class="n">power</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+            
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">outpath</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;sanity_check_pin_</span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s1">.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Total power: </span><span class="si">{</span><span class="n">total_power</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Count: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># power interpolation --- NOTE: the interpolation option considers powers as point values, but they are rather node averaged values. This approximation will be solved in future releases, the interpolation option is also not often used.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">interpoption</span><span class="p">:</span>
+            
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Interpolating power profiles...&#39;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nsteps</span><span class="p">):</span>
+
+                <span class="n">pin_power_vec</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">for</span> <span class="n">pin</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pinpowerdata</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">pin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">step</span><span class="p">:</span>  <span class="c1"># take only selected step</span>
+                        <span class="n">ijxy_index</span> <span class="o">=</span> <span class="p">(</span><span class="n">pin</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">pin</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">pin</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">pin</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span> <span class="c1"># select the pin</span>
+                        <span class="k">if</span> <span class="n">ijxy_index</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pin_power_vec</span><span class="p">:</span>
+                            <span class="n">pin_power_vec</span><span class="p">[</span><span class="n">ijxy_index</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                        <span class="n">pin_power_vec</span><span class="p">[</span><span class="n">ijxy_index</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pin</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span> <span class="c1"># save in relative power vector for that pin, appending each axial layer</span>
+                
+                <span class="c1"># given the interp number you need to find equally spaced nodes between z_core max and z_core min</span>
+                <span class="c1"># flip z_core data to have planes from bottom to top</span>
+                <span class="n">z_core</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">geom</span><span class="o">.</span><span class="n">z_core</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Z core coordinates from bottom to top:&#39;</span><span class="p">,</span> <span class="n">z_core</span><span class="p">)</span>
+                <span class="n">z_core</span><span class="o">=</span> <span class="n">z_core</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">geom</span><span class="o">.</span><span class="n">z_core</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># get rid of bottom and top reflectors</span>
+                <span class="n">z_core_interp</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">z_core</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">z_core</span><span class="p">),</span><span class="bp">self</span><span class="o">.</span><span class="n">interpol</span><span class="p">)</span> <span class="c1"># z coordinates must be monotonically increasing</span>
+                <span class="c1">#z_core_interp= [17.55, 50, 120, 175, 250, 325, 365]</span>
+                <span class="n">meshboundaries</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">z_core_interp</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">z_core_interp</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                    <span class="n">meshboundaries</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span> <span class="p">(</span><span class="n">z_core_interp</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">z_core_interp</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">/</span><span class="mi">2</span>
+                <span class="n">meshboundaries_all</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(([</span><span class="mf">15.24</span><span class="p">],</span> <span class="n">meshboundaries</span><span class="p">,</span> <span class="p">[</span><span class="mf">383.4</span><span class="p">]))</span>
+                <span class="n">mesheight_interp</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">meshboundaries_all</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">meshboundaries_all</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                    <span class="n">mesheight_interp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span> <span class="n">meshboundaries_all</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">meshboundaries_all</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                
+                <span class="n">mesheight_interp</span><span class="o">=</span> <span class="n">mesheight_interp</span> <span class="c1">#save meshheightinterp</span>
+                <span class="n">z_core_interp</span><span class="o">=</span> <span class="n">z_core_interp</span> <span class="c1">#save zcoreinterp</span>
+
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;New mesheigths&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">mesheight_interp</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Original mesheights&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">geom</span><span class="o">.</span><span class="n">meshheight</span><span class="p">)</span>
+
+                <span class="c1"># you need to interpolated the previous pin powers</span>
+                <span class="k">for</span> <span class="n">ijxy_index</span><span class="p">,</span> <span class="n">power_values</span> <span class="ow">in</span> <span class="n">pin_power_vec</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">pin_power_vec_interp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">z_core_interp</span><span class="p">,</span> <span class="n">z_core</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">power_values</span><span class="p">))</span>
+                    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">z_value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">z_core_interp</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">pinpowerdatainterp</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">step</span><span class="p">,</span> <span class="n">ijxy_index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ijxy_index</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ijxy_index</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ijxy_index</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">pin_power_vec_interp</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">avgpowdens</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="mf">0.4677</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">mesheight_interp</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">infopow</span><span class="p">[</span><span class="n">case_number</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">100</span><span class="p">),</span> <span class="n">pin_power_vec_interp</span><span class="p">[</span><span class="n">k</span><span class="p">]))</span>
+
+                    <span class="c1"># take sample case to plot and check interpolation</span>
+                    <span class="k">if</span> <span class="n">ijxy_index</span> <span class="o">==</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">15</span><span class="p">):</span> 
+                        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">z_core</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">power_values</span><span class="p">),</span> <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Original&#39;</span><span class="p">)</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">z_core_interp</span><span class="p">,</span> <span class="n">pin_power_vec_interp</span><span class="p">,</span> <span class="s1">&#39;-x&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Interpolated&#39;</span><span class="p">)</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;interpolation_check.png&#39;</span><span class="p">)</span>
+
+                <span class="c1"># SANITY CHECK: total power (check for one burnup step)</span>
+                <span class="n">total_power</span><span class="o">=</span> <span class="mi">0</span>
+                <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">power</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pinpowerdata</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">power</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">step</span><span class="p">):</span>
+                        <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="n">total_power</span> <span class="o">+=</span> <span class="n">power</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+                
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">outpath</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;sanity_check_pin_</span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s1">.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Total power: </span><span class="si">{</span><span class="n">total_power</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Count: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                <span class="n">total_power</span><span class="o">=</span> <span class="mi">0</span>
+                <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">power</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pinpowerdatainterp</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">power</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">step</span><span class="p">):</span>
+                        <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="n">total_power</span> <span class="o">+=</span> <span class="n">power</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+                
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">outpath</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;sanity_check_pin_interp_</span><span class="si">{</span><span class="n">step</span><span class="si">}</span><span class="s1">.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Total power: </span><span class="si">{</span><span class="n">total_power</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Count: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="Cycle.extract_lattype">
+<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.cycle.Cycle.extract_lattype">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_lattype</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extracts lattice type data from a PARCS pmax.dir file.</span>
+<span class="sd">        NOTE: this method will be deprecated in the future NEUTHOS release in favour of user specification of reference polaris case</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Extracting lattice type data from PARCS pmax.dir file&#39;</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="n">latfeat</span><span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="s2">&quot;PMAXS_F&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">parts</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                <span class="k">if</span> <span class="s1">&#39;refl&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="n">latfeat</span><span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">parts</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="s1">&#39;refl&#39;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;bpn&#39;</span><span class="p">,</span> <span class="s1">&#39;sgn&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">]</span>
+                <span class="k">elif</span> <span class="s1">&#39;fuel&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s1">&#39;00-BP&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="s1">&#39;SG&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                            <span class="n">latfeat</span><span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">parts</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="s1">&#39;fuel&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">7</span><span class="p">]),</span> <span class="s1">&#39;bpn&#39;</span><span class="p">,</span> <span class="s1">&#39;sgy&#39;</span><span class="p">,</span> <span class="n">parts</span><span class="p">[</span><span class="mi">12</span><span class="p">]]</span>
+                        <span class="k">elif</span> <span class="s1">&#39;SG&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                            <span class="n">latfeat</span><span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">parts</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="s1">&#39;fuel&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">7</span><span class="p">]),</span> <span class="s1">&#39;bpn&#39;</span><span class="p">,</span> <span class="s1">&#39;sgn&#39;</span><span class="p">,</span> <span class="n">parts</span><span class="p">[</span><span class="mi">11</span><span class="p">]]</span>
+                    <span class="k">elif</span> <span class="s1">&#39;12-BP&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="s1">&#39;SG&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                            <span class="n">latfeat</span><span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">parts</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="s1">&#39;fuel&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">7</span><span class="p">]),</span> <span class="s1">&#39;bpy&#39;</span><span class="p">,</span> <span class="s1">&#39;sgy&#39;</span><span class="p">,</span> <span class="n">parts</span><span class="p">[</span><span class="mi">12</span><span class="p">]]</span>
+                        <span class="k">elif</span> <span class="s1">&#39;SG&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                            <span class="n">latfeat</span><span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">parts</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="s1">&#39;fuel&#39;</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">7</span><span class="p">]),</span> <span class="s1">&#39;bpy&#39;</span><span class="p">,</span> <span class="s1">&#39;sgn&#39;</span><span class="p">,</span> <span class="n">parts</span><span class="p">[</span><span class="mi">11</span><span class="p">]]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">lattype</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">latfeat</span><span class="p">))</span>
+        
+        <span class="k">for</span> <span class="n">lat</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lattype</span><span class="p">:</span> <span class="c1">#save refl and fuel assembly types</span>
+            <span class="k">if</span> <span class="n">lat</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;refl&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">refllat</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lat</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">lat</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;fuel&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fuellat</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lat</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The fuel lattice types are:&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fuellat</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The reflector lattice types are:&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">refllat</span><span class="p">)</span></div>
+
+
+    <span class="c1"># Polaris related methods</span>
+
+<div class="viewcode-block" id="Cycle.extract_spectrum">
+<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.cycle.Cycle.extract_spectrum">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_spectrum</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">sp</span><span class="p">,</span> <span class="n">file_content</span><span class="p">,</span> <span class="n">ngroups</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extracts neutron spectrum from a Polaris (SCALE) spectrum file.</span>
+<span class="sd">        The spectrum is extracted for a given statepoint (sp) and number of energy groups (ngroups).</span>
+<span class="sd">        Returns a list of tuples containing (energy_bin_midpoint, chi_value).</span>
+<span class="sd">        The extract spectrum function is used in two of the polarisoption for lattice composition extraction.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Extracting neutron spectrum from Polaris ...&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Find the statepoint to extract polaris neutron spectrum</span>
+        <span class="n">file_content_statepoint</span> <span class="o">=</span> <span class="n">file_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;--------------------------------------------------</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">+</span> <span class="s1">&#39;Statepoint &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sp</span><span class="p">)</span><span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="s1">&#39;--------------------------------------------------</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">file_content</span><span class="o">=</span> <span class="n">file_content</span><span class="p">[</span><span class="n">file_content_statepoint</span><span class="p">:]</span>
+
+        <span class="c1"># Extract the energy group structure</span>
+        <span class="n">energy_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;\|\s*(\d+)\s*\|\s*([\d.E+-]+)\s*\|\s*([\d.E+-]+)\s*\|&#39;</span>
+        <span class="n">energy_matches</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">energy_pattern</span><span class="p">,</span> <span class="n">file_content</span><span class="p">)</span>
+        
+        <span class="n">group_widths</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">group_em</span><span class="o">=</span> <span class="p">[]</span>
+        <span class="n">middle</span><span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">upper</span><span class="p">,</span> <span class="n">lower</span> <span class="ow">in</span> <span class="n">energy_matches</span><span class="p">:</span>
+            <span class="n">width</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">upper</span><span class="p">)</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="n">lower</span><span class="p">))</span> <span class="o">/</span> <span class="mf">1e6</span>
+            <span class="n">em</span><span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">upper</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1e6</span> <span class="c1"># you need the upper bound of the energy group</span>
+            <span class="n">group_widths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">width</span><span class="p">)</span>
+            <span class="n">group_em</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">em</span><span class="p">)</span>
+        
+        <span class="c1">#print([float(f&quot;{mid:.5e}&quot;) for mid in np.flip(middle)])</span>
+        <span class="c1">#print(&#39;\n&#39;)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">polariswidth</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">group_widths</span><span class="p">[:(</span><span class="n">ngroups</span><span class="o">-</span><span class="mi">1</span><span class="p">)])</span>
+
+        <span class="c1"># Find the start of the &quot;Fission Macroscopic Cross Sections&quot; section</span>
+        <span class="n">fission_section_start</span> <span class="o">=</span> <span class="n">file_content</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;Fission Macroscopic Cross Sections&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fission_section_start</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Sezione &#39;Fission Macroscopic Cross Sections&#39; non trovata&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Extract Chi values</span>
+        <span class="n">chi_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;\|\s*(\d+)\s*\|.*?\|.*?\|.*?\|\s*([\d.E+-]+)\s*\|&#39;</span>
+        <span class="c1"># Extract Chi values only for the fission sections</span>
+        <span class="n">chi_section</span> <span class="o">=</span> <span class="n">file_content</span><span class="p">[</span><span class="n">fission_section_start</span><span class="p">:]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)[:(</span><span class="n">ngroups</span><span class="o">+</span><span class="mi">10</span><span class="p">)]</span>
+        <span class="n">chi_section</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">chi_section</span><span class="p">)</span>
+        <span class="n">chi_matches</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">chi_pattern</span><span class="p">,</span> <span class="n">chi_section</span><span class="p">)</span>
+        
+        <span class="n">chi_values</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">group</span><span class="p">,</span> <span class="n">chi</span> <span class="ow">in</span> <span class="n">chi_matches</span><span class="p">:</span>
+            <span class="n">group_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">group</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">group_index</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">group_widths</span><span class="p">):</span>
+                <span class="n">chi_per_mev</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">chi</span><span class="p">)</span> <span class="o">/</span> <span class="n">group_widths</span><span class="p">[</span><span class="n">group_index</span><span class="p">]</span>
+                <span class="n">em_bin</span><span class="o">=</span> <span class="n">group_em</span><span class="p">[</span><span class="n">group_index</span><span class="p">]</span>
+                <span class="n">chi_values</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">em_bin</span><span class="p">,</span> <span class="n">chi_per_mev</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">chi_values</span></div>
+
+     
+<div class="viewcode-block" id="Cycle.extract_latcomp_scale63">
+<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.cycle.Cycle.extract_latcomp_scale63">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_latcomp_scale63</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">:</span> <span class="s2">&quot;Geometry&quot;</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="n">filepath_finegroup</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extracts lattice composition from a Polaris (SCALE 6.2) lattice composition file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Extracting lattice composition ...&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">geom</span><span class="o">.</span><span class="n">latsym</span> <span class="o">==</span> <span class="s1">&#39;full&#39;</span><span class="p">:</span>
+            <span class="n">line_pins_read</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">npin</span>
+            <span class="n">latfuelpins</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">npin</span><span class="o">*</span><span class="n">geom</span><span class="o">.</span><span class="n">npin</span> <span class="o">-</span> <span class="n">geom</span><span class="o">.</span><span class="n">ngtubes</span> <span class="o">-</span> <span class="n">geom</span><span class="o">.</span><span class="n">nitubes</span>
+        
+        <span class="k">elif</span> <span class="n">geom</span><span class="o">.</span><span class="n">latsym</span> <span class="o">==</span> <span class="s1">&#39;se&#39;</span><span class="p">:</span>
+            <span class="n">line_pins_read</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">npin</span><span class="o">//</span><span class="mi">2</span>
+            <span class="n">latfuelpins</span> <span class="o">=</span> <span class="p">(</span><span class="n">geom</span><span class="o">.</span><span class="n">npin</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">geom</span><span class="o">.</span><span class="n">ngtubesqtr</span> <span class="o">-</span> <span class="n">geom</span><span class="o">.</span><span class="n">nitubesqtr</span>  
+
+        <span class="k">for</span> <span class="n">lattice</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lattype</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">lattice</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;fuel&#39;</span><span class="p">:</span>
+                <span class="c1">#path to standard polaris benchmark output</span>
+                <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">lattice</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">lattice</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.out&#39;</span><span class="p">)</span>
+
+                <span class="c1"># assign path to fine group polaris output if polarisoption requires it</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">polarisoption</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">polarisoption</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                    <span class="n">filefinegroup</span><span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filepath_finegroup</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">lattice</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">lattice</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.out&#39;</span><span class="p">)</span>
+
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+                    <span class="n">latcomp</span><span class="o">=</span> <span class="p">[</span><span class="n">lattice</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+                    <span class="n">index</span><span class="o">=</span> <span class="mi">0</span>
+                    <span class="n">nubar</span><span class="o">=</span> <span class="mi">0</span>
+                    <span class="n">found_statepoint</span><span class="o">=</span> <span class="kc">False</span>
+                    <span class="n">found_nubar</span><span class="o">=</span> <span class="kc">False</span>
+                    <span class="n">found_energy</span><span class="o">=</span> <span class="kc">False</span>
+        
+                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s2">&quot;bu &quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                        <span class="n">parts</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                        <span class="n">burnup</span><span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span> <span class="c1"># burnup is in GWD/MTIHM</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">latburn</span> <span class="o">=</span> <span class="n">burnup</span>
+                        <span class="n">statepoint</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">burnup</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">burnup</span><span class="p">))</span>
+                        <span class="n">found_statepoint</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="n">index</span><span class="o">=</span> <span class="mi">1</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39; Statepoint &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">index</span><span class="o">&lt;=</span><span class="nb">len</span><span class="p">(</span><span class="n">burnup</span><span class="p">)):</span>
+                        <span class="n">found_statepoint</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;State &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; Burnup &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">burnup</span><span class="p">[</span><span class="n">index</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="n">found_statepoint</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;|------|----------|----------|----------|----------|----------|----------|&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                        <span class="n">found_energy</span><span class="o">=</span> <span class="kc">True</span>
+                        <span class="n">line_count</span><span class="o">=</span> <span class="mi">1</span>
+                        <span class="n">fluxweightedER</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="n">found_statepoint</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">found_energy</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">((</span><span class="n">line_count</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">line_count</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)):</span>
+                        <span class="n">parts</span><span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                        <span class="n">fluxweightedER</span><span class="p">[</span><span class="n">line_count</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+                        <span class="n">line_count</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="n">found_statepoint</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">found_energy</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">((</span><span class="n">line_count</span> <span class="o">==</span> <span class="mi">11</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">line_count</span> <span class="o">==</span> <span class="mi">12</span><span class="p">)):</span>
+                        <span class="n">parts</span><span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                        <span class="n">fluxweightedER</span><span class="p">[</span><span class="n">line_count</span><span class="o">-</span><span class="mi">11</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span>
+                        <span class="n">line_count</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="n">found_statepoint</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">found_energy</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">((</span><span class="n">line_count</span> <span class="o">==</span> <span class="mi">13</span><span class="p">)):</span>
+                        <span class="n">line_count</span><span class="o">=</span> <span class="mi">0</span>
+                        <span class="n">er</span><span class="o">=</span> <span class="n">fluxweightedER</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">fluxweightedER</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">fluxweightedER</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">fluxweightedER</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="n">latcomp</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">latcomp</span><span class="p">,</span> <span class="p">[</span><span class="n">burnup</span><span class="p">[</span><span class="n">index</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">er</span><span class="p">])</span>
+                        <span class="n">found_energy</span><span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="n">found_statepoint</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">found_energy</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">((</span><span class="n">line_count</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">line_count</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">line_count</span> <span class="o">!=</span> <span class="mi">11</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">line_count</span> <span class="o">!=</span> <span class="mi">12</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">line_count</span> <span class="o">!=</span> <span class="mi">13</span><span class="p">)):</span>
+                        <span class="n">line_count</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="n">found_statepoint</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;U-235 Concentration&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                        <span class="n">parts</span><span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                        <span class="c1">#print(&#39;U5&#39;)</span>
+                        <span class="n">latcomp</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">latcomp</span><span class="p">,</span><span class="n">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="n">found_statepoint</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;U-238 Concentration&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                        <span class="n">parts</span><span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                        <span class="c1">#print(&#39;U8&#39;)</span>
+                        <span class="n">latcomp</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">latcomp</span><span class="p">,</span> <span class="n">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="n">found_statepoint</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;Pu-239 Concentration&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                        <span class="n">parts</span><span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                        <span class="c1">#print(&#39;PU9&#39;)</span>
+                        <span class="n">latcomp</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">latcomp</span><span class="p">,</span> <span class="n">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="n">found_statepoint</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;Pu-241 Concentration&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                        <span class="n">parts</span><span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                        <span class="c1">#print(&#39;PU41&#39;)</span>
+                        <span class="n">latcomp</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">latcomp</span><span class="p">,</span> <span class="n">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="n">found_statepoint</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;Neutrons Per Fission&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                        <span class="c1">#print(&#39;Nubar&#39;)</span>
+                        <span class="n">found_nubar</span><span class="o">=</span> <span class="kc">True</span>
+                        <span class="n">nubar</span><span class="o">=</span> <span class="mi">0</span>
+                        <span class="n">line_count</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="n">found_statepoint</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">found_nubar</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">line_count</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">):</span>
+                        <span class="n">line_count</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="n">found_statepoint</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">found_nubar</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">line_count</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">line_count</span> <span class="o">&lt;</span> <span class="n">line_pins_read</span><span class="p">):</span>
+                        <span class="n">parts</span><span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                        <span class="n">adding</span><span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">[:]]</span>
+                        <span class="n">nubar</span><span class="o">=</span> <span class="n">nubar</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">adding</span><span class="p">)</span>
+                        <span class="n">line_count</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="n">found_statepoint</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">found_nubar</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">line_count</span> <span class="o">==</span> <span class="n">line_pins_read</span><span class="p">):</span>
+                        <span class="n">parts</span><span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                        <span class="n">adding</span><span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">[:]]</span>
+                        <span class="n">nubar</span><span class="o">=</span> <span class="n">nubar</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">adding</span><span class="p">)</span>
+                        <span class="n">nubar</span><span class="o">=</span> <span class="n">nubar</span><span class="o">/</span><span class="n">latfuelpins</span>
+                        <span class="n">latcomp</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">latcomp</span><span class="p">,</span> <span class="n">nubar</span><span class="p">)</span>
+                        <span class="n">line_count</span><span class="o">=</span> <span class="mi">0</span>
+                        <span class="n">found_nubar</span><span class="o">=</span> <span class="kc">False</span>
+                        <span class="n">found_statepoint</span><span class="o">=</span> <span class="kc">False</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Lattice nubar is: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">nubar</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; for statepoint &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Lattice ER is: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">er</span><span class="p">)</span><span class="o">+</span> <span class="s1">&#39; for statepoint &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>
+                        
+                        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">polarisoption</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">polarisoption</span> <span class="o">==</span> <span class="mi">3</span><span class="p">):</span> <span class="c1"># option 2 and option 3 require spectrum extraction from Polaris output</span>
+
+
+                            <span class="n">chi_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_spectrum</span><span class="p">(</span><span class="n">index</span><span class="p">,</span><span class="n">filefinegroup</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">)</span>
+                            <span class="n">ene_vector</span><span class="o">=</span> <span class="p">[]</span>
+                            <span class="n">chi_vector</span><span class="o">=</span> <span class="p">[]</span>
+
+                            <span class="k">for</span> <span class="n">ene_group</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">chi_values</span><span class="p">:</span>
+                                <span class="n">ene_vector</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ene_group</span><span class="p">)</span>
+                            <span class="n">ene_vector</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ene_vector</span><span class="p">)</span>
+
+                            <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">chi_group</span> <span class="ow">in</span> <span class="n">chi_values</span><span class="p">:</span>
+                                <span class="n">chi_vector</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chi_group</span><span class="p">)</span>
+                            <span class="n">chi_vector</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chi_vector</span><span class="p">)</span>
+
+                            <span class="n">latcomp</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">latcomp</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">ene_vector</span><span class="p">))</span>
+                            <span class="n">latcomp</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">latcomp</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">chi_vector</span><span class="p">))</span>
+
+                        <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">latcomp</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">latcomp</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Cycle.extract_latcomp_scale62">
+<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.cycle.Cycle.extract_latcomp_scale62">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_latcomp_scale62</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">:</span> <span class="s2">&quot;Geometry&quot;</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="n">filepath_finegroup</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extracts lattice composition from a Polaris (SCALE 6.2) lattice composition file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Extracting lattice composition ...&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">geom</span><span class="o">.</span><span class="n">latsym</span> <span class="o">==</span> <span class="s1">&#39;full&#39;</span><span class="p">:</span>
+            <span class="n">line_pins_read</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">npin</span>
+            <span class="n">latfuelpins</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">npin</span><span class="o">*</span><span class="n">geom</span><span class="o">.</span><span class="n">npin</span> <span class="o">-</span> <span class="n">geom</span><span class="o">.</span><span class="n">ngtubes</span> <span class="o">-</span> <span class="n">geom</span><span class="o">.</span><span class="n">nitubes</span>
+        
+        <span class="k">elif</span> <span class="n">geom</span><span class="o">.</span><span class="n">latsym</span> <span class="o">==</span> <span class="s1">&#39;se&#39;</span><span class="p">:</span>
+            <span class="n">line_pins_read</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">npin</span><span class="o">//</span><span class="mi">2</span>
+            <span class="n">latfuelpins</span> <span class="o">=</span> <span class="p">(</span><span class="n">geom</span><span class="o">.</span><span class="n">npin</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">geom</span><span class="o">.</span><span class="n">ngtubesqtr</span> <span class="o">-</span> <span class="n">geom</span><span class="o">.</span><span class="n">nitubesqtr</span>  
+        <span class="k">for</span> <span class="n">lattice</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lattype</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">lattice</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;fuel&#39;</span><span class="p">:</span>
+                <span class="c1">#path to standard polaris benchmark output</span>
+                <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">lattice</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">lattice</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.out&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Reading lattice file: &#39;</span> <span class="o">+</span> <span class="n">path</span><span class="p">)</span>
+
+                <span class="c1"># assign path to fine group polaris output if polarisoption requires it</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">polarisoption</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">polarisoption</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                    <span class="n">filefinegroup</span><span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filepath_finegroup</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">lattice</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">lattice</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.out&#39;</span><span class="p">)</span>
+
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+                    <span class="n">latcomp</span><span class="o">=</span> <span class="p">[</span><span class="n">lattice</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+                    <span class="n">index</span><span class="o">=</span> <span class="mi">0</span>
+                    <span class="n">nubar</span><span class="o">=</span> <span class="mi">0</span>
+                    <span class="n">found_statepoint</span><span class="o">=</span> <span class="kc">False</span>
+                    <span class="n">found_nubar</span><span class="o">=</span> <span class="kc">False</span>
+                    <span class="n">found_energy</span><span class="o">=</span> <span class="kc">False</span>
+                    <span class="n">found_startresult</span><span class="o">=</span> <span class="kc">False</span>
+        
+                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s2">&quot;bu &quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                        <span class="n">parts</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                        <span class="n">burnup</span><span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span> <span class="c1"># burnup is in GWD/MTIHM</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">latburn</span> <span class="o">=</span> <span class="n">burnup</span>
+                        <span class="n">statepoint</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">burnup</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">burnup</span><span class="p">))</span>
+                        <span class="n">found_statepoint</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="n">index</span><span class="o">=</span> <span class="mi">1</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;Depletion/Decay Initial Mass Summary&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">):</span>
+                        <span class="n">found_startresult</span><span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="n">found_startresult</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;Statepoint &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">index</span><span class="o">&lt;=</span><span class="nb">len</span><span class="p">(</span><span class="n">burnup</span><span class="p">)):</span>
+                        <span class="n">found_statepoint</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;State &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; Burnup &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">burnup</span><span class="p">[</span><span class="n">index</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="n">found_statepoint</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;|------|----------|----------|----------|----------|----------|----------|&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                        <span class="n">found_energy</span><span class="o">=</span> <span class="kc">True</span>
+                        <span class="n">line_count</span><span class="o">=</span> <span class="mi">1</span>
+                        <span class="n">fluxweightedER</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="n">found_statepoint</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">found_energy</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">((</span><span class="n">line_count</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">line_count</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)):</span>
+                        <span class="n">parts</span><span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                        <span class="n">fluxweightedER</span><span class="p">[</span><span class="n">line_count</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+                        <span class="n">line_count</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="n">found_statepoint</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">found_energy</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">((</span><span class="n">line_count</span> <span class="o">==</span> <span class="mi">10</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">line_count</span> <span class="o">==</span> <span class="mi">11</span><span class="p">)):</span>
+                        <span class="n">parts</span><span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
+                        <span class="n">fluxweightedER</span><span class="p">[</span><span class="n">line_count</span><span class="o">-</span><span class="mi">11</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span>
+                        <span class="n">line_count</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="n">found_statepoint</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">found_energy</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">((</span><span class="n">line_count</span> <span class="o">==</span> <span class="mi">12</span><span class="p">)):</span>
+                        <span class="n">line_count</span><span class="o">=</span> <span class="mi">0</span>
+                        <span class="n">er</span><span class="o">=</span> <span class="n">fluxweightedER</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">fluxweightedER</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">fluxweightedER</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">fluxweightedER</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="n">latcomp</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">latcomp</span><span class="p">,</span> <span class="p">[</span><span class="n">burnup</span><span class="p">[</span><span class="n">index</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">er</span><span class="p">])</span>
+                        <span class="n">found_energy</span><span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="n">found_statepoint</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">found_energy</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">((</span><span class="n">line_count</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">line_count</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">line_count</span> <span class="o">!=</span> <span class="mi">10</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">line_count</span> <span class="o">!=</span> <span class="mi">11</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">line_count</span> <span class="o">!=</span> <span class="mi">12</span><span class="p">)):</span>
+                        <span class="n">line_count</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="n">found_statepoint</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;U-235 Concentration&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                        <span class="n">parts</span><span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                        <span class="c1">#print(&#39;U5&#39;)</span>
+                        <span class="n">latcomp</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">latcomp</span><span class="p">,</span><span class="n">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="n">found_statepoint</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;U-238 Concentration&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                        <span class="n">parts</span><span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                        <span class="c1">#print(&#39;U8&#39;)</span>
+                        <span class="n">latcomp</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">latcomp</span><span class="p">,</span> <span class="n">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="n">found_statepoint</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;Pu-239 Concentration&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                        <span class="n">parts</span><span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                        <span class="c1">#print(&#39;PU9&#39;)</span>
+                        <span class="n">latcomp</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">latcomp</span><span class="p">,</span> <span class="n">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="n">found_statepoint</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;Pu-241 Concentration&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                        <span class="n">parts</span><span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                        <span class="c1">#print(&#39;PU41&#39;)</span>
+                        <span class="n">latcomp</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">latcomp</span><span class="p">,</span> <span class="n">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="n">found_statepoint</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;Neutrons Per Fission&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                        <span class="c1">#print(&#39;Nubar&#39;)</span>
+                        <span class="n">found_nubar</span><span class="o">=</span> <span class="kc">True</span>
+                        <span class="n">nubar</span><span class="o">=</span> <span class="mi">0</span>
+                        <span class="n">line_count</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="n">found_statepoint</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">found_nubar</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">line_count</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">):</span>
+                        <span class="n">line_count</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="n">found_statepoint</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">found_nubar</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">line_count</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">line_count</span> <span class="o">&lt;</span> <span class="n">line_pins_read</span><span class="p">):</span> 
+                        <span class="n">parts</span><span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                        <span class="n">adding</span><span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">[:]]</span>
+                        <span class="n">nubar</span><span class="o">=</span> <span class="n">nubar</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">adding</span><span class="p">)</span>
+                        <span class="n">line_count</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">elif</span> <span class="p">(</span><span class="n">found_statepoint</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">found_nubar</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">line_count</span> <span class="o">==</span> <span class="n">line_pins_read</span><span class="p">):</span> 
+                        <span class="n">parts</span><span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                        <span class="n">adding</span><span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">[:]]</span>
+                        <span class="n">nubar</span><span class="o">=</span> <span class="n">nubar</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">adding</span><span class="p">)</span>
+                        <span class="n">nubar</span><span class="o">=</span> <span class="n">nubar</span><span class="o">/</span><span class="n">latfuelpins</span>
+                        <span class="n">latcomp</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">latcomp</span><span class="p">,</span> <span class="n">nubar</span><span class="p">)</span>
+                        <span class="n">line_count</span><span class="o">=</span> <span class="mi">0</span>
+                        <span class="n">found_nubar</span><span class="o">=</span> <span class="kc">False</span>
+                        <span class="n">found_statepoint</span><span class="o">=</span> <span class="kc">False</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Lattice nubar is: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">nubar</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; for statepoint &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Lattice ER is: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">er</span><span class="p">)</span><span class="o">+</span> <span class="s1">&#39; for statepoint &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>
+                        
+                        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">polarisoption</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">polarisoption</span> <span class="o">==</span> <span class="mi">3</span><span class="p">):</span> <span class="c1"># option 2 and option 3 require spectrum extraction from Polaris output</span>
+
+                            <span class="n">chi_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">extract_spectrum</span><span class="p">(</span><span class="n">index</span><span class="p">,</span><span class="n">filefinegroup</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">)</span>
+                            <span class="n">ene_vector</span><span class="o">=</span> <span class="p">[]</span>
+                            <span class="n">chi_vector</span><span class="o">=</span> <span class="p">[]</span>
+
+                            <span class="k">for</span> <span class="n">ene_group</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">chi_values</span><span class="p">:</span>
+                                <span class="n">ene_vector</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ene_group</span><span class="p">)</span>
+                            <span class="n">ene_vector</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ene_vector</span><span class="p">)</span>
+
+                            <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">chi_group</span> <span class="ow">in</span> <span class="n">chi_values</span><span class="p">:</span>
+                                <span class="n">chi_vector</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chi_group</span><span class="p">)</span>
+                            <span class="n">chi_vector</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">chi_vector</span><span class="p">)</span>
+
+                            <span class="n">latcomp</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">latcomp</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">ene_vector</span><span class="p">))</span>
+                            <span class="n">latcomp</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">latcomp</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">chi_vector</span><span class="p">))</span>
+
+                        <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">latcomp</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">latcomp</span><span class="p">))</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Daniele Timpano.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

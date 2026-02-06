@@ -1,0 +1,17 @@
+/* This file intentionally left blank. */
+/* Make the top navbar white */
+.bd-header {
+  background-color: white !important;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+/* Make navbar text readable on white */
+.bd-header .navbar-nav .nav-link,
+.bd-header .navbar-brand {
+  color: #222;
+}
+
+/* Hover state */
+.bd-header .navbar-nav .nav-link:hover {
+  color: var(--pst-color-primary);
+}

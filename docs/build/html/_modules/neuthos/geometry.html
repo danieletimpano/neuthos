@@ -1,0 +1,386 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>neuthos.geometry &mdash; neuthos 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=2709fde1"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            neuthos
+              <img src="../../_static/neuthos_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">neuthos</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">neuthos</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">neuthos.geometry</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for neuthos.geometry</h1><div class="highlight"><pre>
+<span></span><span class="c1"># src/neuthos/geometry.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<div class="viewcode-block" id="Geometry">
+<a class="viewcode-back" href="../../api/neuthos.geometry.html#neuthos.geometry.Geometry">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Geometry</span><span class="p">:</span>
+    <span class="c1"># --- geometry inputs ---</span>
+    <span class="n">naxial</span><span class="p">:</span> <span class="nb">int</span>            <span class="c1"># number of axial nodes (-)</span>
+    <span class="n">nass</span><span class="p">:</span> <span class="nb">int</span>              <span class="c1"># number of assemblies in core row/column (-)</span>
+    <span class="n">npin</span><span class="p">:</span> <span class="nb">int</span>              <span class="c1"># number of pins in assembly row/column (-)</span>
+    <span class="n">latsym</span><span class="p">:</span> <span class="nb">str</span>            <span class="c1"># lattice symmetry: &#39;full&#39;, &#39;se&#39;</span>
+    <span class="n">ngtubes</span><span class="p">:</span> <span class="nb">int</span>           <span class="c1"># number of guide tubes in assembly (-)</span>
+    <span class="n">nitubes</span><span class="p">:</span> <span class="nb">int</span>           <span class="c1"># number of instrument tubes in assembly (-)</span>
+    <span class="n">ass_pitch</span><span class="p">:</span> <span class="nb">float</span>       <span class="c1"># ass_pitch pitch (cm)</span>
+    <span class="n">pin_pitch</span><span class="p">:</span> <span class="nb">float</span>       <span class="c1"># pin pitch (cm)</span>
+    <span class="n">pin_radius</span><span class="p">:</span> <span class="nb">float</span>      <span class="c1"># pin radius (used for average power density in cycle)</span>
+    <span class="n">active_height</span><span class="p">:</span> <span class="nb">float</span>   <span class="c1"># fuel active height (cm)</span>
+    <span class="n">coremap</span><span class="p">:</span> <span class="nb">list</span>          <span class="c1"># list of assemblies in the core [i,j] (indexes counting reflector rows)</span>
+    <span class="n">source</span><span class="p">:</span> <span class="nb">list</span>           <span class="c1"># list of assemblies to be modeled for source definition [i,j]</span>
+    <span class="n">ngtubesqtr</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span> <span class="c1"># number of guide tubes in quarter assembly (only needed if latsym is &#39;se&#39;)</span>
+    <span class="n">nitubesqtr</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span> <span class="c1"># number of instrument tubes in quarter assembly (only needed if latsym is &#39;se&#39;)</span>
+
+    <span class="c1"># --- computed / parsed outputs ---</span>
+    <span class="n">coordinates</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">coordinatesVERA_with_index</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">z_core</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>          
+    <span class="n">meshheight</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]))</span>  
+    <span class="n">nodevolume</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">nfuelpins</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># compute the number of fuel pins per assembly</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nfuelpins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">npin</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">npin</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ngtubes</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">nitubes</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Geometry.compute_radial_coordinates_PARCS">
+<a class="viewcode-back" href="../../api/neuthos.geometry.html#neuthos.geometry.Geometry.compute_radial_coordinates_PARCS">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_radial_coordinates_PARCS</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute (i,j,m,n,x_pin,y_pin) for each pin inside each ass_pitch.</span>
+<span class="sd">        Indices are 1-based to match typical PARCS-style indexing.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Computing core PARCS coordinates ...&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+        <span class="n">a_mid</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nass</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="n">p_mid</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">npin</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nass</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nass</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">x_core</span> <span class="o">=</span> <span class="p">(</span><span class="n">j</span> <span class="o">-</span> <span class="n">a_mid</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">ass_pitch</span>
+                <span class="n">y_core</span> <span class="o">=</span> <span class="p">(</span><span class="n">a_mid</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">ass_pitch</span>
+
+                <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">npin</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">npin</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                        <span class="n">x_pin</span> <span class="o">=</span> <span class="n">x_core</span> <span class="o">+</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">p_mid</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pin_pitch</span>
+                        <span class="n">y_pin</span> <span class="o">=</span> <span class="n">y_core</span> <span class="o">+</span> <span class="p">(</span><span class="n">p_mid</span> <span class="o">-</span> <span class="n">m</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pin_pitch</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">x_pin</span><span class="p">,</span> <span class="n">y_pin</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Geometry.read_axial_mesh_from_parcs">
+<a class="viewcode-back" href="../../api/neuthos.geometry.html#neuthos.geometry.Geometry.read_axial_mesh_from_parcs">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_axial_mesh_from_parcs</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">filepath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="c1"># users can pass str or Path</span>
+        <span class="n">header_token</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot; Number      (cm)      (cm)  Integ.   Assm.&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parse axial mesh information from a PARCS text file section that begins with `Number (cm) (cm) Integ. Assm.`.</span>
+
+<span class="sd">        - Reads exactly `naxial_nodes` rows after the header.</span>
+<span class="sd">        - Flips heights to bottom-to-top order (assuming the code provides this info as top-to-bottom).</span>
+<span class="sd">        - Computes node volumes: ass_pitch^2 * height.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">filepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">z_core</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodevolume</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="n">mesh_h</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">filepath</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+
+        <span class="n">found_axial</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">header_token</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">found_axial</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">found_axial</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># Stop when the count exceeds the number of axial nodes</span>
+            <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">naxial</span><span class="p">:</span>
+                <span class="n">found_axial</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">break</span>
+
+            <span class="n">parts</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="c1"># Parse only if there are three columns</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="c1"># If PARCS has blank lines or separators inside the table, we skip</span>
+                <span class="k">continue</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">z_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">h_val</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="c1"># Non-numeric line inside the table: skip</span>
+                <span class="k">continue</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">z_core</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">z_val</span><span class="p">)</span>
+            <span class="n">mesh_h</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h_val</span><span class="p">)</span>
+            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">count</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">naxial</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Axial mesh parsing found </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2"> nodes, expected </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">naxial</span><span class="si">}</span><span class="s2">. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Check header_token and file format: </span><span class="si">{</span><span class="n">filepath</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Flip heights to bottom-to-top order (your original behavior)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meshheight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mesh_h</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">))</span>
+
+        <span class="c1"># Node volumes (real node volume)</span>
+        <span class="n">a2</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ass_pitch</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nodevolume</span> <span class="o">=</span> <span class="p">[</span><span class="n">a2</span> <span class="o">*</span> <span class="n">h</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">meshheight</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="Geometry.compute_2D_coordinates_VERA_qtr">
+<a class="viewcode-back" href="../../api/neuthos.geometry.html#neuthos.geometry.Geometry.compute_2D_coordinates_VERA_qtr">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_2D_coordinates_VERA_qtr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Computing core VERA coordinates ...&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span> 
+
+        <span class="n">a_mid</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nass</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="n">p_mid</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">npin</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+        
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nass</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nass</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">x_core</span> <span class="o">=</span> <span class="p">(</span><span class="n">j</span> <span class="o">-</span> <span class="n">a_mid</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">ass_pitch</span>
+                <span class="n">y_core</span> <span class="o">=</span> <span class="p">(</span><span class="n">a_mid</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">ass_pitch</span>
+                <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">npin</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">npin</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                        <span class="n">x_pin</span> <span class="o">=</span> <span class="n">x_core</span> <span class="o">+</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">p_mid</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pin_pitch</span>
+                        <span class="n">y_pin</span> <span class="o">=</span> <span class="n">y_core</span> <span class="o">+</span> <span class="p">(</span><span class="n">p_mid</span> <span class="o">-</span> <span class="n">m</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pin_pitch</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">x_pin</span><span class="p">,</span> <span class="n">y_pin</span><span class="p">))</span>
+
+        <span class="c1"># This section maps classic assembly indices with VERA southeast quarter core indices</span>
+        <span class="n">coremap</span><span class="o">=</span> <span class="p">[]</span>
+        <span class="n">coremap_quarter</span><span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">nass</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">nass</span><span class="p">):</span> 
+                <span class="n">coremap</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">])</span>
+                
+        <span class="c1"># Select only the south east corner of this</span>
+        <span class="k">for</span> <span class="n">assembly</span> <span class="ow">in</span> <span class="n">coremap</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">assembly</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">nass</span> <span class="o">//</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">assembly</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">nass</span> <span class="o">//</span><span class="mi">2</span><span class="p">:</span>
+                <span class="n">coremap_quarter</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">assembly</span><span class="p">)</span>
+
+        <span class="c1"># numerate south east corner from 1 to len(coremap_quarter)</span>
+        <span class="n">connect</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">i</span><span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">assembly</span> <span class="ow">in</span> <span class="n">coremap_quarter</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">assembly</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">coremap</span><span class="p">:</span>  <span class="c1"># only consider assemblies that are actually in the core</span>
+                <span class="n">connect</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">assembly</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">assembly</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">i</span><span class="p">])</span>
+                <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
+
+        <span class="c1"># convert to pandas for easier handling</span>
+        <span class="n">connect</span><span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">connect</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;x_index&#39;</span><span class="p">,</span><span class="s1">&#39;y_index&#39;</span><span class="p">,</span><span class="s1">&#39;vera_index&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Now map the pin coordinates to VERA indices</span>
+        <span class="k">for</span> <span class="n">coord</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="p">:</span>
+            <span class="c1"># This is valid only for the quarter bottom right of the core</span>
+            <span class="k">if</span> <span class="p">([</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">):</span>  
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">connect</span><span class="p">)):</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">connect</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span><span class="n">connect</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                        <span class="n">vera_index</span> <span class="o">=</span> <span class="n">connect</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">coordinatesVERA_with_index</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">vera_index</span><span class="p">))</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Assembly </span><span class="si">{</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">,</span><span class="si">{</span><span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1"> has VERA index </span><span class="si">{</span><span class="n">vera_index</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                        <span class="k">break</span></div>
+
+
+<div class="viewcode-block" id="Geometry.compute_3D_coordinates_VERA_qtr">
+<a class="viewcode-back" href="../../api/neuthos.geometry.html#neuthos.geometry.Geometry.compute_3D_coordinates_VERA_qtr">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_3D_coordinates_VERA_qtr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+        <span class="n">filepath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="c1"># users can pass str or Path</span>
+        <span class="n">axial_header_token</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;axial_edit_bounds&quot;</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Computing core VERA coordinates ...&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span> 
+
+        <span class="n">a_mid</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nass</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="n">p_mid</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">npin</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+        
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nass</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nass</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">x_core</span> <span class="o">=</span> <span class="p">(</span><span class="n">j</span> <span class="o">-</span> <span class="n">a_mid</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">ass_pitch</span>
+                <span class="n">y_core</span> <span class="o">=</span> <span class="p">(</span><span class="n">a_mid</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">ass_pitch</span>
+                <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">npin</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">npin</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                        <span class="n">x_pin</span> <span class="o">=</span> <span class="n">x_core</span> <span class="o">+</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">p_mid</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pin_pitch</span>
+                        <span class="n">y_pin</span> <span class="o">=</span> <span class="n">y_core</span> <span class="o">+</span> <span class="p">(</span><span class="n">p_mid</span> <span class="o">-</span> <span class="n">m</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pin_pitch</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">x_pin</span><span class="p">,</span> <span class="n">y_pin</span><span class="p">))</span>
+
+        <span class="c1"># This section maps classic assembly indices with VERA southeast quarter core indices</span>
+        <span class="n">coremap</span><span class="o">=</span> <span class="p">[]</span>
+        <span class="n">coremap_quarter</span><span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">nass</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">nass</span><span class="p">):</span> 
+                <span class="n">coremap</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">])</span>
+                
+        <span class="c1"># Select only the south east corner of this</span>
+        <span class="k">for</span> <span class="n">assembly</span> <span class="ow">in</span> <span class="n">coremap</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">assembly</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">nass</span> <span class="o">//</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">assembly</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">nass</span> <span class="o">//</span><span class="mi">2</span><span class="p">:</span>
+                <span class="n">coremap_quarter</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">assembly</span><span class="p">)</span>
+
+        <span class="c1"># numerate south east corner from 1 to len(coremap_quarter)</span>
+        <span class="n">connect</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">i</span><span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">assembly</span> <span class="ow">in</span> <span class="n">coremap_quarter</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">assembly</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">coremap</span><span class="p">:</span>  <span class="c1"># only consider assemblies that are actually in the core</span>
+                <span class="n">connect</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">assembly</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">assembly</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">i</span><span class="p">])</span>
+                <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
+
+        <span class="c1"># convert to pandas for easier handling</span>
+        <span class="n">connect</span><span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">connect</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;x_index&#39;</span><span class="p">,</span><span class="s1">&#39;y_index&#39;</span><span class="p">,</span><span class="s1">&#39;vera_index&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Extract axial mesh from the specfied file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">z_core</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+        <span class="n">filepath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">lines</span><span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+        <span class="n">found_axial</span><span class="o">=</span> <span class="kc">False</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Axial Z core:&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">axial_header_token</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                <span class="n">found_axial</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+                <span class="n">data</span><span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">z_core</span><span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span>
+                <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">z_core</span><span class="p">)</span>
+                <span class="n">found_axial</span><span class="o">=</span> <span class="kc">False</span>
+                <span class="k">break</span>
+
+        <span class="c1">#flip heights to have the bottom to top order</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meshheight</span><span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">z_core</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Mesh heights:&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meshheight</span><span class="p">)</span>
+        
+        <span class="c1">### CURRENTLY NODE VOLUME IS NOT USED IN VERA</span>
+        <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">meshheight</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">nodevolume</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">ass_pitch</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">h</span><span class="p">)</span> <span class="c1"># real node volume</span>
+
+        <span class="c1"># Generate full 3D coordinates with VERA index    </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coordinatesVERA_with_index</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span> <span class="c1"># This will store the coordinates with VERA index</span>
+        <span class="k">for</span> <span class="n">coord</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="p">:</span>
+            <span class="c1"># This is valid only for the quarter bottom right of the core</span>
+            <span class="c1"># The coordinates are in the form (i, j, m, n, x_pin, y_pin)</span>
+            <span class="k">if</span> <span class="p">([</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">):</span>  <span class="c1"># Check if the assembly is in the source list</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">47</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">connect</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="ow">and</span> <span class="p">(</span><span class="n">connect</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                        <span class="n">vera_index</span> <span class="o">=</span> <span class="n">connect</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+                        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">naxial</span><span class="o">-</span><span class="mi">2</span><span class="p">):</span> <span class="c1"># HARD CODED: you have to get rid of the reflectors</span>
+                            <span class="n">znode</span><span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">z_core</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_core</span><span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mi">2</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">coordinatesVERA_with_index</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">vera_index</span><span class="p">,</span> <span class="n">znode</span><span class="p">,</span> <span class="n">k</span><span class="p">))</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Assembly </span><span class="si">{</span><span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1">,</span><span class="si">{</span><span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1"> has VERA index </span><span class="si">{</span><span class="n">vera_index</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                        <span class="k">break</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2026, Daniele Timpano.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
