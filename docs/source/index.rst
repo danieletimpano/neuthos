@@ -54,7 +54,4 @@ https://doi.org/10.1016/j.pnucene.2025.106234.
    :maxdepth: 2
    :caption: Contents:
 
-   overview
-   methodology
-   usage
    api/modules
