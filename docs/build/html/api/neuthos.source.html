@@ -333,7 +333,7 @@
 <dt class="sig sig-object py" id="neuthos.source.Source">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neuthos.source.</span></span><span class="sig-name descname"><span class="pre">Source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">truncoption</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assytype_to_mcmaterial</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sourceoption='pointsource'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trunc_ass_X=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trunc_ass_Y=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trunc_pin_X=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trunc_pin_Y=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sourceassy=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sourcepin=&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/source.html#Source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.source.Source" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Manages neutron source term generation for reactor physics calculations.</p>
+<p>Manages neutron source term generation for LWR shielding calculations.</p>
 <p>This class handles the computation and output of neutron source terms at both assembly
 and pin levels, including fission spectrum calculations, power-to-source conversions,
 and truncation options for symmetry geometries.</p>
@@ -499,8 +499,8 @@ factors from power to source terms and applies truncation options if specified.<
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>cycle</strong> (<a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle" title="neuthos.cycle.Cycle"><em>Cycle</em></a>) – Cycle object containing assembly power data, exposure profiles, and lattice compositions.</p></li>
-<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry" title="neuthos.geometry.Geometry"><em>Geometry</em></a>) – Geometry object containing assembly and core mesh information.</p></li>
-<li><p><strong>out</strong> (<a class="reference internal" href="neuthos.html#neuthos.Outputs" title="neuthos.Outputs"><em>Outputs</em></a>) – Outputs object for managing output directories and file paths.</p></li>
+<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.html#neuthos.Geometry" title="neuthos.Geometry"><em>Geometry</em></a>) – Geometry object containing assembly and core mesh information.</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="neuthos.outputs.html#neuthos.outputs.Outputs" title="neuthos.outputs.Outputs"><em>Outputs</em></a>) – Outputs object for managing output directories and file paths.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -526,9 +526,9 @@ to assembly-level approximations.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>cycle</strong> (<a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle" title="neuthos.cycle.Cycle"><em>Cycle</em></a>) – Cycle object containing pin power data, exposure profiles, lattice compositions,
 and interpolation options.</p></li>
-<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry" title="neuthos.geometry.Geometry"><em>Geometry</em></a>) – Geometry object containing assembly and core mesh information, pin pitch,
+<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.html#neuthos.Geometry" title="neuthos.Geometry"><em>Geometry</em></a>) – Geometry object containing assembly and core mesh information, pin pitch,
 and axial discretization details.</p></li>
-<li><p><strong>out</strong> (<a class="reference internal" href="neuthos.html#neuthos.Outputs" title="neuthos.Outputs"><em>Outputs</em></a>) – Outputs object for managing output directories and file paths for plots
+<li><p><strong>out</strong> (<a class="reference internal" href="neuthos.outputs.html#neuthos.outputs.Outputs" title="neuthos.outputs.Outputs"><em>Outputs</em></a>) – Outputs object for managing output directories and file paths for plots
 and sanity check outputs.</p></li>
 </ul>
 </dd>
@@ -558,8 +558,8 @@ for pin-wise source modeling.</p></li>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>cycle</strong> (<a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle" title="neuthos.cycle.Cycle"><em>Cycle</em></a>)</p></li>
-<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry" title="neuthos.geometry.Geometry"><em>Geometry</em></a>)</p></li>
-<li><p><strong>out</strong> (<a class="reference internal" href="neuthos.html#neuthos.Outputs" title="neuthos.Outputs"><em>Outputs</em></a>)</p></li>
+<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.html#neuthos.Geometry" title="neuthos.Geometry"><em>Geometry</em></a>)</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="neuthos.outputs.html#neuthos.outputs.Outputs" title="neuthos.outputs.Outputs"><em>Outputs</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -633,8 +633,8 @@ output, and applies truncation geometry transformations if specified.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>cycle</strong> (<a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle" title="neuthos.cycle.Cycle"><em>Cycle</em></a>) – Cycle object containing polaris options and energy group information.</p></li>
-<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry" title="neuthos.geometry.Geometry"><em>Geometry</em></a>) – Geometry object containing core mesh, assembly pitch, and z-coordinate information.</p></li>
-<li><p><strong>out</strong> (<a class="reference internal" href="neuthos.html#neuthos.Outputs" title="neuthos.Outputs"><em>Outputs</em></a>) – Outputs object for managing output directories.</p></li>
+<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.html#neuthos.Geometry" title="neuthos.Geometry"><em>Geometry</em></a>) – Geometry object containing core mesh, assembly pitch, and z-coordinate information.</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="neuthos.outputs.html#neuthos.outputs.Outputs" title="neuthos.outputs.Outputs"><em>Outputs</em></a>) – Outputs object for managing output directories.</p></li>
 <li><p><strong>filepath</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em>) – Path to the Serpent main input file to be updated with source strength normalization.</p></li>
 </ul>
 </dd>
@@ -660,9 +660,9 @@ Pin-level sources provide higher spatial resolution than assembly-level approxim
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>cycle</strong> (<a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle" title="neuthos.cycle.Cycle"><em>Cycle</em></a>) – Cycle object containing polaris options and energy group information.</p></li>
-<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry" title="neuthos.geometry.Geometry"><em>Geometry</em></a>) – Geometry object containing core mesh, assembly pitch, pin pitch, z-coordinates,
+<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.html#neuthos.Geometry" title="neuthos.Geometry"><em>Geometry</em></a>) – Geometry object containing core mesh, assembly pitch, pin pitch, z-coordinates,
 and mesh height information for spatial coordinate calculations.</p></li>
-<li><p><strong>out</strong> (<a class="reference internal" href="neuthos.html#neuthos.Outputs" title="neuthos.Outputs"><em>Outputs</em></a>) – Outputs object for managing output directories and file paths.</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="neuthos.outputs.html#neuthos.outputs.Outputs" title="neuthos.outputs.Outputs"><em>Outputs</em></a>) – Outputs object for managing output directories and file paths.</p></li>
 <li><p><strong>filepath</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em>) – Path to the Serpent main input file to be updated with source strength normalization.</p></li>
 </ul>
 </dd>
@@ -697,8 +697,8 @@ volume bounds to one side of the symmetry plane.</p></li>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>cycle</strong> (<a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle" title="neuthos.cycle.Cycle"><em>Cycle</em></a>)</p></li>
-<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry" title="neuthos.geometry.Geometry"><em>Geometry</em></a>)</p></li>
-<li><p><strong>out</strong> (<a class="reference internal" href="neuthos.html#neuthos.Outputs" title="neuthos.Outputs"><em>Outputs</em></a>)</p></li>
+<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.html#neuthos.Geometry" title="neuthos.Geometry"><em>Geometry</em></a>)</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="neuthos.outputs.html#neuthos.outputs.Outputs" title="neuthos.outputs.Outputs"><em>Outputs</em></a>)</p></li>
 <li><p><strong>filepath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
 </ul>
 </dd>

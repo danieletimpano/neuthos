@@ -312,9 +312,59 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
 <div class="viewcode-block" id="Geometry">
-<a class="viewcode-back" href="../../api/neuthos.geometry.html#neuthos.geometry.Geometry">[docs]</a>
+<a class="viewcode-back" href="../../api/neuthos.geometry.html#neuthos.Geometry">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Geometry</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Geometry class for nuclear reactor core calculations.</span>
+<span class="sd">    </span>
+<span class="sd">    This class manages geometry data and computations for a nuclear reactor core,</span>
+<span class="sd">    including radial and axial coordinate generation, mesh handling, and PARCS/VERA</span>
+<span class="sd">    coordinate system transformations.</span>
+<span class="sd">    </span>
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    naxial : int</span>
+<span class="sd">        Number of axial nodes (-)</span>
+<span class="sd">    nass : int</span>
+<span class="sd">        Number of assemblies in core row/column (-)</span>
+<span class="sd">    npin : int</span>
+<span class="sd">        Number of pins in assembly row/column (-)</span>
+<span class="sd">    latsym : str</span>
+<span class="sd">        Lattice symmetry: &#39;full&#39; for full core or &#39;se&#39; for southeast quarter</span>
+<span class="sd">    ngtubes : int</span>
+<span class="sd">        Number of guide tubes in assembly (-)</span>
+<span class="sd">    nitubes : int</span>
+<span class="sd">        Number of instrument tubes in assembly (-)</span>
+<span class="sd">    ass_pitch : float</span>
+<span class="sd">        Assembly pitch (cm)</span>
+<span class="sd">    pin_pitch : float</span>
+<span class="sd">        Pin pitch (cm)</span>
+<span class="sd">    pin_radius : float</span>
+<span class="sd">        Pin radius used for average power density calculation in cycle (cm)</span>
+<span class="sd">    active_height : float</span>
+<span class="sd">        Fuel active height (cm)</span>
+<span class="sd">    coremap : list</span>
+<span class="sd">        List of assemblies in the core as [i,j] coordinates (indexes counting reflector rows)</span>
+<span class="sd">    source : list</span>
+<span class="sd">        List of assemblies to be modeled for source definition [i,j]</span>
+<span class="sd">    ngtubesqtr : int, optional</span>
+<span class="sd">        Number of guide tubes in quarter assembly (only needed if latsym is &#39;se&#39;)</span>
+<span class="sd">    nitubesqtr : int, optional</span>
+<span class="sd">        Number of instrument tubes in quarter assembly (only needed if latsym is &#39;se&#39;)</span>
+<span class="sd">    coordinates : List[Tuple[int, int, int, int, float, float]]</span>
+<span class="sd">        Radial coordinates in format (i, j, m, n, x_pin, y_pin)</span>
+<span class="sd">    coordinatesVERA_with_index : List[Tuple[int, int, int, int, float, float, int]]</span>
+<span class="sd">        VERA coordinates with index in format (i, j, m, n, x_pin, y_pin, vera_index)</span>
+<span class="sd">    z_core : List[float]</span>
+<span class="sd">        Axial core heights (cm)</span>
+<span class="sd">    meshheight : np.ndarray</span>
+<span class="sd">        Mesh heights for each axial node (cm)</span>
+<span class="sd">    nodevolume : List[float]</span>
+<span class="sd">        Volume of each node (cm³)</span>
+<span class="sd">    nfuelpins : int</span>
+<span class="sd">        Computed number of fuel pins per assembly</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># --- geometry inputs ---</span>
     <span class="n">naxial</span><span class="p">:</span> <span class="nb">int</span>            <span class="c1"># number of axial nodes (-)</span>
     <span class="n">nass</span><span class="p">:</span> <span class="nb">int</span>              <span class="c1"># number of assemblies in core row/column (-)</span>
@@ -344,7 +394,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">nfuelpins</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">npin</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">npin</span> <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ngtubes</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">nitubes</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Geometry.compute_radial_coordinates_PARCS">
-<a class="viewcode-back" href="../../api/neuthos.geometry.html#neuthos.geometry.Geometry.compute_radial_coordinates_PARCS">[docs]</a>
+<a class="viewcode-back" href="../../api/neuthos.geometry.html#neuthos.Geometry.compute_radial_coordinates_PARCS">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_radial_coordinates_PARCS</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute (i,j,m,n,x_pin,y_pin) for each pin inside each ass_pitch.</span>
@@ -370,7 +420,7 @@
 
 
 <div class="viewcode-block" id="Geometry.read_axial_mesh_from_parcs">
-<a class="viewcode-back" href="../../api/neuthos.geometry.html#neuthos.geometry.Geometry.read_axial_mesh_from_parcs">[docs]</a>
+<a class="viewcode-back" href="../../api/neuthos.geometry.html#neuthos.Geometry.read_axial_mesh_from_parcs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">read_axial_mesh_from_parcs</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">filepath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="c1"># users can pass str or Path</span>
@@ -440,8 +490,30 @@
 
 
 <div class="viewcode-block" id="Geometry.compute_2D_coordinates_VERA_qtr">
-<a class="viewcode-back" href="../../api/neuthos.geometry.html#neuthos.geometry.Geometry.compute_2D_coordinates_VERA_qtr">[docs]</a>
+<a class="viewcode-back" href="../../api/neuthos.geometry.html#neuthos.Geometry.compute_2D_coordinates_VERA_qtr">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_2D_coordinates_VERA_qtr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute 2D radial coordinates for VERA southeast quarter core with VERA indexing.</span>
+<span class="sd">        </span>
+<span class="sd">        This method generates pin coordinates (i, j, m, n, x_pin, y_pin) for all pins in the core,</span>
+<span class="sd">        then maps assemblies in the southeast quarter to VERA indices. Only pins belonging to </span>
+<span class="sd">        assemblies in the source list are included in the output with their VERA indices.</span>
+<span class="sd">        </span>
+<span class="sd">        The method:</span>
+<span class="sd">        - Computes full 2D pin coordinates in PARCS format</span>
+<span class="sd">        - Identifies southeast quarter assemblies from the full core map</span>
+<span class="sd">        - Creates a mapping between assembly positions and VERA indices</span>
+<span class="sd">        - Stores coordinates with VERA indices in coordinatesVERA_with_index</span>
+<span class="sd">        </span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        None</span>
+<span class="sd">        </span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Only assemblies listed in self.source are processed for VERA indexing.</span>
+<span class="sd">        The VERA indexing starts from 0 for the first southeast quarter assembly.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Computing core VERA coordinates ...&quot;</span><span class="p">)</span>
 
@@ -497,11 +569,66 @@
 
 
 <div class="viewcode-block" id="Geometry.compute_3D_coordinates_VERA_qtr">
-<a class="viewcode-back" href="../../api/neuthos.geometry.html#neuthos.geometry.Geometry.compute_3D_coordinates_VERA_qtr">[docs]</a>
+<a class="viewcode-back" href="../../api/neuthos.geometry.html#neuthos.Geometry.compute_3D_coordinates_VERA_qtr">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">compute_3D_coordinates_VERA_qtr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
         <span class="n">filepath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="c1"># users can pass str or Path</span>
         <span class="n">axial_header_token</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;axial_edit_bounds&quot;</span>
         <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute 3D radial and axial coordinates for VERA southeast quarter core with VERA indexing.</span>
+<span class="sd">        </span>
+<span class="sd">        This method generates pin coordinates (i, j, m, n, x_pin, y_pin, vera_index, z_node, k) </span>
+<span class="sd">        for all pins in the core, then maps assemblies in the southeast quarter to VERA indices </span>
+<span class="sd">        and axial node information. Only pins belonging to assemblies in the source list are </span>
+<span class="sd">        included in the output with their VERA indices and axial coordinates.</span>
+<span class="sd">        </span>
+<span class="sd">        The method:</span>
+<span class="sd">        - Computes full 3D pin coordinates in PARCS format</span>
+<span class="sd">        - Extracts axial mesh information from a specified file</span>
+<span class="sd">        - Identifies southeast quarter assemblies from the full core map</span>
+<span class="sd">        - Creates a mapping between assembly positions and VERA indices</span>
+<span class="sd">        - Stores coordinates with VERA indices and axial information in coordinatesVERA_with_index</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filepath : Union[str, Path]</span>
+<span class="sd">            Path to the input file containing axial mesh information (typically a VERA input file).</span>
+<span class="sd">            Users can pass either a string or pathlib.Path object.</span>
+<span class="sd">        axial_header_token : str, optional</span>
+<span class="sd">            Header token to identify the line containing axial mesh data in the input file.</span>
+<span class="sd">            Default is &quot;axial_edit_bounds&quot;.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">            Populates the internal attributes:</span>
+<span class="sd">            - coordinates: List of 2D pin coordinates (i, j, m, n, x_pin, y_pin)</span>
+<span class="sd">            - z_core: List of axial heights (cm)</span>
+<span class="sd">            - meshheight: numpy array of mesh heights for each axial node (cm)</span>
+<span class="sd">            - nodevolume: List of node volumes (cm³)</span>
+<span class="sd">            - coordinatesVERA_with_index: List of 3D pin coordinates with VERA index </span>
+<span class="sd">              and axial information (i, j, m, n, x_pin, y_pin, vera_index, znode, k)</span>
+<span class="sd">        </span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        FileNotFoundError</span>
+<span class="sd">            If the specified filepath does not exist.</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the axial_header_token is not found in the file or if axial mesh data is malformed.</span>
+<span class="sd">        </span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - Only assemblies listed in self.source are processed for VERA indexing.</span>
+<span class="sd">        - The VERA indexing starts from 0 for the first southeast quarter assembly.</span>
+<span class="sd">        - Axial node volumes are computed as ass_pitch² × mesh_height but are not currently used in VERA calculations.</span>
+<span class="sd">        - Hard-coded loop excludes first and last axial nodes (reflectors): range(self.naxial-2)</span>
+<span class="sd">        - The axial node center (znode) is computed as the midpoint between consecutive z_core values.</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; geom = Geometry(...)</span>
+<span class="sd">        &gt;&gt;&gt; geom.compute_3D_coordinates_VERA_qtr(&#39;vera_input.txt&#39;, axial_header_token=&#39;axial_edit_bounds&#39;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Computing core VERA coordinates ...&quot;</span><span class="p">)</span>
 
