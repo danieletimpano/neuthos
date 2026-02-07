@@ -11,6 +11,78 @@ import math
 
 @dataclass
 class Cycle:
+    """
+    Cycle class for managing nuclear reactor cycle information and depletion data.
+    
+    This class handles the extraction and storage of cycle-related data from Polaris/PARCS and VERA.
+    It manages both user inputs and computed/parsed outputs for cycle analysis.
+    
+    Attributes
+    ----------
+    Input Attributes:
+        nassembly_with_reflectors : int
+            Total number of assemblies including reflectors in the core.
+        polarisoption : int
+            Polaris data usage option:
+            - 0: uses literature assumptions for nubar/sigma_f/Er
+            - 1: uses Polaris output for nubar and Er
+            - 2: uses Polaris output only for Chi
+            - 3: uses Polaris output for nubar, Er and Chi
+        nsteps : int
+            Number of depletion steps in the cycle.
+        asspower : float, optional
+            Assembly power in MW. Used only if polarisoption is 0 or 1 (default: 0.0).
+        groups : int, optional
+            Number of energy groups in Polaris finegroup output (default: 252).
+            Input is ignored if polarisoption is 0 or 1.
+        interpoption : bool, optional
+            Whether to perform power interpolation (default: False).
+            Input is ignored if polarisoption is 0 or 1.
+        interpolnodes : int, optional
+            Number of nodes to use for power interpolation (default: None).
+            Option only possible for pin power source.
+    
+    Output/Computed Attributes:
+        cycleinfopow : List[float]
+            Power levels [MW] for each step in the cycle.
+        cycleinfodays : List[float]
+            Number of days for each step in the cycle.
+        cycleinfoexp : List[float]
+            Exposure [GWD/MTIHM] for each step in the cycle.
+        coolant_density : dict
+            Coolant density [g/cm³] mapped by step index to arrays of shape (naxial, nassembly_with_reflectors).
+        assyaxial : List[Tuple[str, int, List[int]]]
+            List of tuples containing (type, assy_type, axial_config) for each assembly type.
+            Type is either 'FUEL' or 'REFL'.
+        assyradial : List[Tuple[int, int, int]]
+            List of tuples containing (x_index, y_index, value) for radial assembly configuration.
+        polariswidth : List[float]
+            Energy group widths [MeV] for Polaris spectrum.
+        lattype : List[Tuple[int, str, str, float, str, str, str]]
+            List of tuples containing lattice feature data (latfeat).
+        refllat : List[int]
+            List of reflector lattice type indices.
+        fuellat : List[int]
+            List of fuel lattice type indices.
+        latburn : List[float]
+            Burnup levels [GWD/MTIHM] for lattice composition.
+        latcomp : List[Tuple]
+            List of tuples containing lattice composition data.
+        assyexp : List[Tuple[int, int, int]]
+            List of tuples containing (x_index, y_index, assigned_depletion_index) for assemblies.
+        corevol : float
+            Core volume [cm³].
+        avgpowdens : float
+            Average power density [MeV/cm³].
+        exposure : np.ndarray
+            3D array of shape (naxial, nassembly_with_reflectors, nsteps) containing assembly exposure values [GWD/MTIHM].
+        asspowerdata : List[Tuple[int, int, int, int, float]]
+            List of assembly power tuples (step, x_index, y_index, axial_plane, power_value).
+        pinpowerdata : List[Tuple[int, int, int, int, int, int, float]]
+            List of pin power tuples (step, i_index, j_index, k_index, x_index, y_index, power_value).
+        pinpowerdatainterp : List[Tuple[int, int, int, int, int, int, float]]
+            List of interpolated pin power tuples (step, i_index, j_index, k_index, x_index, y_index, power_value).
+    """
     # --- cycle inputs ---
     nassembly_with_reflectors: int                  # total number of assemblies including reflectors
     polarisoption: int                              # 0 uses literature assumptions for nubar/sigma_f/Er, 1 uses Polaris output for nubar and Er, 2 uses Polaris ouput only for Chi, 3 uses Polaris output for nubar, Er and Chi
@@ -362,7 +434,10 @@ class Cycle:
                 f.write(f'Count: {count}')
 
     def extract_pinpower(self, geom: "Geometry", out: "Outputs", folderpath: Union[str, Path]) -> None:
-        
+        """
+            Extracts 3D pinpower from PARCS .parcs_pin files.
+        """   
+
         print('The average power density is:')
         self.corevol = geom.nfuelpins * math.pi * (geom.pin_radius)**2 * (geom.active_height)        # cm3
         self.avgpowdens= self.asspower / (self.corevol)                                              # W/cm3
@@ -508,7 +583,7 @@ class Cycle:
             self, filepath: Union[str, Path]) -> None:
         """
         Extracts lattice type data from a PARCS pmax.dir file.
-        NOTE: this method will be deprecated in the future NEUTHOS release in favour of user specification of reference polaris case
+        NOTE: this method will be deprecated in the future NEUTHOS release in favour of user specification of reference polaris cases.
         """
 
 
@@ -555,7 +630,7 @@ class Cycle:
         Extracts neutron spectrum from a Polaris (SCALE) spectrum file.
         The spectrum is extracted for a given statepoint (sp) and number of energy groups (ngroups).
         Returns a list of tuples containing (energy_bin_midpoint, chi_value).
-        The extract spectrum function is used in two of the polarisoption for lattice composition extraction.
+        The extracted emission spectrum is used in two of the polarisoption for lattice composition extraction.
         """
 
         print('Extracting neutron spectrum from Polaris ...')
@@ -607,7 +682,7 @@ class Cycle:
     def extract_latcomp_scale63(
             self, geom: "Geometry", filepath: Union[str, Path], filepath_finegroup: Union[str, Path] = None) -> None:
         """
-        Extracts lattice composition from a Polaris (SCALE 6.2) lattice composition file.
+        Extracts lattice composition from a Polaris (SCALE 6.3) output file, as a function of burnup.
         """
 
         print('Extracting lattice composition ...')
@@ -734,7 +809,7 @@ class Cycle:
     def extract_latcomp_scale62(
             self, geom: "Geometry", filepath: Union[str, Path], filepath_finegroup: Union[str, Path] = None) -> None:
         """
-        Extracts lattice composition from a Polaris (SCALE 6.2) lattice composition file.
+        Extracts lattice composition from a Polaris (SCALE 6.2) output file, as a function of burnup.
         """
 
         print('Extracting lattice composition ...')

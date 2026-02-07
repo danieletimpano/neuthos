@@ -12,6 +12,16 @@ import os
 # Create an Outputs dataclass to handle output-related functionalities
 @dataclass
 class Outputs:
+    """
+    Handles output and visualization functionalities for neutronics calculations.
+    
+    This class provides methods to write various data outputs to CSV files and
+    create visualizations for source definitions. It supports both 2D and 3D
+    visualizations and manages output routing through a configurable base directory.
+    
+    :param base_dir: Base directory for routing all output files. Defaults to current directory.
+    :type base_dir: Path
+    """
     base_dir: Path = Path(".")  # optional; can be used to route outputs
 
     def write_PARCS_pin_coordinates(
@@ -166,6 +176,13 @@ class Outputs:
     def write_lattype_to_csv(
             self, cycle: "Cycle", outputpath: Union[str, Path]) -> Path:
 
+        """
+        Write lattice type data to a CSV file.
+
+        The output file is created at the given path (relative to the output base
+        directory, if configured) and contains one row per lattice type with its properties.
+        """
+
         outputpath = Path(outputpath)
 
         # Route relative paths under base_dir (so that outputs can be grouped)
@@ -185,6 +202,13 @@ class Outputs:
     def write_asspower_to_csv(            
             self, cycle: "Cycle", outputpath: Union[str, Path]) -> Path:
         
+        """
+        Write assembly power data to a CSV file.
+
+        The output file is created at the given path (relative to the output base
+        directory, if configured) and contains one row per assembly with its power data.
+        """
+        
         print('Saving core power to .csv ...')
 
         outputpath = Path(outputpath)
@@ -202,8 +226,14 @@ class Outputs:
 
     def write_pinpower_to_csv(
             self, source: "Source", outputpath: Union[str, Path]) -> Path:
+        """
+        Write pin power data to a CSV file.
+
+        The output file is created at the given path (relative to the output base
+        directory, if configured) and contains one row per pin with its power data.
+        """
         
-        print('Step 8.5: saving core power to .csv ...')
+        print('Saving pin source information to .csv ...')
 
         outputpath = Path(outputpath)
         # Route relative paths under base_dir (so that outputs can be grouped)
@@ -221,7 +251,14 @@ class Outputs:
     def write_asssourceinfo_to_csv(
             self, source: "Source", outputpath: Union[str, Path]) -> Path:
         
-        print('Saving core power to .csv ...')
+        """
+        Write assembly source information to a CSV file.
+        The output file is created at the given path (relative to the output base directory, if configured) 
+        and contains one row per assembly with its source information.
+
+        """
+        
+        print('Saving assembly source information to .csv ...')
 
         outputpath = Path(outputpath)
         # Route relative paths under base_dir (so that outputs can be grouped)
@@ -239,7 +276,13 @@ class Outputs:
     def write_pinsourceinfo_to_csv(
             self, source: "Source", outputpath: Union[str, Path]) -> Path:
         
-        print('Saving core power to .csv ...')
+        """
+        Write pin source information to a CSV file.
+        The output file is created at the given path (relative to the output base directory, if configured) 
+        and contains one row per pin with its source information.
+        """
+        
+        print('Saving pin source information to .csv ...')
 
         outputpath = Path(outputpath)
         # Route relative paths under base_dir (so that outputs can be grouped)
@@ -256,6 +299,10 @@ class Outputs:
 
     def visualize_source_ass(
             self, geom: "Geometry", source: "Source", flag: str) -> Path:
+        """
+        Visualize assembly source definition.
+        The visualization can be either 2D (at core midplane) or 3D based on the flag provided.
+        """
         
         print('Visualizing assembly source definition ...')
 
@@ -333,6 +380,12 @@ class Outputs:
 
     def visualize_source_pin(
             self, geom: "Geometry", source: "Source", flag: str) -> Path:
+        """
+        Visualize pin source definition.
+        The visualization can be either 2D (at core midplane) or 3D based on the flag provided.
+        If 3D is selected, a .csv file readable by Paraview Table to Points option is created.
+        Use Paraview to visualize the source for 3D definition.
+        """
         
         print('Visualizing assembly source definition ...')
 

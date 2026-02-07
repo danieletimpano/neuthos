@@ -11,25 +11,80 @@ import csv
 import os
 
 @dataclass
-class Source  :
+class Source:
+    """
+    Manages neutron source term generation for LWR shielding calculations.
+    
+    This class handles the computation and output of neutron source terms at both assembly
+    and pin levels, including fission spectrum calculations, power-to-source conversions,
+    and truncation options for symmetry geometries.
+    
+    Attributes
+    ----------
+    step : int
+        Step number used for source term extraction from cycle data.
+    bins : np.ndarray
+        Energy bin edges defining the fission spectrum discretization (linspace array).
+    truncoption : bool
+        Flag to control spectrum truncation at upper energy bound (False: no truncation, 
+        True: truncation enabled).
+    assytype_to_mcmaterial : dict
+        Mapping dictionary linking Serpent material names to PARCS assembly type identifiers.
+    sourceoption : str, optional
+        Type of source definition ('pointsource' or 'volumesource'). Default is 'pointsource'.
+    trunc_ass_X : List[Tuple[int, int]], optional
+        Assembly coordinates along X truncation symmetry line.
+    trunc_ass_Y : List[Tuple[int, int]], optional
+        Assembly coordinates along Y truncation symmetry line.
+    trunc_pin_X : List[Tuple[int, int]], optional
+        Pin grid indices along X truncation symmetry line.
+    trunc_pin_Y : List[Tuple[int, int]], optional
+        Pin grid indices along Y truncation symmetry line.
+    sourceassy : List[Tuple], optional
+        Computed assembly-level source data. Each tuple contains:
+        (step, i_coord, j_coord, k_coord, power, source_term, spectrum, fuel_type, energy_bounds).
+    sourcepin : List[Tuple], optional
+        Computed pin-level source data. Each tuple contains:
+        (step, i_coord, j_coord, k_coord, pin_x, pin_y, power, source_term, spectrum, fuel_type).
+    """
     # --- source inputs ---
-    step: int                                                                 # step used for source term extraction
-    bins: np.ndarray                                                          # linspace used to define energy bins
-    truncoption: bool                                                         # option to control whether to truncate the fission spectrum at the upper energy bound of the bins (0: no truncation, 1: truncation)
-    assytype_to_mcmaterial: dict                                              # dictionary to store the link between serpent material and parcs assemblies
-    sourceoption: str = 'pointsource'                                         # option to control whether to write point source or volumetric source
-    trunc_ass_X: List[Tuple[int, int]] = None                                 # assemblies along X truncation line
-    trunc_ass_Y: List[Tuple[int, int]] = None                                 # assemblies along Y truncation line
-    trunc_pin_X: List[Tuple[int, int]] = None                                 # pins along X truncation line
-    trunc_pin_Y: List[Tuple[int, int]] = None                                 # pins along Y truncation line
+    step: int
+    bins: np.ndarray
+    truncoption: bool
+    assytype_to_mcmaterial: dict
+    sourceoption: str = 'pointsource'
+    trunc_ass_X: List[Tuple[int, int]] = None
+    trunc_ass_Y: List[Tuple[int, int]] = None
+    trunc_pin_X: List[Tuple[int, int]] = None
+    trunc_pin_Y: List[Tuple[int, int]] = None
 
     # --- computed / parsed outputs ---
-    sourceassy : List[Tuple[int, int, int]] = field(default_factory=list)                       # list of tuples with assembly coordinates and type (i,j,assytype)
-    sourcepin : List[Tuple[int, int, int, int, int, int, float]] = field(default_factory=list)  # list of tuples with pin coordinates and type (step, i_index, j_index, k_index, x_index, y_index, power_value)
+    sourceassy : List[Tuple[int, int, int]] = field(default_factory=list)
+    sourcepin : List[Tuple[int, int, int, int, int, int, float]] = field(default_factory=list)
 
     def build_source_ass(
         self, cycle: "Cycle", geom: "Geometry", out: "Outputs") -> None:
-
+        """
+        Build assembly-level neutron source terms from cycle and geometry data.
+        
+        This method processes assembly-wise burnup profiles, compositions, and generates
+        neutron multiplication factors and fission spectra. It computes the conversion
+        factors from power to source terms and applies truncation options if specified.
+        
+        Parameters
+        ----------
+        cycle : Cycle
+            Cycle object containing assembly power data, exposure profiles, and lattice compositions.
+        geom : Geometry
+            Geometry object containing assembly and core mesh information.
+        out : Outputs
+            Outputs object for managing output directories and file paths.
+        
+        Returns
+        -------
+        None
+            Populates self.sourceassy with computed assembly-level source data.
+        """
         print('Preparing data for source term ...')
         
         # for step in steps:
@@ -459,6 +514,30 @@ class Source  :
 
     def write_source_ass(
              self, cycle: "Cycle", geom: "Geometry", out: "Outputs", filepath: Union[str, Path]) -> None:
+        """
+        Write assembly-level neutron source terms to external source file format.
+        
+        This method outputs the computed assembly source data to Serpent-compatible external source
+        specification files. It handles spatial binning (volume vs point sources), energy spectrum
+        output, and applies truncation geometry transformations if specified.
+        
+        Parameters
+        ----------
+        cycle : Cycle
+            Cycle object containing polaris options and energy group information.
+        geom : Geometry
+            Geometry object containing core mesh, assembly pitch, and z-coordinate information.
+        out : Outputs
+            Outputs object for managing output directories.
+        filepath : Union[str, Path]
+            Path to the Serpent main input file to be updated with source strength normalization.
+        
+        Returns
+        -------
+        None
+            Writes external source files to the neutron_source directory and updates the main
+            Serpent input file with the total source strength.
+        """
 
         # define output directory for source
         outpath = Path(os.path.join(out.base_dir, 'neutron_source'))
@@ -553,6 +632,54 @@ class Source  :
 
     def build_source_pin(
                     self, cycle: "Cycle", geom: "Geometry", out: "Outputs") -> None:
+        """
+        Build pin-level neutron source terms from cycle and geometry data.
+        
+        This method processes pin-wise burnup profiles, compositions, and generates
+        neutron multiplication factors and fission spectra at the pin level. It computes
+        conversion factors from power to source terms and applies truncation options if
+        specified. Pin-level source modeling provides higher spatial resolution compared
+        to assembly-level approximations.
+        
+        Parameters
+        ----------
+        cycle : Cycle
+            Cycle object containing pin power data, exposure profiles, lattice compositions,
+            and interpolation options.
+        geom : Geometry
+            Geometry object containing assembly and core mesh information, pin pitch,
+            and axial discretization details.
+        out : Outputs
+            Outputs object for managing output directories and file paths for plots
+            and sanity check outputs.
+        
+        Returns
+        -------
+        None
+            Populates self.sourcepin with computed pin-level source data. Each entry
+            contains: (step, i_coord, j_coord, k_coord, pin_x, pin_y, power, source_term,
+            spectrum, fuel_type).
+        
+        Notes
+        -----
+        - Uses microscopic fission cross-sections and neutron yields from literature.
+        - Generates normalized fission spectra using Watt and Maxwell distribution functions.
+        - Supports both interpolated and non-interpolated pin power data via cycle.interpoption.
+        - Handles truncation geometry with symmetry axis considerations for pin-level divisions.
+        - Polaris options 2 and 3 (with energy group-dependent data) are not supported
+          for pin-wise source modeling.
+        
+        Raises
+        ------
+        SystemExit
+            If Polaris options 2 or 3 are selected, as these are incompatible with
+            pin-wise source calculations.
+        
+        See Also
+        --------
+        build_source_ass : Assembly-level source term generation.
+        write_source_pin : Output pin-level source terms to external file format.
+        """
 
         print('Step 8.1: preparing data for source term ...')
 
@@ -1048,6 +1175,64 @@ class Source  :
 
     def write_source_pin(
             self, cycle: "Cycle", geom: "Geometry", out: "Outputs", filepath: Union[str, Path]) -> None:
+        """
+        Write pin-level neutron source terms to external source file format.
+        
+        This method outputs the computed pin-level source data to Serpent-compatible external source
+        specification files. It handles spatial binning for both point and volume sources, applies
+        energy spectrum output, and implements truncation geometry transformations if specified.
+        Pin-level sources provide higher spatial resolution than assembly-level approximations.
+        
+        Parameters
+        ----------
+        cycle : Cycle
+            Cycle object containing polaris options and energy group information.
+        geom : Geometry
+            Geometry object containing core mesh, assembly pitch, pin pitch, z-coordinates,
+            and mesh height information for spatial coordinate calculations.
+        out : Outputs
+            Outputs object for managing output directories and file paths.
+        filepath : Union[str, Path]
+            Path to the Serpent main input file to be updated with source strength normalization.
+        
+        Returns
+        -------
+        None
+            Writes external source files to the neutron_source directory and updates the main
+            Serpent input file with the total source strength.
+        
+        Notes
+        -----
+        - Creates two output files per step: external source specification (PWS.ser) and 
+          updated main input file (main_*PWS.ser).
+        - Supports both 'pointsource' and 'volumesource' options via self.sourceoption.
+        - Point sources are defined as single coordinates (sp syntax).
+        - Volume sources are defined as spatial bins (sx, sy, sz syntax) with material specification.
+        - For truncation geometry, applies spatial restrictions to sources on symmetry axes.
+        - Energy spectrum is output using self.bins for bin edges and computed spectrum values.
+        - Normalizes source weights by total source strength for probabilistic sampling.
+        - Pins on truncation symmetry axes (trunc_pinsym_X, trunc_pinsym_Y) have restricted
+          volume bounds to one side of the symmetry plane.
+        
+        Raises
+        ------
+        FileNotFoundError
+            If the input filepath for the main Serpent file does not exist.
+        IOError
+            If output directory cannot be created or files cannot be written.
+        
+        See Also
+        --------
+        build_source_pin : Pin-level source term generation.
+        write_source_ass : Assembly-level source term output.
+        
+        Examples
+        --------
+        >>> source = Source(step=0, bins=np.logspace(-2, 1, 50), truncoption=False,
+        ...                 assytype_to_mcmaterial={'1': 'fuel1'}, sourceoption='pointsource')
+        >>> source.build_source_pin(cycle, geom, out)
+        >>> source.write_source_pin(cycle, geom, out, 'path/to/main.ser')
+        """
 
 
         # define output directory for source

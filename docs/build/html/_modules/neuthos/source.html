@@ -318,27 +318,82 @@
 <div class="viewcode-block" id="Source">
 <a class="viewcode-back" href="../../api/neuthos.source.html#neuthos.Source">[docs]</a>
 <span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Source</span>  <span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Source</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Manages neutron source term generation for reactor physics calculations.</span>
+<span class="sd">    </span>
+<span class="sd">    This class handles the computation and output of neutron source terms at both assembly</span>
+<span class="sd">    and pin levels, including fission spectrum calculations, power-to-source conversions,</span>
+<span class="sd">    and truncation options for symmetry geometries.</span>
+<span class="sd">    </span>
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    step : int</span>
+<span class="sd">        Step number used for source term extraction from cycle data.</span>
+<span class="sd">    bins : np.ndarray</span>
+<span class="sd">        Energy bin edges defining the fission spectrum discretization (linspace array).</span>
+<span class="sd">    truncoption : bool</span>
+<span class="sd">        Flag to control spectrum truncation at upper energy bound (False: no truncation, </span>
+<span class="sd">        True: truncation enabled).</span>
+<span class="sd">    assytype_to_mcmaterial : dict</span>
+<span class="sd">        Mapping dictionary linking Serpent material names to PARCS assembly type identifiers.</span>
+<span class="sd">    sourceoption : str, optional</span>
+<span class="sd">        Type of source definition (&#39;pointsource&#39; or &#39;volumesource&#39;). Default is &#39;pointsource&#39;.</span>
+<span class="sd">    trunc_ass_X : List[Tuple[int, int]], optional</span>
+<span class="sd">        Assembly coordinates along X truncation symmetry line.</span>
+<span class="sd">    trunc_ass_Y : List[Tuple[int, int]], optional</span>
+<span class="sd">        Assembly coordinates along Y truncation symmetry line.</span>
+<span class="sd">    trunc_pin_X : List[Tuple[int, int]], optional</span>
+<span class="sd">        Pin grid indices along X truncation symmetry line.</span>
+<span class="sd">    trunc_pin_Y : List[Tuple[int, int]], optional</span>
+<span class="sd">        Pin grid indices along Y truncation symmetry line.</span>
+<span class="sd">    sourceassy : List[Tuple], optional</span>
+<span class="sd">        Computed assembly-level source data. Each tuple contains:</span>
+<span class="sd">        (step, i_coord, j_coord, k_coord, power, source_term, spectrum, fuel_type, energy_bounds).</span>
+<span class="sd">    sourcepin : List[Tuple], optional</span>
+<span class="sd">        Computed pin-level source data. Each tuple contains:</span>
+<span class="sd">        (step, i_coord, j_coord, k_coord, pin_x, pin_y, power, source_term, spectrum, fuel_type).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># --- source inputs ---</span>
-    <span class="n">step</span><span class="p">:</span> <span class="nb">int</span>                                                                 <span class="c1"># step used for source term extraction</span>
-    <span class="n">bins</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>                                                          <span class="c1"># linspace used to define energy bins</span>
-    <span class="n">truncoption</span><span class="p">:</span> <span class="nb">bool</span>                                                         <span class="c1"># option to control whether to truncate the fission spectrum at the upper energy bound of the bins (0: no truncation, 1: truncation)</span>
-    <span class="n">assytype_to_mcmaterial</span><span class="p">:</span> <span class="nb">dict</span>                                              <span class="c1"># dictionary to store the link between serpent material and parcs assemblies</span>
-    <span class="n">sourceoption</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;pointsource&#39;</span>                                         <span class="c1"># option to control whether to write point source or volumetric source</span>
-    <span class="n">trunc_ass_X</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>                                 <span class="c1"># assemblies along X truncation line</span>
-    <span class="n">trunc_ass_Y</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>                                 <span class="c1"># assemblies along Y truncation line</span>
-    <span class="n">trunc_pin_X</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>                                 <span class="c1"># pins along X truncation line</span>
-    <span class="n">trunc_pin_Y</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>                                 <span class="c1"># pins along Y truncation line</span>
+    <span class="n">step</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">bins</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+    <span class="n">truncoption</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">assytype_to_mcmaterial</span><span class="p">:</span> <span class="nb">dict</span>
+    <span class="n">sourceoption</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;pointsource&#39;</span>
+    <span class="n">trunc_ass_X</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">trunc_ass_Y</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">trunc_pin_X</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">trunc_pin_Y</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="c1"># --- computed / parsed outputs ---</span>
-    <span class="n">sourceassy</span> <span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>                       <span class="c1"># list of tuples with assembly coordinates and type (i,j,assytype)</span>
-    <span class="n">sourcepin</span> <span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>  <span class="c1"># list of tuples with pin coordinates and type (step, i_index, j_index, k_index, x_index, y_index, power_value)</span>
+    <span class="n">sourceassy</span> <span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">sourcepin</span> <span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Source.build_source_ass">
 <a class="viewcode-back" href="../../api/neuthos.source.html#neuthos.Source.build_source_ass">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">build_source_ass</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">cycle</span><span class="p">:</span> <span class="s2">&quot;Cycle&quot;</span><span class="p">,</span> <span class="n">geom</span><span class="p">:</span> <span class="s2">&quot;Geometry&quot;</span><span class="p">,</span> <span class="n">out</span><span class="p">:</span> <span class="s2">&quot;Outputs&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Build assembly-level neutron source terms from cycle and geometry data.</span>
+<span class="sd">        </span>
+<span class="sd">        This method processes assembly-wise burnup profiles, compositions, and generates</span>
+<span class="sd">        neutron multiplication factors and fission spectra. It computes the conversion</span>
+<span class="sd">        factors from power to source terms and applies truncation options if specified.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cycle : Cycle</span>
+<span class="sd">            Cycle object containing assembly power data, exposure profiles, and lattice compositions.</span>
+<span class="sd">        geom : Geometry</span>
+<span class="sd">            Geometry object containing assembly and core mesh information.</span>
+<span class="sd">        out : Outputs</span>
+<span class="sd">            Outputs object for managing output directories and file paths.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">            Populates self.sourceassy with computed assembly-level source data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Preparing data for source term ...&#39;</span><span class="p">)</span>
         
         <span class="c1"># for step in steps:</span>
@@ -771,6 +826,30 @@
 <a class="viewcode-back" href="../../api/neuthos.source.html#neuthos.Source.write_source_ass">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">write_source_ass</span><span class="p">(</span>
              <span class="bp">self</span><span class="p">,</span> <span class="n">cycle</span><span class="p">:</span> <span class="s2">&quot;Cycle&quot;</span><span class="p">,</span> <span class="n">geom</span><span class="p">:</span> <span class="s2">&quot;Geometry&quot;</span><span class="p">,</span> <span class="n">out</span><span class="p">:</span> <span class="s2">&quot;Outputs&quot;</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write assembly-level neutron source terms to external source file format.</span>
+<span class="sd">        </span>
+<span class="sd">        This method outputs the computed assembly source data to Serpent-compatible external source</span>
+<span class="sd">        specification files. It handles spatial binning (volume vs point sources), energy spectrum</span>
+<span class="sd">        output, and applies truncation geometry transformations if specified.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cycle : Cycle</span>
+<span class="sd">            Cycle object containing polaris options and energy group information.</span>
+<span class="sd">        geom : Geometry</span>
+<span class="sd">            Geometry object containing core mesh, assembly pitch, and z-coordinate information.</span>
+<span class="sd">        out : Outputs</span>
+<span class="sd">            Outputs object for managing output directories.</span>
+<span class="sd">        filepath : Union[str, Path]</span>
+<span class="sd">            Path to the Serpent main input file to be updated with source strength normalization.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">            Writes external source files to the neutron_source directory and updates the main</span>
+<span class="sd">            Serpent input file with the total source strength.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># define output directory for source</span>
         <span class="n">outpath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">base_dir</span><span class="p">,</span> <span class="s1">&#39;neutron_source&#39;</span><span class="p">))</span>
@@ -868,6 +947,54 @@
 <a class="viewcode-back" href="../../api/neuthos.source.html#neuthos.Source.build_source_pin">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">build_source_pin</span><span class="p">(</span>
                     <span class="bp">self</span><span class="p">,</span> <span class="n">cycle</span><span class="p">:</span> <span class="s2">&quot;Cycle&quot;</span><span class="p">,</span> <span class="n">geom</span><span class="p">:</span> <span class="s2">&quot;Geometry&quot;</span><span class="p">,</span> <span class="n">out</span><span class="p">:</span> <span class="s2">&quot;Outputs&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Build pin-level neutron source terms from cycle and geometry data.</span>
+<span class="sd">        </span>
+<span class="sd">        This method processes pin-wise burnup profiles, compositions, and generates</span>
+<span class="sd">        neutron multiplication factors and fission spectra at the pin level. It computes</span>
+<span class="sd">        conversion factors from power to source terms and applies truncation options if</span>
+<span class="sd">        specified. Pin-level source modeling provides higher spatial resolution compared</span>
+<span class="sd">        to assembly-level approximations.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cycle : Cycle</span>
+<span class="sd">            Cycle object containing pin power data, exposure profiles, lattice compositions,</span>
+<span class="sd">            and interpolation options.</span>
+<span class="sd">        geom : Geometry</span>
+<span class="sd">            Geometry object containing assembly and core mesh information, pin pitch,</span>
+<span class="sd">            and axial discretization details.</span>
+<span class="sd">        out : Outputs</span>
+<span class="sd">            Outputs object for managing output directories and file paths for plots</span>
+<span class="sd">            and sanity check outputs.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">            Populates self.sourcepin with computed pin-level source data. Each entry</span>
+<span class="sd">            contains: (step, i_coord, j_coord, k_coord, pin_x, pin_y, power, source_term,</span>
+<span class="sd">            spectrum, fuel_type).</span>
+<span class="sd">        </span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - Uses microscopic fission cross-sections and neutron yields from literature.</span>
+<span class="sd">        - Generates normalized fission spectra using Watt and Maxwell distribution functions.</span>
+<span class="sd">        - Supports both interpolated and non-interpolated pin power data via cycle.interpoption.</span>
+<span class="sd">        - Handles truncation geometry with symmetry axis considerations for pin-level divisions.</span>
+<span class="sd">        - Polaris options 2 and 3 (with energy group-dependent data) are not supported</span>
+<span class="sd">          for pin-wise source modeling.</span>
+<span class="sd">        </span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        SystemExit</span>
+<span class="sd">            If Polaris options 2 or 3 are selected, as these are incompatible with</span>
+<span class="sd">            pin-wise source calculations.</span>
+<span class="sd">        </span>
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        build_source_ass : Assembly-level source term generation.</span>
+<span class="sd">        write_source_pin : Output pin-level source terms to external file format.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Step 8.1: preparing data for source term ...&#39;</span><span class="p">)</span>
 
@@ -1366,6 +1493,64 @@
 <a class="viewcode-back" href="../../api/neuthos.source.html#neuthos.Source.write_source_pin">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">write_source_pin</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">cycle</span><span class="p">:</span> <span class="s2">&quot;Cycle&quot;</span><span class="p">,</span> <span class="n">geom</span><span class="p">:</span> <span class="s2">&quot;Geometry&quot;</span><span class="p">,</span> <span class="n">out</span><span class="p">:</span> <span class="s2">&quot;Outputs&quot;</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Write pin-level neutron source terms to external source file format.</span>
+<span class="sd">        </span>
+<span class="sd">        This method outputs the computed pin-level source data to Serpent-compatible external source</span>
+<span class="sd">        specification files. It handles spatial binning for both point and volume sources, applies</span>
+<span class="sd">        energy spectrum output, and implements truncation geometry transformations if specified.</span>
+<span class="sd">        Pin-level sources provide higher spatial resolution than assembly-level approximations.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        cycle : Cycle</span>
+<span class="sd">            Cycle object containing polaris options and energy group information.</span>
+<span class="sd">        geom : Geometry</span>
+<span class="sd">            Geometry object containing core mesh, assembly pitch, pin pitch, z-coordinates,</span>
+<span class="sd">            and mesh height information for spatial coordinate calculations.</span>
+<span class="sd">        out : Outputs</span>
+<span class="sd">            Outputs object for managing output directories and file paths.</span>
+<span class="sd">        filepath : Union[str, Path]</span>
+<span class="sd">            Path to the Serpent main input file to be updated with source strength normalization.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">            Writes external source files to the neutron_source directory and updates the main</span>
+<span class="sd">            Serpent input file with the total source strength.</span>
+<span class="sd">        </span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        - Creates two output files per step: external source specification (PWS.ser) and </span>
+<span class="sd">          updated main input file (main_*PWS.ser).</span>
+<span class="sd">        - Supports both &#39;pointsource&#39; and &#39;volumesource&#39; options via self.sourceoption.</span>
+<span class="sd">        - Point sources are defined as single coordinates (sp syntax).</span>
+<span class="sd">        - Volume sources are defined as spatial bins (sx, sy, sz syntax) with material specification.</span>
+<span class="sd">        - For truncation geometry, applies spatial restrictions to sources on symmetry axes.</span>
+<span class="sd">        - Energy spectrum is output using self.bins for bin edges and computed spectrum values.</span>
+<span class="sd">        - Normalizes source weights by total source strength for probabilistic sampling.</span>
+<span class="sd">        - Pins on truncation symmetry axes (trunc_pinsym_X, trunc_pinsym_Y) have restricted</span>
+<span class="sd">          volume bounds to one side of the symmetry plane.</span>
+<span class="sd">        </span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        FileNotFoundError</span>
+<span class="sd">            If the input filepath for the main Serpent file does not exist.</span>
+<span class="sd">        IOError</span>
+<span class="sd">            If output directory cannot be created or files cannot be written.</span>
+<span class="sd">        </span>
+<span class="sd">        See Also</span>
+<span class="sd">        --------</span>
+<span class="sd">        build_source_pin : Pin-level source term generation.</span>
+<span class="sd">        write_source_ass : Assembly-level source term output.</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
+<span class="sd">        &gt;&gt;&gt; source = Source(step=0, bins=np.logspace(-2, 1, 50), truncoption=False,</span>
+<span class="sd">        ...                 assytype_to_mcmaterial={&#39;1&#39;: &#39;fuel1&#39;}, sourceoption=&#39;pointsource&#39;)</span>
+<span class="sd">        &gt;&gt;&gt; source.build_source_pin(cycle, geom, out)</span>
+<span class="sd">        &gt;&gt;&gt; source.write_source_pin(cycle, geom, out, &#39;path/to/main.ser&#39;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
 
         <span class="c1"># define output directory for source</span>

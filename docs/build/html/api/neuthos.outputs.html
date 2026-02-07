@@ -332,11 +332,15 @@
 <span id="neuthos-outputs-module"></span><h1>neuthos.outputs module<a class="headerlink" href="#module-neuthos.outputs" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="neuthos.outputs.Outputs">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neuthos.outputs.</span></span><span class="sig-name descname"><span class="pre">Outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">PosixPath('.')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/outputs.html#Outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.outputs.Outputs" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neuthos.outputs.</span></span><span class="sig-name descname"><span class="pre">Outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('.')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/outputs.html#Outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.outputs.Outputs" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Handles output and visualization functionalities for neutronics calculations.</p>
+<p>This class provides methods to write various data outputs to CSV files and
+create visualizations for source definitions. It supports both 2D and 3D
+visualizations and manages output routing through a configurable base directory.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>base_dir</strong> (<em>Path</em>)</p>
+<dd class="field-odd"><p><strong>base_dir</strong> (<em>Path</em>) – Base directory for routing all output files. Defaults to current directory.</p>
 </dd>
 </dl>
 <dl class="py attribute">
@@ -347,10 +351,12 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="neuthos.outputs.Outputs.visualize_source_ass">
 <span class="sig-name descname"><span class="pre">visualize_source_ass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/outputs.html#Outputs.visualize_source_ass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.outputs.Outputs.visualize_source_ass" title="Link to this definition">#</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Visualize assembly source definition.
+The visualization can be either 2D (at core midplane) or 3D based on the flag provided.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.html#neuthos.Geometry" title="neuthos.Geometry"><em>Geometry</em></a>)</p></li>
+<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry" title="neuthos.geometry.Geometry"><em>Geometry</em></a>)</p></li>
 <li><p><strong>source</strong> (<a class="reference internal" href="neuthos.html#neuthos.Source" title="neuthos.Source"><em>Source</em></a>)</p></li>
 <li><p><strong>flag</strong> (<em>str</em>)</p></li>
 </ul>
@@ -364,10 +370,14 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="neuthos.outputs.Outputs.visualize_source_pin">
 <span class="sig-name descname"><span class="pre">visualize_source_pin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/outputs.html#Outputs.visualize_source_pin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.outputs.Outputs.visualize_source_pin" title="Link to this definition">#</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Visualize pin source definition.
+The visualization can be either 2D (at core midplane) or 3D based on the flag provided.
+If 3D is selected, a .csv file readable by Paraview Table to Points option is created.
+Use Paraview to visualize the source for 3D definition.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.html#neuthos.Geometry" title="neuthos.Geometry"><em>Geometry</em></a>)</p></li>
+<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry" title="neuthos.geometry.Geometry"><em>Geometry</em></a>)</p></li>
 <li><p><strong>source</strong> (<a class="reference internal" href="neuthos.html#neuthos.Source" title="neuthos.Source"><em>Source</em></a>)</p></li>
 <li><p><strong>flag</strong> (<em>str</em>)</p></li>
 </ul>
@@ -388,7 +398,7 @@ Cartesian coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.html#neuthos.Geometry" title="neuthos.Geometry"><em>Geometry</em></a>)</p></li>
+<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry" title="neuthos.geometry.Geometry"><em>Geometry</em></a>)</p></li>
 <li><p><strong>outputpath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
 </ul>
 </dd>
@@ -408,7 +418,7 @@ Cartesian coordinates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.html#neuthos.Geometry" title="neuthos.Geometry"><em>Geometry</em></a>)</p></li>
+<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry" title="neuthos.geometry.Geometry"><em>Geometry</em></a>)</p></li>
 <li><p><strong>outputpath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
 </ul>
 </dd>
@@ -421,10 +431,13 @@ Cartesian coordinates.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="neuthos.outputs.Outputs.write_asspower_to_csv">
 <span class="sig-name descname"><span class="pre">write_asspower_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cycle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputpath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/outputs.html#Outputs.write_asspower_to_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.outputs.Outputs.write_asspower_to_csv" title="Link to this definition">#</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Write assembly power data to a CSV file.</p>
+<p>The output file is created at the given path (relative to the output base
+directory, if configured) and contains one row per assembly with its power data.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>cycle</strong> (<a class="reference internal" href="neuthos.html#neuthos.Cycle" title="neuthos.Cycle"><em>Cycle</em></a>)</p></li>
+<li><p><strong>cycle</strong> (<a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle" title="neuthos.cycle.Cycle"><em>Cycle</em></a>)</p></li>
 <li><p><strong>outputpath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
 </ul>
 </dd>
@@ -437,7 +450,10 @@ Cartesian coordinates.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="neuthos.outputs.Outputs.write_asssourceinfo_to_csv">
 <span class="sig-name descname"><span class="pre">write_asssourceinfo_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputpath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/outputs.html#Outputs.write_asssourceinfo_to_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.outputs.Outputs.write_asssourceinfo_to_csv" title="Link to this definition">#</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Write assembly source information to a CSV file.
+The output file is created at the given path (relative to the output base directory, if configured)
+and contains one row per assembly with its source information.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>source</strong> (<a class="reference internal" href="neuthos.html#neuthos.Source" title="neuthos.Source"><em>Source</em></a>)</p></li>
@@ -459,7 +475,7 @@ directory, if configured) and contains one row per assembly type with its axial 
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>cycle</strong> (<a class="reference internal" href="neuthos.html#neuthos.Cycle" title="neuthos.Cycle"><em>Cycle</em></a>)</p></li>
+<li><p><strong>cycle</strong> (<a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle" title="neuthos.cycle.Cycle"><em>Cycle</em></a>)</p></li>
 <li><p><strong>outputpath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
 </ul>
 </dd>
@@ -478,7 +494,7 @@ directory, if configured) and contains one row per assembly with its radial conf
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>cycle</strong> (<a class="reference internal" href="neuthos.html#neuthos.Cycle" title="neuthos.Cycle"><em>Cycle</em></a>)</p></li>
+<li><p><strong>cycle</strong> (<a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle" title="neuthos.cycle.Cycle"><em>Cycle</em></a>)</p></li>
 <li><p><strong>outputpath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
 </ul>
 </dd>
@@ -516,7 +532,7 @@ directory, if configured) and contains one row per assembly with its radial conf
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>cycle</strong> (<a class="reference internal" href="neuthos.html#neuthos.Cycle" title="neuthos.Cycle"><em>Cycle</em></a>)</p></li>
+<li><p><strong>cycle</strong> (<a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle" title="neuthos.cycle.Cycle"><em>Cycle</em></a>)</p></li>
 <li><p><strong>outputpath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
 </ul>
 </dd>
@@ -532,7 +548,7 @@ directory, if configured) and contains one row per assembly with its radial conf
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>cycle</strong> (<a class="reference internal" href="neuthos.html#neuthos.Cycle" title="neuthos.Cycle"><em>Cycle</em></a>)</p></li>
+<li><p><strong>cycle</strong> (<a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle" title="neuthos.cycle.Cycle"><em>Cycle</em></a>)</p></li>
 <li><p><strong>outputpath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
 </ul>
 </dd>
@@ -545,10 +561,13 @@ directory, if configured) and contains one row per assembly with its radial conf
 <dl class="py method">
 <dt class="sig sig-object py" id="neuthos.outputs.Outputs.write_lattype_to_csv">
 <span class="sig-name descname"><span class="pre">write_lattype_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cycle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputpath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/outputs.html#Outputs.write_lattype_to_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.outputs.Outputs.write_lattype_to_csv" title="Link to this definition">#</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Write lattice type data to a CSV file.</p>
+<p>The output file is created at the given path (relative to the output base
+directory, if configured) and contains one row per lattice type with its properties.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>cycle</strong> (<a class="reference internal" href="neuthos.html#neuthos.Cycle" title="neuthos.Cycle"><em>Cycle</em></a>)</p></li>
+<li><p><strong>cycle</strong> (<a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle" title="neuthos.cycle.Cycle"><em>Cycle</em></a>)</p></li>
 <li><p><strong>outputpath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
 </ul>
 </dd>
@@ -561,7 +580,10 @@ directory, if configured) and contains one row per assembly with its radial conf
 <dl class="py method">
 <dt class="sig sig-object py" id="neuthos.outputs.Outputs.write_pinpower_to_csv">
 <span class="sig-name descname"><span class="pre">write_pinpower_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputpath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/outputs.html#Outputs.write_pinpower_to_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.outputs.Outputs.write_pinpower_to_csv" title="Link to this definition">#</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Write pin power data to a CSV file.</p>
+<p>The output file is created at the given path (relative to the output base
+directory, if configured) and contains one row per pin with its power data.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>source</strong> (<a class="reference internal" href="neuthos.html#neuthos.Source" title="neuthos.Source"><em>Source</em></a>)</p></li>
@@ -577,7 +599,10 @@ directory, if configured) and contains one row per assembly with its radial conf
 <dl class="py method">
 <dt class="sig sig-object py" id="neuthos.outputs.Outputs.write_pinsourceinfo_to_csv">
 <span class="sig-name descname"><span class="pre">write_pinsourceinfo_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputpath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/outputs.html#Outputs.write_pinsourceinfo_to_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.outputs.Outputs.write_pinsourceinfo_to_csv" title="Link to this definition">#</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Write pin source information to a CSV file.
+The output file is created at the given path (relative to the output base directory, if configured)
+and contains one row per pin with its source information.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>source</strong> (<a class="reference internal" href="neuthos.html#neuthos.Source" title="neuthos.Source"><em>Source</em></a>)</p></li>

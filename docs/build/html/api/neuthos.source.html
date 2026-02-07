@@ -331,8 +331,12 @@
 <span id="neuthos-source-module"></span><h1>neuthos.source module<a class="headerlink" href="#module-neuthos.source" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="neuthos.source.Source">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neuthos.source.</span></span><span class="sig-name descname"><span class="pre">Source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins:</span> <span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">truncoption:</span> <span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assytype_to_mcmaterial:</span> <span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sourceoption:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'pointsource'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trunc_ass_X:</span> <span class="pre">List[Tuple[int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int]]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trunc_ass_Y:</span> <span class="pre">List[Tuple[int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int]]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trunc_pin_X:</span> <span class="pre">List[Tuple[int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int]]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trunc_pin_Y:</span> <span class="pre">List[Tuple[int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int]]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sourceassy:</span> <span class="pre">List[Tuple[int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int]]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sourcepin:</span> <span class="pre">List[Tuple[int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">float]]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/source.html#Source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.source.Source" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neuthos.source.</span></span><span class="sig-name descname"><span class="pre">Source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">truncoption</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assytype_to_mcmaterial</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sourceoption='pointsource'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trunc_ass_X=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trunc_ass_Y=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trunc_pin_X=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trunc_pin_Y=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sourceassy=&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sourcepin=&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/source.html#Source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.source.Source" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Manages neutron source term generation for reactor physics calculations.</p>
+<p>This class handles the computation and output of neutron source terms at both assembly
+and pin levels, including fission spectrum calculations, power-to-source conversions,
+and truncation options for symmetry geometries.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -351,28 +355,159 @@
 </dd>
 </dl>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="neuthos.source.Source.assytype_to_mcmaterial">
-<span class="sig-name descname"><span class="pre">assytype_to_mcmaterial</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#neuthos.source.Source.assytype_to_mcmaterial" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="neuthos.source.Source.step">
+<span class="sig-name descname"><span class="pre">step</span></span><a class="headerlink" href="#neuthos.source.Source.step" title="Link to this definition">#</a></dt>
+<dd><p>Step number used for source term extraction from cycle data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="neuthos.source.Source.bins">
-<span class="sig-name descname"><span class="pre">bins</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#neuthos.source.Source.bins" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">bins</span></span><a class="headerlink" href="#neuthos.source.Source.bins" title="Link to this definition">#</a></dt>
+<dd><p>Energy bin edges defining the fission spectrum discretization (linspace array).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.source.Source.truncoption">
+<span class="sig-name descname"><span class="pre">truncoption</span></span><a class="headerlink" href="#neuthos.source.Source.truncoption" title="Link to this definition">#</a></dt>
+<dd><p>Flag to control spectrum truncation at upper energy bound (False: no truncation,
+True: truncation enabled).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.source.Source.assytype_to_mcmaterial">
+<span class="sig-name descname"><span class="pre">assytype_to_mcmaterial</span></span><a class="headerlink" href="#neuthos.source.Source.assytype_to_mcmaterial" title="Link to this definition">#</a></dt>
+<dd><p>Mapping dictionary linking Serpent material names to PARCS assembly type identifiers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.source.Source.sourceoption">
+<span class="sig-name descname"><span class="pre">sourceoption</span></span><a class="headerlink" href="#neuthos.source.Source.sourceoption" title="Link to this definition">#</a></dt>
+<dd><p>Type of source definition (‘pointsource’ or ‘volumesource’). Default is ‘pointsource’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str, optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.source.Source.trunc_ass_X">
+<span class="sig-name descname"><span class="pre">trunc_ass_X</span></span><a class="headerlink" href="#neuthos.source.Source.trunc_ass_X" title="Link to this definition">#</a></dt>
+<dd><p>Assembly coordinates along X truncation symmetry line.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Tuple[int, int]], optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.source.Source.trunc_ass_Y">
+<span class="sig-name descname"><span class="pre">trunc_ass_Y</span></span><a class="headerlink" href="#neuthos.source.Source.trunc_ass_Y" title="Link to this definition">#</a></dt>
+<dd><p>Assembly coordinates along Y truncation symmetry line.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Tuple[int, int]], optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.source.Source.trunc_pin_X">
+<span class="sig-name descname"><span class="pre">trunc_pin_X</span></span><a class="headerlink" href="#neuthos.source.Source.trunc_pin_X" title="Link to this definition">#</a></dt>
+<dd><p>Pin grid indices along X truncation symmetry line.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Tuple[int, int]], optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.source.Source.trunc_pin_Y">
+<span class="sig-name descname"><span class="pre">trunc_pin_Y</span></span><a class="headerlink" href="#neuthos.source.Source.trunc_pin_Y" title="Link to this definition">#</a></dt>
+<dd><p>Pin grid indices along Y truncation symmetry line.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Tuple[int, int]], optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.source.Source.sourceassy">
+<span class="sig-name descname"><span class="pre">sourceassy</span></span><a class="headerlink" href="#neuthos.source.Source.sourceassy" title="Link to this definition">#</a></dt>
+<dd><p>Computed assembly-level source data. Each tuple contains:
+(step, i_coord, j_coord, k_coord, power, source_term, spectrum, fuel_type, energy_bounds).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Tuple], optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.source.Source.sourcepin">
+<span class="sig-name descname"><span class="pre">sourcepin</span></span><a class="headerlink" href="#neuthos.source.Source.sourcepin" title="Link to this definition">#</a></dt>
+<dd><p>Computed pin-level source data. Each tuple contains:
+(step, i_coord, j_coord, k_coord, pin_x, pin_y, power, source_term, spectrum, fuel_type).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Tuple], optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">assytype_to_mcmaterial</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#id0" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">bins</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#id1" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="neuthos.source.Source.build_source_ass">
 <span class="sig-name descname"><span class="pre">build_source_ass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cycle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/source.html#Source.build_source_ass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.source.Source.build_source_ass" title="Link to this definition">#</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Build assembly-level neutron source terms from cycle and geometry data.</p>
+<p>This method processes assembly-wise burnup profiles, compositions, and generates
+neutron multiplication factors and fission spectra. It computes the conversion
+factors from power to source terms and applies truncation options if specified.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>cycle</strong> (<a class="reference internal" href="neuthos.html#neuthos.Cycle" title="neuthos.Cycle"><em>Cycle</em></a>)</p></li>
-<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.html#neuthos.Geometry" title="neuthos.Geometry"><em>Geometry</em></a>)</p></li>
-<li><p><strong>out</strong> (<a class="reference internal" href="neuthos.html#neuthos.Outputs" title="neuthos.Outputs"><em>Outputs</em></a>)</p></li>
+<li><p><strong>cycle</strong> (<a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle" title="neuthos.cycle.Cycle"><em>Cycle</em></a>) – Cycle object containing assembly power data, exposure profiles, and lattice compositions.</p></li>
+<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry" title="neuthos.geometry.Geometry"><em>Geometry</em></a>) – Geometry object containing assembly and core mesh information.</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="neuthos.html#neuthos.Outputs" title="neuthos.Outputs"><em>Outputs</em></a>) – Outputs object for managing output directories and file paths.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Populates self.sourceassy with computed assembly-level source data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -380,79 +515,135 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="neuthos.source.Source.build_source_pin">
 <span class="sig-name descname"><span class="pre">build_source_pin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cycle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/source.html#Source.build_source_pin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.source.Source.build_source_pin" title="Link to this definition">#</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Build pin-level neutron source terms from cycle and geometry data.</p>
+<p>This method processes pin-wise burnup profiles, compositions, and generates
+neutron multiplication factors and fission spectra at the pin level. It computes
+conversion factors from power to source terms and applies truncation options if
+specified. Pin-level source modeling provides higher spatial resolution compared
+to assembly-level approximations.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>cycle</strong> (<a class="reference internal" href="neuthos.html#neuthos.Cycle" title="neuthos.Cycle"><em>Cycle</em></a>)</p></li>
-<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.html#neuthos.Geometry" title="neuthos.Geometry"><em>Geometry</em></a>)</p></li>
+<li><p><strong>cycle</strong> (<a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle" title="neuthos.cycle.Cycle"><em>Cycle</em></a>) – Cycle object containing pin power data, exposure profiles, lattice compositions,
+and interpolation options.</p></li>
+<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry" title="neuthos.geometry.Geometry"><em>Geometry</em></a>) – Geometry object containing assembly and core mesh information, pin pitch,
+and axial discretization details.</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="neuthos.html#neuthos.Outputs" title="neuthos.Outputs"><em>Outputs</em></a>) – Outputs object for managing output directories and file paths for plots
+and sanity check outputs.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Populates self.sourcepin with computed pin-level source data. Each entry
+contains: (step, i_coord, j_coord, k_coord, pin_x, pin_y, power, source_term,
+spectrum, fuel_type).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Uses microscopic fission cross-sections and neutron yields from literature.</p></li>
+<li><p>Generates normalized fission spectra using Watt and Maxwell distribution functions.</p></li>
+<li><p>Supports both interpolated and non-interpolated pin power data via cycle.interpoption.</p></li>
+<li><p>Handles truncation geometry with symmetry axis considerations for pin-level divisions.</p></li>
+<li><p>Polaris options 2 and 3 (with energy group-dependent data) are not supported
+for pin-wise source modeling.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>SystemExit</strong> – If Polaris options 2 or 3 are selected, as these are incompatible with
+    pin-wise source calculations.</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>cycle</strong> (<a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle" title="neuthos.cycle.Cycle"><em>Cycle</em></a>)</p></li>
+<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry" title="neuthos.geometry.Geometry"><em>Geometry</em></a>)</p></li>
 <li><p><strong>out</strong> (<a class="reference internal" href="neuthos.html#neuthos.Outputs" title="neuthos.Outputs"><em>Outputs</em></a>)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#neuthos.source.Source.build_source_ass" title="neuthos.source.Source.build_source_ass"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build_source_ass</span></code></a></dt><dd><p>Assembly-level source term generation.</p>
+</dd>
+<dt><a class="reference internal" href="#neuthos.source.Source.write_source_pin" title="neuthos.source.Source.write_source_pin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_source_pin</span></code></a></dt><dd><p>Output pin-level source terms to external file format.</p>
+</dd>
+</dl>
+</div>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="neuthos.source.Source.sourceassy">
-<span class="sig-name descname"><span class="pre">sourceassy</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#neuthos.source.Source.sourceassy" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">sourceassy</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#id2" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="neuthos.source.Source.sourceoption">
-<span class="sig-name descname"><span class="pre">sourceoption</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'pointsource'</span></em><a class="headerlink" href="#neuthos.source.Source.sourceoption" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">sourceoption</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'pointsource'</span></em><a class="headerlink" href="#id3" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="neuthos.source.Source.sourcepin">
-<span class="sig-name descname"><span class="pre">sourcepin</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#neuthos.source.Source.sourcepin" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">sourcepin</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#id4" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="neuthos.source.Source.step">
-<span class="sig-name descname"><span class="pre">step</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#neuthos.source.Source.step" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">step</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#id5" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="neuthos.source.Source.trunc_ass_X">
-<span class="sig-name descname"><span class="pre">trunc_ass_X</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#neuthos.source.Source.trunc_ass_X" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">trunc_ass_X</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id6" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="neuthos.source.Source.trunc_ass_Y">
-<span class="sig-name descname"><span class="pre">trunc_ass_Y</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#neuthos.source.Source.trunc_ass_Y" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">trunc_ass_Y</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id7" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="neuthos.source.Source.trunc_pin_X">
-<span class="sig-name descname"><span class="pre">trunc_pin_X</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#neuthos.source.Source.trunc_pin_X" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="id8">
+<span class="sig-name descname"><span class="pre">trunc_pin_X</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id8" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="neuthos.source.Source.trunc_pin_Y">
-<span class="sig-name descname"><span class="pre">trunc_pin_Y</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#neuthos.source.Source.trunc_pin_Y" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="id9">
+<span class="sig-name descname"><span class="pre">trunc_pin_Y</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id9" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="neuthos.source.Source.truncoption">
-<span class="sig-name descname"><span class="pre">truncoption</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#neuthos.source.Source.truncoption" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="id10">
+<span class="sig-name descname"><span class="pre">truncoption</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#id10" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="neuthos.source.Source.write_source_ass">
 <span class="sig-name descname"><span class="pre">write_source_ass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cycle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/source.html#Source.write_source_ass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.source.Source.write_source_ass" title="Link to this definition">#</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Write assembly-level neutron source terms to external source file format.</p>
+<p>This method outputs the computed assembly source data to Serpent-compatible external source
+specification files. It handles spatial binning (volume vs point sources), energy spectrum
+output, and applies truncation geometry transformations if specified.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>cycle</strong> (<a class="reference internal" href="neuthos.html#neuthos.Cycle" title="neuthos.Cycle"><em>Cycle</em></a>)</p></li>
-<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.html#neuthos.Geometry" title="neuthos.Geometry"><em>Geometry</em></a>)</p></li>
-<li><p><strong>out</strong> (<a class="reference internal" href="neuthos.html#neuthos.Outputs" title="neuthos.Outputs"><em>Outputs</em></a>)</p></li>
-<li><p><strong>filepath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+<li><p><strong>cycle</strong> (<a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle" title="neuthos.cycle.Cycle"><em>Cycle</em></a>) – Cycle object containing polaris options and energy group information.</p></li>
+<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry" title="neuthos.geometry.Geometry"><em>Geometry</em></a>) – Geometry object containing core mesh, assembly pitch, and z-coordinate information.</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="neuthos.html#neuthos.Outputs" title="neuthos.Outputs"><em>Outputs</em></a>) – Outputs object for managing output directories.</p></li>
+<li><p><strong>filepath</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em>) – Path to the Serpent main input file to be updated with source strength normalization.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Writes external source files to the neutron_source directory and updates the main
+Serpent input file with the total source strength.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -460,19 +651,77 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="neuthos.source.Source.write_source_pin">
 <span class="sig-name descname"><span class="pre">write_source_pin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cycle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/source.html#Source.write_source_pin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.source.Source.write_source_pin" title="Link to this definition">#</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Write pin-level neutron source terms to external source file format.</p>
+<p>This method outputs the computed pin-level source data to Serpent-compatible external source
+specification files. It handles spatial binning for both point and volume sources, applies
+energy spectrum output, and implements truncation geometry transformations if specified.
+Pin-level sources provide higher spatial resolution than assembly-level approximations.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>cycle</strong> (<a class="reference internal" href="neuthos.html#neuthos.Cycle" title="neuthos.Cycle"><em>Cycle</em></a>)</p></li>
-<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.html#neuthos.Geometry" title="neuthos.Geometry"><em>Geometry</em></a>)</p></li>
+<li><p><strong>cycle</strong> (<a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle" title="neuthos.cycle.Cycle"><em>Cycle</em></a>) – Cycle object containing polaris options and energy group information.</p></li>
+<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry" title="neuthos.geometry.Geometry"><em>Geometry</em></a>) – Geometry object containing core mesh, assembly pitch, pin pitch, z-coordinates,
+and mesh height information for spatial coordinate calculations.</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="neuthos.html#neuthos.Outputs" title="neuthos.Outputs"><em>Outputs</em></a>) – Outputs object for managing output directories and file paths.</p></li>
+<li><p><strong>filepath</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em>) – Path to the Serpent main input file to be updated with source strength normalization.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Writes external source files to the neutron_source directory and updates the main
+Serpent input file with the total source strength.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Creates two output files per step: external source specification (PWS.ser) and
+updated main input file (main_*PWS.ser).</p></li>
+<li><p>Supports both ‘pointsource’ and ‘volumesource’ options via self.sourceoption.</p></li>
+<li><p>Point sources are defined as single coordinates (sp syntax).</p></li>
+<li><p>Volume sources are defined as spatial bins (sx, sy, sz syntax) with material specification.</p></li>
+<li><p>For truncation geometry, applies spatial restrictions to sources on symmetry axes.</p></li>
+<li><p>Energy spectrum is output using self.bins for bin edges and computed spectrum values.</p></li>
+<li><p>Normalizes source weights by total source strength for probabilistic sampling.</p></li>
+<li><p>Pins on truncation symmetry axes (trunc_pinsym_X, trunc_pinsym_Y) have restricted
+volume bounds to one side of the symmetry plane.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>FileNotFoundError</strong> – If the input filepath for the main Serpent file does not exist.</p></li>
+<li><p><strong>IOError</strong> – If output directory cannot be created or files cannot be written.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>cycle</strong> (<a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle" title="neuthos.cycle.Cycle"><em>Cycle</em></a>)</p></li>
+<li><p><strong>geom</strong> (<a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry" title="neuthos.geometry.Geometry"><em>Geometry</em></a>)</p></li>
 <li><p><strong>out</strong> (<a class="reference internal" href="neuthos.html#neuthos.Outputs" title="neuthos.Outputs"><em>Outputs</em></a>)</p></li>
 <li><p><strong>filepath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#neuthos.source.Source.build_source_pin" title="neuthos.source.Source.build_source_pin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build_source_pin</span></code></a></dt><dd><p>Pin-level source term generation.</p>
+</dd>
+<dt><a class="reference internal" href="#neuthos.source.Source.write_source_ass" title="neuthos.source.Source.write_source_ass"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_source_ass</span></code></a></dt><dd><p>Assembly-level source term output.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">source</span> <span class="o">=</span> <span class="n">Source</span><span class="p">(</span><span class="n">step</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="n">truncoption</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="n">assytype_to_mcmaterial</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;1&#39;</span><span class="p">:</span> <span class="s1">&#39;fuel1&#39;</span><span class="p">},</span> <span class="n">sourceoption</span><span class="o">=</span><span class="s1">&#39;pointsource&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">source</span><span class="o">.</span><span class="n">build_source_pin</span><span class="p">(</span><span class="n">cycle</span><span class="p">,</span> <span class="n">geom</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">source</span><span class="o">.</span><span class="n">write_source_pin</span><span class="p">(</span><span class="n">cycle</span><span class="p">,</span> <span class="n">geom</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="s1">&#39;path/to/main.ser&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>
@@ -518,19 +767,30 @@
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.source.Source"><code class="docutils literal notranslate"><span class="pre">Source</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.source.Source.assytype_to_mcmaterial"><code class="docutils literal notranslate"><span class="pre">Source.assytype_to_mcmaterial</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.source.Source.bins"><code class="docutils literal notranslate"><span class="pre">Source.bins</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.source.Source.build_source_ass"><code class="docutils literal notranslate"><span class="pre">Source.build_source_ass()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.source.Source.build_source_pin"><code class="docutils literal notranslate"><span class="pre">Source.build_source_pin()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.source.Source.sourceassy"><code class="docutils literal notranslate"><span class="pre">Source.sourceassy</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.source.Source.sourceoption"><code class="docutils literal notranslate"><span class="pre">Source.sourceoption</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.source.Source.sourcepin"><code class="docutils literal notranslate"><span class="pre">Source.sourcepin</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.source.Source.step"><code class="docutils literal notranslate"><span class="pre">Source.step</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.source.Source.bins"><code class="docutils literal notranslate"><span class="pre">Source.bins</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.source.Source.truncoption"><code class="docutils literal notranslate"><span class="pre">Source.truncoption</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.source.Source.assytype_to_mcmaterial"><code class="docutils literal notranslate"><span class="pre">Source.assytype_to_mcmaterial</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.source.Source.sourceoption"><code class="docutils literal notranslate"><span class="pre">Source.sourceoption</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.source.Source.trunc_ass_X"><code class="docutils literal notranslate"><span class="pre">Source.trunc_ass_X</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.source.Source.trunc_ass_Y"><code class="docutils literal notranslate"><span class="pre">Source.trunc_ass_Y</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.source.Source.trunc_pin_X"><code class="docutils literal notranslate"><span class="pre">Source.trunc_pin_X</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.source.Source.trunc_pin_Y"><code class="docutils literal notranslate"><span class="pre">Source.trunc_pin_Y</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.source.Source.truncoption"><code class="docutils literal notranslate"><span class="pre">Source.truncoption</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.source.Source.sourceassy"><code class="docutils literal notranslate"><span class="pre">Source.sourceassy</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.source.Source.sourcepin"><code class="docutils literal notranslate"><span class="pre">Source.sourcepin</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id0"><code class="docutils literal notranslate"><span class="pre">Source.assytype_to_mcmaterial</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1"><code class="docutils literal notranslate"><span class="pre">Source.bins</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.source.Source.build_source_ass"><code class="docutils literal notranslate"><span class="pre">Source.build_source_ass()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.source.Source.build_source_pin"><code class="docutils literal notranslate"><span class="pre">Source.build_source_pin()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2"><code class="docutils literal notranslate"><span class="pre">Source.sourceassy</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3"><code class="docutils literal notranslate"><span class="pre">Source.sourceoption</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4"><code class="docutils literal notranslate"><span class="pre">Source.sourcepin</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id5"><code class="docutils literal notranslate"><span class="pre">Source.step</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id6"><code class="docutils literal notranslate"><span class="pre">Source.trunc_ass_X</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id7"><code class="docutils literal notranslate"><span class="pre">Source.trunc_ass_Y</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id8"><code class="docutils literal notranslate"><span class="pre">Source.trunc_pin_X</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id9"><code class="docutils literal notranslate"><span class="pre">Source.trunc_pin_Y</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id10"><code class="docutils literal notranslate"><span class="pre">Source.truncoption</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.source.Source.write_source_ass"><code class="docutils literal notranslate"><span class="pre">Source.write_source_ass()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.source.Source.write_source_pin"><code class="docutils literal notranslate"><span class="pre">Source.write_source_pin()</span></code></a></li>
 </ul>

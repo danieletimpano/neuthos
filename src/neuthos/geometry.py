@@ -8,6 +8,56 @@ import pandas as pd
 
 @dataclass
 class Geometry:
+    """
+    Geometry class for nuclear reactor core calculations.
+    
+    This class manages geometry data and computations for a nuclear reactor core,
+    including radial and axial coordinate generation, mesh handling, and PARCS/VERA
+    coordinate system transformations.
+    
+    Attributes
+    ----------
+    naxial : int
+        Number of axial nodes (-)
+    nass : int
+        Number of assemblies in core row/column (-)
+    npin : int
+        Number of pins in assembly row/column (-)
+    latsym : str
+        Lattice symmetry: 'full' for full core or 'se' for southeast quarter
+    ngtubes : int
+        Number of guide tubes in assembly (-)
+    nitubes : int
+        Number of instrument tubes in assembly (-)
+    ass_pitch : float
+        Assembly pitch (cm)
+    pin_pitch : float
+        Pin pitch (cm)
+    pin_radius : float
+        Pin radius used for average power density calculation in cycle (cm)
+    active_height : float
+        Fuel active height (cm)
+    coremap : list
+        List of assemblies in the core as [i,j] coordinates (indexes counting reflector rows)
+    source : list
+        List of assemblies to be modeled for source definition [i,j]
+    ngtubesqtr : int, optional
+        Number of guide tubes in quarter assembly (only needed if latsym is 'se')
+    nitubesqtr : int, optional
+        Number of instrument tubes in quarter assembly (only needed if latsym is 'se')
+    coordinates : List[Tuple[int, int, int, int, float, float]]
+        Radial coordinates in format (i, j, m, n, x_pin, y_pin)
+    coordinatesVERA_with_index : List[Tuple[int, int, int, int, float, float, int]]
+        VERA coordinates with index in format (i, j, m, n, x_pin, y_pin, vera_index)
+    z_core : List[float]
+        Axial core heights (cm)
+    meshheight : np.ndarray
+        Mesh heights for each axial node (cm)
+    nodevolume : List[float]
+        Volume of each node (cm³)
+    nfuelpins : int
+        Computed number of fuel pins per assembly
+    """
     # --- geometry inputs ---
     naxial: int            # number of axial nodes (-)
     nass: int              # number of assemblies in core row/column (-)
@@ -127,6 +177,28 @@ class Geometry:
         self.nodevolume = [a2 * h for h in self.meshheight]
 
     def compute_2D_coordinates_VERA_qtr(self) -> None:
+        """
+        Compute 2D radial coordinates for VERA southeast quarter core with VERA indexing.
+        
+        This method generates pin coordinates (i, j, m, n, x_pin, y_pin) for all pins in the core,
+        then maps assemblies in the southeast quarter to VERA indices. Only pins belonging to 
+        assemblies in the source list are included in the output with their VERA indices.
+        
+        The method:
+        - Computes full 2D pin coordinates in PARCS format
+        - Identifies southeast quarter assemblies from the full core map
+        - Creates a mapping between assembly positions and VERA indices
+        - Stores coordinates with VERA indices in coordinatesVERA_with_index
+        
+        Raises
+        ------
+        None
+        
+        Notes
+        -----
+        Only assemblies listed in self.source are processed for VERA indexing.
+        The VERA indexing starts from 0 for the first southeast quarter assembly.
+        """
 
         print("Computing core VERA coordinates ...")
 
@@ -184,6 +256,61 @@ class Geometry:
         filepath: Union[str, Path], # users can pass str or Path
         axial_header_token: str = "axial_edit_bounds"
         ) -> None:
+        """
+        Compute 3D radial and axial coordinates for VERA southeast quarter core with VERA indexing.
+        
+        This method generates pin coordinates (i, j, m, n, x_pin, y_pin, vera_index, z_node, k) 
+        for all pins in the core, then maps assemblies in the southeast quarter to VERA indices 
+        and axial node information. Only pins belonging to assemblies in the source list are 
+        included in the output with their VERA indices and axial coordinates.
+        
+        The method:
+        - Computes full 3D pin coordinates in PARCS format
+        - Extracts axial mesh information from a specified file
+        - Identifies southeast quarter assemblies from the full core map
+        - Creates a mapping between assembly positions and VERA indices
+        - Stores coordinates with VERA indices and axial information in coordinatesVERA_with_index
+        
+        Parameters
+        ----------
+        filepath : Union[str, Path]
+            Path to the input file containing axial mesh information (typically a VERA input file).
+            Users can pass either a string or pathlib.Path object.
+        axial_header_token : str, optional
+            Header token to identify the line containing axial mesh data in the input file.
+            Default is "axial_edit_bounds".
+        
+        Returns
+        -------
+        None
+            Populates the internal attributes:
+            - coordinates: List of 2D pin coordinates (i, j, m, n, x_pin, y_pin)
+            - z_core: List of axial heights (cm)
+            - meshheight: numpy array of mesh heights for each axial node (cm)
+            - nodevolume: List of node volumes (cm³)
+            - coordinatesVERA_with_index: List of 3D pin coordinates with VERA index 
+              and axial information (i, j, m, n, x_pin, y_pin, vera_index, znode, k)
+        
+        Raises
+        ------
+        FileNotFoundError
+            If the specified filepath does not exist.
+        ValueError
+            If the axial_header_token is not found in the file or if axial mesh data is malformed.
+        
+        Notes
+        -----
+        - Only assemblies listed in self.source are processed for VERA indexing.
+        - The VERA indexing starts from 0 for the first southeast quarter assembly.
+        - Axial node volumes are computed as ass_pitch² × mesh_height but are not currently used in VERA calculations.
+        - Hard-coded loop excludes first and last axial nodes (reflectors): range(self.naxial-2)
+        - The axial node center (znode) is computed as the midpoint between consecutive z_core values.
+        
+        Examples
+        --------
+        >>> geom = Geometry(...)
+        >>> geom.compute_3D_coordinates_VERA_qtr('vera_input.txt', axial_header_token='axial_edit_bounds')
+        """
 
         print("Computing core VERA coordinates ...")
 

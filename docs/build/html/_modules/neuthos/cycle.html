@@ -315,9 +315,81 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 
 <div class="viewcode-block" id="Cycle">
-<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.cycle.Cycle">[docs]</a>
+<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.Cycle">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Cycle</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Cycle class for managing nuclear reactor cycle information and depletion data.</span>
+<span class="sd">    </span>
+<span class="sd">    This class handles the extraction and storage of cycle-related data from Polaris/PARCS and VERA.</span>
+<span class="sd">    It manages both user inputs and computed/parsed outputs for cycle analysis.</span>
+<span class="sd">    </span>
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Input Attributes:</span>
+<span class="sd">        nassembly_with_reflectors : int</span>
+<span class="sd">            Total number of assemblies including reflectors in the core.</span>
+<span class="sd">        polarisoption : int</span>
+<span class="sd">            Polaris data usage option:</span>
+<span class="sd">            - 0: uses literature assumptions for nubar/sigma_f/Er</span>
+<span class="sd">            - 1: uses Polaris output for nubar and Er</span>
+<span class="sd">            - 2: uses Polaris output only for Chi</span>
+<span class="sd">            - 3: uses Polaris output for nubar, Er and Chi</span>
+<span class="sd">        nsteps : int</span>
+<span class="sd">            Number of depletion steps in the cycle.</span>
+<span class="sd">        asspower : float, optional</span>
+<span class="sd">            Assembly power in MW. Used only if polarisoption is 0 or 1 (default: 0.0).</span>
+<span class="sd">        groups : int, optional</span>
+<span class="sd">            Number of energy groups in Polaris finegroup output (default: 252).</span>
+<span class="sd">            Input is ignored if polarisoption is 0 or 1.</span>
+<span class="sd">        interpoption : bool, optional</span>
+<span class="sd">            Whether to perform power interpolation (default: False).</span>
+<span class="sd">            Input is ignored if polarisoption is 0 or 1.</span>
+<span class="sd">        interpolnodes : int, optional</span>
+<span class="sd">            Number of nodes to use for power interpolation (default: None).</span>
+<span class="sd">            Option only possible for pin power source.</span>
+<span class="sd">    </span>
+<span class="sd">    Output/Computed Attributes:</span>
+<span class="sd">        cycleinfopow : List[float]</span>
+<span class="sd">            Power levels [MW] for each step in the cycle.</span>
+<span class="sd">        cycleinfodays : List[float]</span>
+<span class="sd">            Number of days for each step in the cycle.</span>
+<span class="sd">        cycleinfoexp : List[float]</span>
+<span class="sd">            Exposure [GWD/MTIHM] for each step in the cycle.</span>
+<span class="sd">        coolant_density : dict</span>
+<span class="sd">            Coolant density [g/cm³] mapped by step index to arrays of shape (naxial, nassembly_with_reflectors).</span>
+<span class="sd">        assyaxial : List[Tuple[str, int, List[int]]]</span>
+<span class="sd">            List of tuples containing (type, assy_type, axial_config) for each assembly type.</span>
+<span class="sd">            Type is either &#39;FUEL&#39; or &#39;REFL&#39;.</span>
+<span class="sd">        assyradial : List[Tuple[int, int, int]]</span>
+<span class="sd">            List of tuples containing (x_index, y_index, value) for radial assembly configuration.</span>
+<span class="sd">        polariswidth : List[float]</span>
+<span class="sd">            Energy group widths [MeV] for Polaris spectrum.</span>
+<span class="sd">        lattype : List[Tuple[int, str, str, float, str, str, str]]</span>
+<span class="sd">            List of tuples containing lattice feature data (latfeat).</span>
+<span class="sd">        refllat : List[int]</span>
+<span class="sd">            List of reflector lattice type indices.</span>
+<span class="sd">        fuellat : List[int]</span>
+<span class="sd">            List of fuel lattice type indices.</span>
+<span class="sd">        latburn : List[float]</span>
+<span class="sd">            Burnup levels [GWD/MTIHM] for lattice composition.</span>
+<span class="sd">        latcomp : List[Tuple]</span>
+<span class="sd">            List of tuples containing lattice composition data.</span>
+<span class="sd">        assyexp : List[Tuple[int, int, int]]</span>
+<span class="sd">            List of tuples containing (x_index, y_index, assigned_depletion_index) for assemblies.</span>
+<span class="sd">        corevol : float</span>
+<span class="sd">            Core volume [cm³].</span>
+<span class="sd">        avgpowdens : float</span>
+<span class="sd">            Average power density [MeV/cm³].</span>
+<span class="sd">        exposure : np.ndarray</span>
+<span class="sd">            3D array of shape (naxial, nassembly_with_reflectors, nsteps) containing assembly exposure values [GWD/MTIHM].</span>
+<span class="sd">        asspowerdata : List[Tuple[int, int, int, int, float]]</span>
+<span class="sd">            List of assembly power tuples (step, x_index, y_index, axial_plane, power_value).</span>
+<span class="sd">        pinpowerdata : List[Tuple[int, int, int, int, int, int, float]]</span>
+<span class="sd">            List of pin power tuples (step, i_index, j_index, k_index, x_index, y_index, power_value).</span>
+<span class="sd">        pinpowerdatainterp : List[Tuple[int, int, int, int, int, int, float]]</span>
+<span class="sd">            List of interpolated pin power tuples (step, i_index, j_index, k_index, x_index, y_index, power_value).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># --- cycle inputs ---</span>
     <span class="n">nassembly_with_reflectors</span><span class="p">:</span> <span class="nb">int</span>                  <span class="c1"># total number of assemblies including reflectors</span>
     <span class="n">polarisoption</span><span class="p">:</span> <span class="nb">int</span>                              <span class="c1"># 0 uses literature assumptions for nubar/sigma_f/Er, 1 uses Polaris output for nubar and Er, 2 uses Polaris ouput only for Chi, 3 uses Polaris output for nubar, Er and Chi</span>
@@ -351,7 +423,7 @@
     <span class="c1"># PARCS related methods</span>
 
 <div class="viewcode-block" id="Cycle.extract_cycle_info">
-<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.cycle.Cycle.extract_cycle_info">[docs]</a>
+<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.Cycle.extract_cycle_info">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">extract_cycle_info</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> 
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -389,7 +461,7 @@
 
 
 <div class="viewcode-block" id="Cycle.extract_coolant_info">
-<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.cycle.Cycle.extract_coolant_info">[docs]</a>
+<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.Cycle.extract_coolant_info">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">extract_coolant_info</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>  <span class="n">geom</span><span class="p">:</span> <span class="s2">&quot;Geometry&quot;</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -447,7 +519,7 @@
 
 
 <div class="viewcode-block" id="Cycle.extract_assyaxial">
-<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.cycle.Cycle.extract_assyaxial">[docs]</a>
+<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.Cycle.extract_assyaxial">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">extract_assyaxial</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -486,7 +558,7 @@
 
 
 <div class="viewcode-block" id="Cycle.extract_assyradial">
-<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.cycle.Cycle.extract_assyradial">[docs]</a>
+<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.Cycle.extract_assyradial">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">extract_assyradial</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">:</span> <span class="s2">&quot;Geometry&quot;</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -519,7 +591,7 @@
 
 
 <div class="viewcode-block" id="Cycle.extract_exposure">
-<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.cycle.Cycle.extract_exposure">[docs]</a>
+<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.Cycle.extract_exposure">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">extract_exposure</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">:</span> <span class="s2">&quot;Geometry&quot;</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -591,7 +663,7 @@
 
 
 <div class="viewcode-block" id="Cycle.extract_asspower">
-<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.cycle.Cycle.extract_asspower">[docs]</a>
+<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.Cycle.extract_asspower">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">extract_asspower</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">:</span> <span class="s2">&quot;Geometry&quot;</span><span class="p">,</span> <span class="n">out</span><span class="p">:</span> <span class="s2">&quot;Outputs&quot;</span><span class="p">,</span> <span class="n">folderpath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 
@@ -687,9 +759,12 @@
 
 
 <div class="viewcode-block" id="Cycle.extract_pinpower">
-<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.cycle.Cycle.extract_pinpower">[docs]</a>
+<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.Cycle.extract_pinpower">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">extract_pinpower</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">:</span> <span class="s2">&quot;Geometry&quot;</span><span class="p">,</span> <span class="n">out</span><span class="p">:</span> <span class="s2">&quot;Outputs&quot;</span><span class="p">,</span> <span class="n">folderpath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Extracts 3D pinpower from PARCS .parcs_pin files.</span>
+<span class="sd">        &quot;&quot;&quot;</span>   
+
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The average power density is:&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">corevol</span> <span class="o">=</span> <span class="n">geom</span><span class="o">.</span><span class="n">nfuelpins</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">geom</span><span class="o">.</span><span class="n">pin_radius</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">geom</span><span class="o">.</span><span class="n">active_height</span><span class="p">)</span>        <span class="c1"># cm3</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">avgpowdens</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">asspower</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corevol</span><span class="p">)</span>                                              <span class="c1"># W/cm3</span>
@@ -833,12 +908,12 @@
 
 
 <div class="viewcode-block" id="Cycle.extract_lattype">
-<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.cycle.Cycle.extract_lattype">[docs]</a>
+<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.Cycle.extract_lattype">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">extract_lattype</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Extracts lattice type data from a PARCS pmax.dir file.</span>
-<span class="sd">        NOTE: this method will be deprecated in the future NEUTHOS release in favour of user specification of reference polaris case</span>
+<span class="sd">        NOTE: this method will be deprecated in the future NEUTHOS release in favour of user specification of reference polaris cases.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
 
@@ -881,14 +956,14 @@
     <span class="c1"># Polaris related methods</span>
 
 <div class="viewcode-block" id="Cycle.extract_spectrum">
-<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.cycle.Cycle.extract_spectrum">[docs]</a>
+<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.Cycle.extract_spectrum">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">extract_spectrum</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">sp</span><span class="p">,</span> <span class="n">file_content</span><span class="p">,</span> <span class="n">ngroups</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Extracts neutron spectrum from a Polaris (SCALE) spectrum file.</span>
 <span class="sd">        The spectrum is extracted for a given statepoint (sp) and number of energy groups (ngroups).</span>
 <span class="sd">        Returns a list of tuples containing (energy_bin_midpoint, chi_value).</span>
-<span class="sd">        The extract spectrum function is used in two of the polarisoption for lattice composition extraction.</span>
+<span class="sd">        The extracted emission spectrum is used in two of the polarisoption for lattice composition extraction.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Extracting neutron spectrum from Polaris ...&#39;</span><span class="p">)</span>
@@ -939,11 +1014,11 @@
 
      
 <div class="viewcode-block" id="Cycle.extract_latcomp_scale63">
-<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.cycle.Cycle.extract_latcomp_scale63">[docs]</a>
+<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.Cycle.extract_latcomp_scale63">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">extract_latcomp_scale63</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">:</span> <span class="s2">&quot;Geometry&quot;</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="n">filepath_finegroup</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Extracts lattice composition from a Polaris (SCALE 6.2) lattice composition file.</span>
+<span class="sd">        Extracts lattice composition from a Polaris (SCALE 6.3) output file, as a function of burnup.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Extracting lattice composition ...&#39;</span><span class="p">)</span>
@@ -1069,11 +1144,11 @@
 
 
 <div class="viewcode-block" id="Cycle.extract_latcomp_scale62">
-<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.cycle.Cycle.extract_latcomp_scale62">[docs]</a>
+<a class="viewcode-back" href="../../api/neuthos.cycle.html#neuthos.Cycle.extract_latcomp_scale62">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">extract_latcomp_scale62</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">geom</span><span class="p">:</span> <span class="s2">&quot;Geometry&quot;</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="n">filepath_finegroup</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Extracts lattice composition from a Polaris (SCALE 6.2) lattice composition file.</span>
+<span class="sd">        Extracts lattice composition from a Polaris (SCALE 6.2) output file, as a function of burnup.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Extracting lattice composition ...&#39;</span><span class="p">)</span>
