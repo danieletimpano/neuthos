@@ -1,5 +1,5 @@
 
-![](docs/build/html/_static/logo.png)
+![](docs/build/html/_static/neuthos_logo.png)
 
 ## Overview
 
