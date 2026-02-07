@@ -1,20 +1,5 @@
 # src/neuthos/geometry.py
 
-"""
-/*--------------------------------------------------------------------------*\
-|                                                                            |
-|   _   _ _____ _   _ _____ _   _ _____ _____                                |
-|  | \ | | ____| | | |_   _| | | |  _  | ____|                               |
-|  |  \| |  _| | | | | | | | |_| | | | | |___                                |
-|  | |\  | |___| | | | | | |  _  | |_| |___| |                               |
-|  |_| \_|_____|_____| |_| |_| |_|_____|_____|                               |
-|                                                                            |
-|  NEUTHOS                                                                   |
-|  Neutron Source Definition and Damage Assessment                           |
-|                                                                            |
-\*--------------------------------------------------------------------------*/
-"""
-
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Tuple, Union

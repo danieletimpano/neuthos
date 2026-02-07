@@ -53,5 +53,6 @@ https://doi.org/10.1016/j.pnucene.2025.106234.
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-
+   
+   api/theory
    api/modules

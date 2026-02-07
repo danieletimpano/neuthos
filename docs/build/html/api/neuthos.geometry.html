@@ -31,6 +31,7 @@
 <link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=9a4b2e3c" />
   
   <!-- So that users can add custom icons -->
   <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -45,7 +46,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="neuthos.outputs module" href="neuthos.outputs.html" />
-    <link rel="prev" title="neuthos.exceptions module" href="neuthos.exceptions.html" />
+    <link rel="prev" title="neuthos.cycle module" href="neuthos.cycle.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -130,9 +131,16 @@
 <nav>
   <ul class="bd-navbar-elements navbar-nav">
     
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="theory.html">
+    THEORY
+  </a>
+</li>
+
+
 <li class="nav-item current active">
   <a class="nav-link nav-internal" href="modules.html">
-    neuthos
+    NEUTHOS
   </a>
 </li>
 
@@ -209,9 +217,16 @@
 <nav>
   <ul class="bd-navbar-elements navbar-nav">
     
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="theory.html">
+    THEORY
+  </a>
+</li>
+
+
 <li class="nav-item current active">
   <a class="nav-link nav-internal" href="modules.html">
-    neuthos
+    NEUTHOS
   </a>
 </li>
 
@@ -243,11 +258,8 @@
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="neuthos.html">neuthos package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="neuthos.api.html">neuthos.api module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neuthos.config.html">neuthos.config module</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="neuthos.html">NEUTHOS</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="neuthos.cycle.html">neuthos.cycle module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neuthos.exceptions.html">neuthos.exceptions module</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">neuthos.geometry module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="neuthos.outputs.html">neuthos.outputs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="neuthos.source.html">neuthos.source module</a></li>
@@ -294,10 +306,10 @@
       </a>
     </li>
     
-    <li class="breadcrumb-item"><a href="modules.html" class="nav-link">neuthos</a></li>
+    <li class="breadcrumb-item"><a href="modules.html" class="nav-link">NEUTHOS</a></li>
     
     
-    <li class="breadcrumb-item"><a href="neuthos.html" class="nav-link">neuthos package</a></li>
+    <li class="breadcrumb-item"><a href="neuthos.html" class="nav-link">NEUTHOS</a></li>
     
     <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">neuthos.geometry module</span></li>
   </ul>
@@ -318,6 +330,197 @@
                   
   <section id="module-neuthos.geometry">
 <span id="neuthos-geometry-module"></span><h1>neuthos.geometry module<a class="headerlink" href="#module-neuthos.geometry" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="neuthos.geometry.Geometry">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neuthos.geometry.</span></span><span class="sig-name descname"><span class="pre">Geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">naxial:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nass:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">npin:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latsym:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ngtubes:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nitubes:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ass_pitch:</span> <span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pin_pitch:</span> <span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pin_radius:</span> <span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active_height:</span> <span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coremap:</span> <span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source:</span> <span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ngtubesqtr:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nitubesqtr:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coordinates:</span> <span class="pre">List[Tuple[int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">float]]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coordinatesVERA_with_index:</span> <span class="pre">List[Tuple[int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int]]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_core:</span> <span class="pre">List[float]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meshheight:</span> <span class="pre">numpy.ndarray</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodevolume:</span> <span class="pre">List[float]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/geometry.html#Geometry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.geometry.Geometry" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>naxial</strong> (<em>int</em>)</p></li>
+<li><p><strong>nass</strong> (<em>int</em>)</p></li>
+<li><p><strong>npin</strong> (<em>int</em>)</p></li>
+<li><p><strong>latsym</strong> (<em>str</em>)</p></li>
+<li><p><strong>ngtubes</strong> (<em>int</em>)</p></li>
+<li><p><strong>nitubes</strong> (<em>int</em>)</p></li>
+<li><p><strong>ass_pitch</strong> (<em>float</em>)</p></li>
+<li><p><strong>pin_pitch</strong> (<em>float</em>)</p></li>
+<li><p><strong>pin_radius</strong> (<em>float</em>)</p></li>
+<li><p><strong>active_height</strong> (<em>float</em>)</p></li>
+<li><p><strong>coremap</strong> (<em>list</em>)</p></li>
+<li><p><strong>source</strong> (<em>list</em>)</p></li>
+<li><p><strong>ngtubesqtr</strong> (<em>int</em>)</p></li>
+<li><p><strong>nitubesqtr</strong> (<em>int</em>)</p></li>
+<li><p><strong>coordinates</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>coordinatesVERA_with_index</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>float</em><em>, </em><em>float</em><em>, </em><em>int</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>z_core</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>)</p></li>
+<li><p><strong>meshheight</strong> (<em>numpy.ndarray</em>)</p></li>
+<li><p><strong>nodevolume</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.geometry.Geometry.active_height">
+<span class="sig-name descname"><span class="pre">active_height</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#neuthos.geometry.Geometry.active_height" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.geometry.Geometry.ass_pitch">
+<span class="sig-name descname"><span class="pre">ass_pitch</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#neuthos.geometry.Geometry.ass_pitch" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.geometry.Geometry.compute_2D_coordinates_VERA_qtr">
+<span class="sig-name descname"><span class="pre">compute_2D_coordinates_VERA_qtr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/geometry.html#Geometry.compute_2D_coordinates_VERA_qtr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.geometry.Geometry.compute_2D_coordinates_VERA_qtr" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.geometry.Geometry.compute_3D_coordinates_VERA_qtr">
+<span class="sig-name descname"><span class="pre">compute_3D_coordinates_VERA_qtr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axial_header_token</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'axial_edit_bounds'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/geometry.html#Geometry.compute_3D_coordinates_VERA_qtr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.geometry.Geometry.compute_3D_coordinates_VERA_qtr" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filepath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+<li><p><strong>axial_header_token</strong> (<em>str</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.geometry.Geometry.compute_radial_coordinates_PARCS">
+<span class="sig-name descname"><span class="pre">compute_radial_coordinates_PARCS</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/geometry.html#Geometry.compute_radial_coordinates_PARCS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.geometry.Geometry.compute_radial_coordinates_PARCS" title="Link to this definition">#</a></dt>
+<dd><p>Compute (i,j,m,n,x_pin,y_pin) for each pin inside each ass_pitch.
+Indices are 1-based to match typical PARCS-style indexing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.geometry.Geometry.coordinates">
+<span class="sig-name descname"><span class="pre">coordinates</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#neuthos.geometry.Geometry.coordinates" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.geometry.Geometry.coordinatesVERA_with_index">
+<span class="sig-name descname"><span class="pre">coordinatesVERA_with_index</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#neuthos.geometry.Geometry.coordinatesVERA_with_index" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.geometry.Geometry.coremap">
+<span class="sig-name descname"><span class="pre">coremap</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#neuthos.geometry.Geometry.coremap" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.geometry.Geometry.latsym">
+<span class="sig-name descname"><span class="pre">latsym</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#neuthos.geometry.Geometry.latsym" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.geometry.Geometry.meshheight">
+<span class="sig-name descname"><span class="pre">meshheight</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#neuthos.geometry.Geometry.meshheight" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.geometry.Geometry.nass">
+<span class="sig-name descname"><span class="pre">nass</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#neuthos.geometry.Geometry.nass" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.geometry.Geometry.naxial">
+<span class="sig-name descname"><span class="pre">naxial</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#neuthos.geometry.Geometry.naxial" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.geometry.Geometry.nfuelpins">
+<span class="sig-name descname"><span class="pre">nfuelpins</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#neuthos.geometry.Geometry.nfuelpins" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.geometry.Geometry.ngtubes">
+<span class="sig-name descname"><span class="pre">ngtubes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#neuthos.geometry.Geometry.ngtubes" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.geometry.Geometry.ngtubesqtr">
+<span class="sig-name descname"><span class="pre">ngtubesqtr</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#neuthos.geometry.Geometry.ngtubesqtr" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.geometry.Geometry.nitubes">
+<span class="sig-name descname"><span class="pre">nitubes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#neuthos.geometry.Geometry.nitubes" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.geometry.Geometry.nitubesqtr">
+<span class="sig-name descname"><span class="pre">nitubesqtr</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#neuthos.geometry.Geometry.nitubesqtr" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.geometry.Geometry.nodevolume">
+<span class="sig-name descname"><span class="pre">nodevolume</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#neuthos.geometry.Geometry.nodevolume" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.geometry.Geometry.npin">
+<span class="sig-name descname"><span class="pre">npin</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#neuthos.geometry.Geometry.npin" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.geometry.Geometry.pin_pitch">
+<span class="sig-name descname"><span class="pre">pin_pitch</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#neuthos.geometry.Geometry.pin_pitch" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.geometry.Geometry.pin_radius">
+<span class="sig-name descname"><span class="pre">pin_radius</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#neuthos.geometry.Geometry.pin_radius" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.geometry.Geometry.read_axial_mesh_from_parcs">
+<span class="sig-name descname"><span class="pre">read_axial_mesh_from_parcs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header_token</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'</span> <span class="pre">Number</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">(cm)</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">(cm)</span>&#160; <span class="pre">Integ.</span>&#160;&#160; <span class="pre">Assm.'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/geometry.html#Geometry.read_axial_mesh_from_parcs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.geometry.Geometry.read_axial_mesh_from_parcs" title="Link to this definition">#</a></dt>
+<dd><p>Parse axial mesh information from a PARCS text file section that begins with <cite>Number (cm) (cm) Integ. Assm.</cite>.</p>
+<ul class="simple">
+<li><p>Reads exactly <cite>naxial_nodes</cite> rows after the header.</p></li>
+<li><p>Flips heights to bottom-to-top order (assuming the code provides this info as top-to-bottom).</p></li>
+<li><p>Computes node volumes: ass_pitch^2 * height.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filepath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+<li><p><strong>header_token</strong> (<em>str</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.geometry.Geometry.source">
+<span class="sig-name descname"><span class="pre">source</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#neuthos.geometry.Geometry.source" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.geometry.Geometry.z_core">
+<span class="sig-name descname"><span class="pre">z_core</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#neuthos.geometry.Geometry.z_core" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 
 
@@ -331,12 +534,12 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="neuthos.exceptions.html"
+       href="neuthos.cycle.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">neuthos.exceptions module</p>
+        <p class="prev-next-title">neuthos.cycle module</p>
       </div>
     </a>
     <a class="right-next"
@@ -358,6 +561,44 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.geometry.Geometry"><code class="docutils literal notranslate"><span class="pre">Geometry</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.geometry.Geometry.active_height"><code class="docutils literal notranslate"><span class="pre">Geometry.active_height</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.geometry.Geometry.ass_pitch"><code class="docutils literal notranslate"><span class="pre">Geometry.ass_pitch</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.geometry.Geometry.compute_2D_coordinates_VERA_qtr"><code class="docutils literal notranslate"><span class="pre">Geometry.compute_2D_coordinates_VERA_qtr()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.geometry.Geometry.compute_3D_coordinates_VERA_qtr"><code class="docutils literal notranslate"><span class="pre">Geometry.compute_3D_coordinates_VERA_qtr()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.geometry.Geometry.compute_radial_coordinates_PARCS"><code class="docutils literal notranslate"><span class="pre">Geometry.compute_radial_coordinates_PARCS()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.geometry.Geometry.coordinates"><code class="docutils literal notranslate"><span class="pre">Geometry.coordinates</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.geometry.Geometry.coordinatesVERA_with_index"><code class="docutils literal notranslate"><span class="pre">Geometry.coordinatesVERA_with_index</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.geometry.Geometry.coremap"><code class="docutils literal notranslate"><span class="pre">Geometry.coremap</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.geometry.Geometry.latsym"><code class="docutils literal notranslate"><span class="pre">Geometry.latsym</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.geometry.Geometry.meshheight"><code class="docutils literal notranslate"><span class="pre">Geometry.meshheight</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.geometry.Geometry.nass"><code class="docutils literal notranslate"><span class="pre">Geometry.nass</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.geometry.Geometry.naxial"><code class="docutils literal notranslate"><span class="pre">Geometry.naxial</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.geometry.Geometry.nfuelpins"><code class="docutils literal notranslate"><span class="pre">Geometry.nfuelpins</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.geometry.Geometry.ngtubes"><code class="docutils literal notranslate"><span class="pre">Geometry.ngtubes</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.geometry.Geometry.ngtubesqtr"><code class="docutils literal notranslate"><span class="pre">Geometry.ngtubesqtr</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.geometry.Geometry.nitubes"><code class="docutils literal notranslate"><span class="pre">Geometry.nitubes</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.geometry.Geometry.nitubesqtr"><code class="docutils literal notranslate"><span class="pre">Geometry.nitubesqtr</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.geometry.Geometry.nodevolume"><code class="docutils literal notranslate"><span class="pre">Geometry.nodevolume</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.geometry.Geometry.npin"><code class="docutils literal notranslate"><span class="pre">Geometry.npin</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.geometry.Geometry.pin_pitch"><code class="docutils literal notranslate"><span class="pre">Geometry.pin_pitch</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.geometry.Geometry.pin_radius"><code class="docutils literal notranslate"><span class="pre">Geometry.pin_radius</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.geometry.Geometry.read_axial_mesh_from_parcs"><code class="docutils literal notranslate"><span class="pre">Geometry.read_axial_mesh_from_parcs()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.geometry.Geometry.source"><code class="docutils literal notranslate"><span class="pre">Geometry.source</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.geometry.Geometry.z_core"><code class="docutils literal notranslate"><span class="pre">Geometry.z_core</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
   <div role="note" aria-label="source link">

@@ -1,0 +1,571 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>THEORY &#8212; NEUTHOS 0.1 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=9a4b2e3c" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=2709fde1"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/theory';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="NEUTHOS" href="modules.html" />
+    <link rel="prev" title="Overview" href="../index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/neuthos_logo.png" class="logo__image only-light" alt="NEUTHOS 0.1 documentation - Home"/>
+    <img src="../_static/neuthos_logo.png" class="logo__image only-dark pst-js-only" alt="NEUTHOS 0.1 documentation - Home"/>
+  
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    THEORY
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="modules.html">
+    NEUTHOS
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    THEORY
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="modules.html">
+    NEUTHOS
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"></div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">THEORY</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="theory">
+<h1>THEORY<a class="headerlink" href="#theory" title="Link to this heading">#</a></h1>
+<figure class="align-center" id="id1">
+<img alt="../_images/methodology_block_diagram.png" src="../_images/methodology_block_diagram.png" />
+<figcaption>
+<p><span class="caption-text">Block diagram of the source preparation procedure.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>The source preparation procedure follows available literature on this topic.
+The pin power information for each assembly <span class="math notranslate nohighlight">\(m\)</span>, pin <span class="math notranslate nohighlight">\(p\)</span> and axial
+layer <span class="math notranslate nohighlight">\(z\)</span> in the core is converted into a fission source rate by means of
+the average number of neutrons generated per fission <span class="math notranslate nohighlight">\(\nu\)</span>, the energy
+recoverable from fission <span class="math notranslate nohighlight">\(E\)</span> (MeV) and the conversion factor <span class="math notranslate nohighlight">\(C\)</span>
+from MeV to J (<span class="math notranslate nohighlight">\(1.6019 \times 10^{-13}\)</span> J/MeV), as shown in
+Equation <a class="reference internal" href="#equation-eq-source-strength">(1)</a>.</p>
+<div class="math notranslate nohighlight" id="equation-eq-source-strength">
+<span class="eqno">(1)<a class="headerlink" href="#equation-eq-source-strength" title="Link to this equation">#</a></span>\[S_{m,p}^z = P_{m,p}^z \frac{\nu_m^z}{E_m^z C}\]</div>
+<section id="retrieval-of-lattice-level-quantities">
+<h2>Retrieval of lattice-level quantities<a class="headerlink" href="#retrieval-of-lattice-level-quantities" title="Link to this heading">#</a></h2>
+<p>Retrieving the average number of neutrons per fission and the energy released
+per fission requires access to quantities calculated at the lattice level and
+not directly available from PARCS. For this purpose, the EPFL linking tool reads
+the axial specifications in the nodal solver input to identify the corresponding
+lattice and retrieve the associated quantities from its reference history in the
+Polaris output files.</p>
+<p>For any specified burnup point in the simulated cycle state points, the routine
+retrieves:</p>
+<ul class="simple">
+<li><p>the average number of neutrons per fission <span class="math notranslate nohighlight">\(\nu\)</span>,</p></li>
+<li><p>the energy released per fission <span class="math notranslate nohighlight">\(E\)</span>,</p></li>
+<li><p>the nuclide concentrations <span class="math notranslate nohighlight">\(\rho^i\)</span> (atom/barn-cm)</p></li>
+</ul>
+<p>for the four fissile nuclides <span class="math notranslate nohighlight">\(^{235}\mathrm{U}\)</span>, <span class="math notranslate nohighlight">\(^{238}\mathrm{U}\)</span>,
+<span class="math notranslate nohighlight">\(^{239}\mathrm{Pu}\)</span> and <span class="math notranslate nohighlight">\(^{241}\mathrm{Pu}\)</span>.</p>
+</section>
+<section id="definition-of-nu-m-z-and-e-m-z">
+<h2>Definition of <span class="math notranslate nohighlight">\(\nu_m^z\)</span> and <span class="math notranslate nohighlight">\(E_m^z\)</span><a class="headerlink" href="#definition-of-nu-m-z-and-e-m-z" title="Link to this heading">#</a></h2>
+<p>The specification of <span class="math notranslate nohighlight">\(\nu_m^z\)</span> and <span class="math notranslate nohighlight">\(E_m^z\)</span> in
+Equation <a class="reference internal" href="#equation-eq-source-strength">(1)</a> can be carried out using two alternative
+approaches:</p>
+<ul class="simple">
+<li><p><strong>Polaris Option</strong>: direct use of lattice-specific values retrieved from
+Polaris;</p></li>
+<li><p><strong>Literature Option</strong>: computation of weighted averages based on the
+macroscopic fission cross-sections of the four fissile nuclides.</p></li>
+</ul>
+<p>For the <em>Literature Option</em>, the average number of neutrons per fission and the
+energy released per fission are computed as:</p>
+<div class="math notranslate nohighlight" id="equation-eq-nu-weighted">
+<span class="eqno">(2)<a class="headerlink" href="#equation-eq-nu-weighted" title="Link to this equation">#</a></span>\[\nu_m^z =
+\frac{\sum_{i=1}^4 \nu^i \rho_m^{(i,z)} \sigma_f^i}
+     {\sum_{i=1}^4 \rho_m^{(i,z)} \sigma_f^i}\]</div>
+<div class="math notranslate nohighlight" id="equation-eq-energy-weighted">
+<span class="eqno">(3)<a class="headerlink" href="#equation-eq-energy-weighted" title="Link to this equation">#</a></span>\[E_m^z =
+\frac{\sum_{i=1}^4 E^i \rho_m^{(i,z)} \sigma_f^i}
+     {\sum_{i=1}^4 \rho_m^{(i,z)} \sigma_f^i}\]</div>
+<p>The effective one-group microscopic fission cross-sections <span class="math notranslate nohighlight">\(\sigma_f^i\)</span>
+are taken from CASMO-4, where they are employed for LWR average spectrum
+calculations. Different LWR spectrum weighting factors are used in the more
+recent CASMO-5 release.</p>
+<p>The average number of neutrons per fission <span class="math notranslate nohighlight">\(\nu^i\)</span> and the energy released
+per fission <span class="math notranslate nohighlight">\(E^i\)</span> are taken from available literature. Nuclide densities
+are retrieved from Polaris output as described above.</p>
+<p>Both methods for the definition of the source strength are implemented in the
+linking tool developed in this study. Their impact on fluence calculations is
+briefly discussed in the section dedicated to the investigation of modeling
+biases.</p>
+</section>
+<section id="source-spatial-definition">
+<h2>Source spatial definition<a class="headerlink" href="#source-spatial-definition" title="Link to this heading">#</a></h2>
+<p>Source strengths define neutron sampling probabilities in the subsequent Monte
+Carlo shielding calculations. The source preparation routine supports both:</p>
+<ul class="simple">
+<li><p><strong>pin-wise source (PWS)</strong> definition,</p></li>
+<li><p><strong>assembly-wise source (AWS)</strong> definition.</p></li>
+</ul>
+<p>In the assembly-wise case, neutrons are sampled only within fuel volumes, while
+the same neutron-sampling probability is assigned to each fuel axial layer,
+independently of the fuel rod location inside the assembly.</p>
+<figure class="align-center" id="id2">
+<img alt="../_images/source_definition.png" src="../_images/source_definition.png" />
+<figcaption>
+<p><span class="caption-text">Example of assembly-wise (A) and pin-wise (B) source definition.</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="source-spectrum-definition">
+<h2>Source spectrum definition<a class="headerlink" href="#source-spectrum-definition" title="Link to this heading">#</a></h2>
+<p>The source definition also requires the specification of the neutron energy
+spectrum, accounting for the specific fuel composition. The spectrum is defined
+up to 20 MeV through an assembly-wise weighted average, according to
+Equation <a class="reference internal" href="#equation-eq-spectrum">(4)</a>.</p>
+<div class="math notranslate nohighlight" id="equation-eq-spectrum">
+<span class="eqno">(4)<a class="headerlink" href="#equation-eq-spectrum" title="Link to this equation">#</a></span>\[\chi_m(E) = \sum_{i=1}^4 w_m^i \chi^i(E)\]</div>
+<p>The weights <span class="math notranslate nohighlight">\(w_m^i\)</span> reflect the fractions of neutrons generated by fission
+from the different nuclides:</p>
+<div class="math notranslate nohighlight" id="equation-eq-weights">
+<span class="eqno">(5)<a class="headerlink" href="#equation-eq-weights" title="Link to this equation">#</a></span>\[w_m^i =
+\frac{\nu^i \rho_m^i \sigma_f^i}
+     {\sum_{i=1}^4 \nu^i \rho_m^i \sigma_f^i}\]</div>
+<p>The spectra <span class="math notranslate nohighlight">\(\chi^i(E)\)</span> are defined assuming:</p>
+<ul class="simple">
+<li><p>a Watt spectrum for <span class="math notranslate nohighlight">\(^{235}\mathrm{U}\)</span>, <span class="math notranslate nohighlight">\(^{238}\mathrm{U}\)</span> and
+<span class="math notranslate nohighlight">\(^{239}\mathrm{Pu}\)</span>,</p></li>
+<li><p>a Maxwellian spectrum for <span class="math notranslate nohighlight">\(^{241}\mathrm{Pu}\)</span>.</p></li>
+</ul>
+<p>The constants used in the definition of these spectra are consistent with those
+reported in the Monte Carlo code MCNP documentation.</p>
+<p>As an alternative, a <strong>Polaris Option</strong> for spectrum definition is available. In
+this case, a reference spectrum for each lattice is extracted from a dedicated
+Polaris calculation using the SCALE 252-group library. The resulting spectra are
+then passed to Serpent using the same energy group structure.</p>
+</section>
+<section id="time-averaging-over-the-reactor-cycle">
+<h2>Time-averaging over the reactor cycle<a class="headerlink" href="#time-averaging-over-the-reactor-cycle" title="Link to this heading">#</a></h2>
+<p>Once the source specifications have been determined for each of the <span class="math notranslate nohighlight">\(N\)</span>
+state points simulated in a reactor cycle by PARCS, source weights and spectra
+are averaged based on the core-average burnup in order to obtain a single source
+file per reactor cycle.</p>
+<p>This averaging procedure is performed according to:</p>
+<div class="math notranslate nohighlight" id="equation-eq-time-average">
+<span class="eqno">(6)<a class="headerlink" href="#equation-eq-time-average" title="Link to this equation">#</a></span>\[\bar{q} =
+\frac{\sum_{i=1}^N q_i \Delta bu_i}
+     {\sum_{i=1}^N \Delta bu_i}\]</div>
+<p>where <span class="math notranslate nohighlight">\(q_i\)</span> is any quantity of interest at state point <span class="math notranslate nohighlight">\(i\)</span>,
+<span class="math notranslate nohighlight">\(\Delta bu_i\)</span> is the average core burnup increase between state points
+<span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(i+1\)</span> (GW/t), and <span class="math notranslate nohighlight">\(\bar{q}\)</span> is the burnup-weighted
+average value.</p>
+<p>The impact of time-averaging within a reactor cycle is briefly discussed in the
+section dedicated to the investigation of modeling biases.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Overview</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="modules.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">NEUTHOS</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#retrieval-of-lattice-level-quantities">Retrieval of lattice-level quantities</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definition-of-nu-m-z-and-e-m-z">Definition of <span class="math notranslate nohighlight">\(\nu_m^z\)</span> and <span class="math notranslate nohighlight">\(E_m^z\)</span></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#source-spatial-definition">Source spatial definition</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#source-spectrum-definition">Source spectrum definition</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#time-averaging-over-the-reactor-cycle">Time-averaging over the reactor cycle</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/theory.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, Daniele Timpano.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

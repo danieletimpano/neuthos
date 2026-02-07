@@ -50,7 +50,7 @@ autodoc_mock_imports = [
     "numpy",
     "pandas",
     "matplotlib",
-    "neuthos"
+    "scipy",
 ]
 
 # -- Options for HTML output -------------------------------------------------

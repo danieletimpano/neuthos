@@ -1,4 +1,4 @@
-neuthos
+NEUTHOS
 =======
 
 .. toctree::

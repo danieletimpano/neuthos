@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>neuthos package &#8212; NEUTHOS 0.1 documentation</title>
+    <title>NEUTHOS &#8212; NEUTHOS 0.1 documentation</title>
   
   
   
@@ -31,6 +31,7 @@
 <link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=9a4b2e3c" />
   
   <!-- So that users can add custom icons -->
   <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -44,8 +45,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'api/neuthos';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="neuthos.api module" href="neuthos.api.html" />
-    <link rel="prev" title="neuthos" href="modules.html" />
+    <link rel="next" title="neuthos.cycle module" href="neuthos.cycle.html" />
+    <link rel="prev" title="NEUTHOS" href="modules.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -130,9 +131,16 @@
 <nav>
   <ul class="bd-navbar-elements navbar-nav">
     
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="theory.html">
+    THEORY
+  </a>
+</li>
+
+
 <li class="nav-item current active">
   <a class="nav-link nav-internal" href="modules.html">
-    neuthos
+    NEUTHOS
   </a>
 </li>
 
@@ -209,9 +217,16 @@
 <nav>
   <ul class="bd-navbar-elements navbar-nav">
     
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="theory.html">
+    THEORY
+  </a>
+</li>
+
+
 <li class="nav-item current active">
   <a class="nav-link nav-internal" href="modules.html">
-    neuthos
+    NEUTHOS
   </a>
 </li>
 
@@ -243,11 +258,8 @@
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">neuthos package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="neuthos.api.html">neuthos.api module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neuthos.config.html">neuthos.config module</a></li>
+<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">NEUTHOS</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="neuthos.cycle.html">neuthos.cycle module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="neuthos.exceptions.html">neuthos.exceptions module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="neuthos.geometry.html">neuthos.geometry module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="neuthos.outputs.html">neuthos.outputs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="neuthos.source.html">neuthos.source module</a></li>
@@ -294,9 +306,9 @@
       </a>
     </li>
     
-    <li class="breadcrumb-item"><a href="modules.html" class="nav-link">neuthos</a></li>
+    <li class="breadcrumb-item"><a href="modules.html" class="nav-link">NEUTHOS</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">neuthos package</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">NEUTHOS</span></li>
   </ul>
 </nav>
 </div>
@@ -313,24 +325,1090 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="neuthos-package">
-<h1>neuthos package<a class="headerlink" href="#neuthos-package" title="Link to this heading">#</a></h1>
+  <section id="neuthos">
+<h1>NEUTHOS<a class="headerlink" href="#neuthos" title="Link to this heading">#</a></h1>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="neuthos.api.html">neuthos.api module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="neuthos.config.html">neuthos.config module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="neuthos.cycle.html">neuthos.cycle module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="neuthos.exceptions.html">neuthos.exceptions module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="neuthos.geometry.html">neuthos.geometry module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="neuthos.outputs.html">neuthos.outputs module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="neuthos.source.html">neuthos.source module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="neuthos.cycle.html">neuthos.cycle module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle"><code class="docutils literal notranslate"><span class="pre">Cycle</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.asspower"><code class="docutils literal notranslate"><span class="pre">Cycle.asspower</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.asspowerdata"><code class="docutils literal notranslate"><span class="pre">Cycle.asspowerdata</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.assyaxial"><code class="docutils literal notranslate"><span class="pre">Cycle.assyaxial</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.assyexp"><code class="docutils literal notranslate"><span class="pre">Cycle.assyexp</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.assyradial"><code class="docutils literal notranslate"><span class="pre">Cycle.assyradial</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.avgpowdens"><code class="docutils literal notranslate"><span class="pre">Cycle.avgpowdens</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.coolant_density"><code class="docutils literal notranslate"><span class="pre">Cycle.coolant_density</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.corevol"><code class="docutils literal notranslate"><span class="pre">Cycle.corevol</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.cycleinfodays"><code class="docutils literal notranslate"><span class="pre">Cycle.cycleinfodays</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.cycleinfoexp"><code class="docutils literal notranslate"><span class="pre">Cycle.cycleinfoexp</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.cycleinfopow"><code class="docutils literal notranslate"><span class="pre">Cycle.cycleinfopow</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.exposure"><code class="docutils literal notranslate"><span class="pre">Cycle.exposure</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.extract_asspower"><code class="docutils literal notranslate"><span class="pre">Cycle.extract_asspower()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.extract_assyaxial"><code class="docutils literal notranslate"><span class="pre">Cycle.extract_assyaxial()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.extract_assyradial"><code class="docutils literal notranslate"><span class="pre">Cycle.extract_assyradial()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.extract_coolant_info"><code class="docutils literal notranslate"><span class="pre">Cycle.extract_coolant_info()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.extract_cycle_info"><code class="docutils literal notranslate"><span class="pre">Cycle.extract_cycle_info()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.extract_exposure"><code class="docutils literal notranslate"><span class="pre">Cycle.extract_exposure()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.extract_latcomp_scale62"><code class="docutils literal notranslate"><span class="pre">Cycle.extract_latcomp_scale62()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.extract_latcomp_scale63"><code class="docutils literal notranslate"><span class="pre">Cycle.extract_latcomp_scale63()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.extract_lattype"><code class="docutils literal notranslate"><span class="pre">Cycle.extract_lattype()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.extract_pinpower"><code class="docutils literal notranslate"><span class="pre">Cycle.extract_pinpower()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.extract_spectrum"><code class="docutils literal notranslate"><span class="pre">Cycle.extract_spectrum()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.fuellat"><code class="docutils literal notranslate"><span class="pre">Cycle.fuellat</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.groups"><code class="docutils literal notranslate"><span class="pre">Cycle.groups</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.interpolnodes"><code class="docutils literal notranslate"><span class="pre">Cycle.interpolnodes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.interpoption"><code class="docutils literal notranslate"><span class="pre">Cycle.interpoption</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.latburn"><code class="docutils literal notranslate"><span class="pre">Cycle.latburn</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.latcomp"><code class="docutils literal notranslate"><span class="pre">Cycle.latcomp</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.lattype"><code class="docutils literal notranslate"><span class="pre">Cycle.lattype</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.nassembly_with_reflectors"><code class="docutils literal notranslate"><span class="pre">Cycle.nassembly_with_reflectors</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.nsteps"><code class="docutils literal notranslate"><span class="pre">Cycle.nsteps</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.pinpowerdata"><code class="docutils literal notranslate"><span class="pre">Cycle.pinpowerdata</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.pinpowerdatainterp"><code class="docutils literal notranslate"><span class="pre">Cycle.pinpowerdatainterp</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.polarisoption"><code class="docutils literal notranslate"><span class="pre">Cycle.polarisoption</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.polariswidth"><code class="docutils literal notranslate"><span class="pre">Cycle.polariswidth</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.cycle.html#neuthos.cycle.Cycle.refllat"><code class="docutils literal notranslate"><span class="pre">Cycle.refllat</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="neuthos.geometry.html">neuthos.geometry module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry"><code class="docutils literal notranslate"><span class="pre">Geometry</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry.active_height"><code class="docutils literal notranslate"><span class="pre">Geometry.active_height</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry.ass_pitch"><code class="docutils literal notranslate"><span class="pre">Geometry.ass_pitch</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry.compute_2D_coordinates_VERA_qtr"><code class="docutils literal notranslate"><span class="pre">Geometry.compute_2D_coordinates_VERA_qtr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry.compute_3D_coordinates_VERA_qtr"><code class="docutils literal notranslate"><span class="pre">Geometry.compute_3D_coordinates_VERA_qtr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry.compute_radial_coordinates_PARCS"><code class="docutils literal notranslate"><span class="pre">Geometry.compute_radial_coordinates_PARCS()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry.coordinates"><code class="docutils literal notranslate"><span class="pre">Geometry.coordinates</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry.coordinatesVERA_with_index"><code class="docutils literal notranslate"><span class="pre">Geometry.coordinatesVERA_with_index</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry.coremap"><code class="docutils literal notranslate"><span class="pre">Geometry.coremap</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry.latsym"><code class="docutils literal notranslate"><span class="pre">Geometry.latsym</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry.meshheight"><code class="docutils literal notranslate"><span class="pre">Geometry.meshheight</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry.nass"><code class="docutils literal notranslate"><span class="pre">Geometry.nass</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry.naxial"><code class="docutils literal notranslate"><span class="pre">Geometry.naxial</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry.nfuelpins"><code class="docutils literal notranslate"><span class="pre">Geometry.nfuelpins</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry.ngtubes"><code class="docutils literal notranslate"><span class="pre">Geometry.ngtubes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry.ngtubesqtr"><code class="docutils literal notranslate"><span class="pre">Geometry.ngtubesqtr</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry.nitubes"><code class="docutils literal notranslate"><span class="pre">Geometry.nitubes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry.nitubesqtr"><code class="docutils literal notranslate"><span class="pre">Geometry.nitubesqtr</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry.nodevolume"><code class="docutils literal notranslate"><span class="pre">Geometry.nodevolume</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry.npin"><code class="docutils literal notranslate"><span class="pre">Geometry.npin</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry.pin_pitch"><code class="docutils literal notranslate"><span class="pre">Geometry.pin_pitch</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry.pin_radius"><code class="docutils literal notranslate"><span class="pre">Geometry.pin_radius</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry.read_axial_mesh_from_parcs"><code class="docutils literal notranslate"><span class="pre">Geometry.read_axial_mesh_from_parcs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry.source"><code class="docutils literal notranslate"><span class="pre">Geometry.source</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.geometry.html#neuthos.geometry.Geometry.z_core"><code class="docutils literal notranslate"><span class="pre">Geometry.z_core</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="neuthos.outputs.html">neuthos.outputs module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="neuthos.outputs.html#neuthos.outputs.Outputs"><code class="docutils literal notranslate"><span class="pre">Outputs</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.outputs.html#neuthos.outputs.Outputs.base_dir"><code class="docutils literal notranslate"><span class="pre">Outputs.base_dir</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.outputs.html#neuthos.outputs.Outputs.visualize_source_ass"><code class="docutils literal notranslate"><span class="pre">Outputs.visualize_source_ass()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.outputs.html#neuthos.outputs.Outputs.visualize_source_pin"><code class="docutils literal notranslate"><span class="pre">Outputs.visualize_source_pin()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.outputs.html#neuthos.outputs.Outputs.write_PARCS_pin_coordinates"><code class="docutils literal notranslate"><span class="pre">Outputs.write_PARCS_pin_coordinates()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.outputs.html#neuthos.outputs.Outputs.write_VERA_pin_coordinates"><code class="docutils literal notranslate"><span class="pre">Outputs.write_VERA_pin_coordinates()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.outputs.html#neuthos.outputs.Outputs.write_asspower_to_csv"><code class="docutils literal notranslate"><span class="pre">Outputs.write_asspower_to_csv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.outputs.html#neuthos.outputs.Outputs.write_asssourceinfo_to_csv"><code class="docutils literal notranslate"><span class="pre">Outputs.write_asssourceinfo_to_csv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.outputs.html#neuthos.outputs.Outputs.write_assyaxial"><code class="docutils literal notranslate"><span class="pre">Outputs.write_assyaxial()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.outputs.html#neuthos.outputs.Outputs.write_assyradial"><code class="docutils literal notranslate"><span class="pre">Outputs.write_assyradial()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.outputs.html#neuthos.outputs.Outputs.write_custom_csv"><code class="docutils literal notranslate"><span class="pre">Outputs.write_custom_csv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.outputs.html#neuthos.outputs.Outputs.write_exposureindex_to_csv"><code class="docutils literal notranslate"><span class="pre">Outputs.write_exposureindex_to_csv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.outputs.html#neuthos.outputs.Outputs.write_latcomp_to_csv"><code class="docutils literal notranslate"><span class="pre">Outputs.write_latcomp_to_csv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.outputs.html#neuthos.outputs.Outputs.write_lattype_to_csv"><code class="docutils literal notranslate"><span class="pre">Outputs.write_lattype_to_csv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.outputs.html#neuthos.outputs.Outputs.write_pinpower_to_csv"><code class="docutils literal notranslate"><span class="pre">Outputs.write_pinpower_to_csv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.outputs.html#neuthos.outputs.Outputs.write_pinsourceinfo_to_csv"><code class="docutils literal notranslate"><span class="pre">Outputs.write_pinsourceinfo_to_csv()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="neuthos.source.html">neuthos.source module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="neuthos.source.html#neuthos.source.Source"><code class="docutils literal notranslate"><span class="pre">Source</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.source.html#neuthos.source.Source.assytype_to_mcmaterial"><code class="docutils literal notranslate"><span class="pre">Source.assytype_to_mcmaterial</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.source.html#neuthos.source.Source.bins"><code class="docutils literal notranslate"><span class="pre">Source.bins</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.source.html#neuthos.source.Source.build_source_ass"><code class="docutils literal notranslate"><span class="pre">Source.build_source_ass()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.source.html#neuthos.source.Source.build_source_pin"><code class="docutils literal notranslate"><span class="pre">Source.build_source_pin()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.source.html#neuthos.source.Source.sourceassy"><code class="docutils literal notranslate"><span class="pre">Source.sourceassy</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.source.html#neuthos.source.Source.sourceoption"><code class="docutils literal notranslate"><span class="pre">Source.sourceoption</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.source.html#neuthos.source.Source.sourcepin"><code class="docutils literal notranslate"><span class="pre">Source.sourcepin</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.source.html#neuthos.source.Source.step"><code class="docutils literal notranslate"><span class="pre">Source.step</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.source.html#neuthos.source.Source.trunc_ass_X"><code class="docutils literal notranslate"><span class="pre">Source.trunc_ass_X</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.source.html#neuthos.source.Source.trunc_ass_Y"><code class="docutils literal notranslate"><span class="pre">Source.trunc_ass_Y</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.source.html#neuthos.source.Source.trunc_pin_X"><code class="docutils literal notranslate"><span class="pre">Source.trunc_pin_X</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.source.html#neuthos.source.Source.trunc_pin_Y"><code class="docutils literal notranslate"><span class="pre">Source.trunc_pin_Y</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.source.html#neuthos.source.Source.truncoption"><code class="docutils literal notranslate"><span class="pre">Source.truncoption</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.source.html#neuthos.source.Source.write_source_ass"><code class="docutils literal notranslate"><span class="pre">Source.write_source_ass()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="neuthos.source.html#neuthos.source.Source.write_source_pin"><code class="docutils literal notranslate"><span class="pre">Source.write_source_pin()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </div>
 </section>
 <section id="module-neuthos">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-neuthos" title="Link to this heading">#</a></h2>
+<p>/<em>————————————————————————–*|                                                                            |
+|   _   _ _____ _   _ _____ _   _ _____ _____                                |
+|  | | | ____| | | |_   _| | | |  _  | ____|                               |
+|  |  | |  _| | | | | | | | |_| | | | | |___                                |
+|  | | | |___| | | | | | |  _  | |_| |___| |                               |
+|  |_| _|_____|_____| |_| |_| |_|_____|_____|                               |
+|                                                                            |
+|  NEUTHOS                                                                   |
+|  Neutron Source Definition and Damage Assessment                           |
+|                                                                            |
+*————————————————————————–</em>/</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="neuthos.Cycle">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neuthos.</span></span><span class="sig-name descname"><span class="pre">Cycle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nassembly_with_reflectors:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polarisoption:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nsteps:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asspower:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interpoption:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interpolnodes:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cycleinfopow:</span> <span class="pre">List[float]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cycleinfodays:</span> <span class="pre">List[float]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cycleinfoexp:</span> <span class="pre">List[float]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coolant_density:</span> <span class="pre">dict</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assyaxial:</span> <span class="pre">List[Tuple[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">List[int]]]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assyradial:</span> <span class="pre">List[Tuple[int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int]]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polariswidth:</span> <span class="pre">List[float]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lattype:</span> <span class="pre">List[Tuple[int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str]]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refllat:</span> <span class="pre">List[int]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuellat:</span> <span class="pre">List[int]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latburn:</span> <span class="pre">List[float]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latcomp:</span> <span class="pre">List[Tuple]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assyexp:</span> <span class="pre">List[Tuple[int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int]]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">asspowerdata:</span> <span class="pre">List[Tuple[int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">float]]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pinpowerdata:</span> <span class="pre">List[Tuple[int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">float]]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pinpowerdatainterp:</span> <span class="pre">List[Tuple[int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">float]]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/cycle.html#Cycle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Cycle" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nassembly_with_reflectors</strong> (<em>int</em>)</p></li>
+<li><p><strong>polarisoption</strong> (<em>int</em>)</p></li>
+<li><p><strong>nsteps</strong> (<em>int</em>)</p></li>
+<li><p><strong>asspower</strong> (<em>float</em>)</p></li>
+<li><p><strong>groups</strong> (<em>int</em>)</p></li>
+<li><p><strong>interpoption</strong> (<em>bool</em>)</p></li>
+<li><p><strong>interpolnodes</strong> (<em>int</em>)</p></li>
+<li><p><strong>cycleinfopow</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>)</p></li>
+<li><p><strong>cycleinfodays</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>)</p></li>
+<li><p><strong>cycleinfoexp</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>)</p></li>
+<li><p><strong>coolant_density</strong> (<em>dict</em>)</p></li>
+<li><p><strong>assyaxial</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>int</em><em>, </em><em>List</em><em>[</em><em>int</em><em>]</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>assyradial</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>polariswidth</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>)</p></li>
+<li><p><strong>lattype</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>str</em><em>, </em><em>str</em><em>, </em><em>float</em><em>, </em><em>str</em><em>, </em><em>str</em><em>, </em><em>str</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>refllat</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>)</p></li>
+<li><p><strong>fuellat</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>)</p></li>
+<li><p><strong>latburn</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>)</p></li>
+<li><p><strong>latcomp</strong> (<em>List</em><em>[</em><em>Tuple</em><em>]</em>)</p></li>
+<li><p><strong>assyexp</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>asspowerdata</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>float</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>pinpowerdata</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>float</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>pinpowerdatainterp</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>float</em><em>]</em><em>]</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Cycle.asspower">
+<span class="sig-name descname"><span class="pre">asspower</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></em><a class="headerlink" href="#neuthos.Cycle.asspower" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Cycle.asspowerdata">
+<span class="sig-name descname"><span class="pre">asspowerdata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#neuthos.Cycle.asspowerdata" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Cycle.assyaxial">
+<span class="sig-name descname"><span class="pre">assyaxial</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#neuthos.Cycle.assyaxial" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Cycle.assyexp">
+<span class="sig-name descname"><span class="pre">assyexp</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#neuthos.Cycle.assyexp" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Cycle.assyradial">
+<span class="sig-name descname"><span class="pre">assyradial</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#neuthos.Cycle.assyradial" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Cycle.avgpowdens">
+<span class="sig-name descname"><span class="pre">avgpowdens</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#neuthos.Cycle.avgpowdens" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Cycle.coolant_density">
+<span class="sig-name descname"><span class="pre">coolant_density</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#neuthos.Cycle.coolant_density" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Cycle.corevol">
+<span class="sig-name descname"><span class="pre">corevol</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#neuthos.Cycle.corevol" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Cycle.cycleinfodays">
+<span class="sig-name descname"><span class="pre">cycleinfodays</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#neuthos.Cycle.cycleinfodays" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Cycle.cycleinfoexp">
+<span class="sig-name descname"><span class="pre">cycleinfoexp</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#neuthos.Cycle.cycleinfoexp" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Cycle.cycleinfopow">
+<span class="sig-name descname"><span class="pre">cycleinfopow</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#neuthos.Cycle.cycleinfopow" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Cycle.exposure">
+<span class="sig-name descname"><span class="pre">exposure</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#neuthos.Cycle.exposure" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Cycle.extract_asspower">
+<span class="sig-name descname"><span class="pre">extract_asspower</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folderpath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/cycle.html#Cycle.extract_asspower"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Cycle.extract_asspower" title="Link to this definition">#</a></dt>
+<dd><p>Extracts assembly power data from a PARCS depletion summary file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>geom</strong> (<a class="reference internal" href="#neuthos.Geometry" title="neuthos.Geometry"><em>Geometry</em></a>)</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="#neuthos.Outputs" title="neuthos.Outputs"><em>Outputs</em></a>)</p></li>
+<li><p><strong>folderpath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Cycle.extract_assyaxial">
+<span class="sig-name descname"><span class="pre">extract_assyaxial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/cycle.html#Cycle.extract_assyaxial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Cycle.extract_assyaxial" title="Link to this definition">#</a></dt>
+<dd><p>Extracts assembly axial configuration from a PARCS assembly geometry file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filepath</strong> (<em>str</em><em> | </em><em>Path</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Cycle.extract_assyradial">
+<span class="sig-name descname"><span class="pre">extract_assyradial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/cycle.html#Cycle.extract_assyradial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Cycle.extract_assyradial" title="Link to this definition">#</a></dt>
+<dd><p>Extracts assembly radial configuration from a PARCS regular coremap input file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>geom</strong> (<a class="reference internal" href="#neuthos.Geometry" title="neuthos.Geometry"><em>Geometry</em></a>)</p></li>
+<li><p><strong>filepath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Cycle.extract_coolant_info">
+<span class="sig-name descname"><span class="pre">extract_coolant_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/cycle.html#Cycle.extract_coolant_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Cycle.extract_coolant_info" title="Link to this definition">#</a></dt>
+<dd><p>Extracts coolant information that varies during the cycle from a PARCS cycle summary file.
+The information extracted includes coolant density for each assembly in the core, including reflector assemblies.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>geom</strong> (<a class="reference internal" href="#neuthos.Geometry" title="neuthos.Geometry"><em>Geometry</em></a>)</p></li>
+<li><p><strong>filepath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Cycle.extract_cycle_info">
+<span class="sig-name descname"><span class="pre">extract_cycle_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/cycle.html#Cycle.extract_cycle_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Cycle.extract_cycle_info" title="Link to this definition">#</a></dt>
+<dd><p>Extract general cycle information from a PARCS depletion summary file.
+The information extracted includes power levels, days, and exposure for each step in the cycle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filepath</strong> (<em>str</em><em> | </em><em>Path</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Cycle.extract_exposure">
+<span class="sig-name descname"><span class="pre">extract_exposure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/cycle.html#Cycle.extract_exposure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Cycle.extract_exposure" title="Link to this definition">#</a></dt>
+<dd><p>Extracts assembly exposure data from a PARCS depletion summary file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>geom</strong> (<a class="reference internal" href="#neuthos.Geometry" title="neuthos.Geometry"><em>Geometry</em></a>)</p></li>
+<li><p><strong>filepath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Cycle.extract_latcomp_scale62">
+<span class="sig-name descname"><span class="pre">extract_latcomp_scale62</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath_finegroup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/cycle.html#Cycle.extract_latcomp_scale62"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Cycle.extract_latcomp_scale62" title="Link to this definition">#</a></dt>
+<dd><p>Extracts lattice composition from a Polaris (SCALE 6.2) lattice composition file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>geom</strong> (<a class="reference internal" href="#neuthos.Geometry" title="neuthos.Geometry"><em>Geometry</em></a>)</p></li>
+<li><p><strong>filepath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+<li><p><strong>filepath_finegroup</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Cycle.extract_latcomp_scale63">
+<span class="sig-name descname"><span class="pre">extract_latcomp_scale63</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath_finegroup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/cycle.html#Cycle.extract_latcomp_scale63"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Cycle.extract_latcomp_scale63" title="Link to this definition">#</a></dt>
+<dd><p>Extracts lattice composition from a Polaris (SCALE 6.2) lattice composition file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>geom</strong> (<a class="reference internal" href="#neuthos.Geometry" title="neuthos.Geometry"><em>Geometry</em></a>)</p></li>
+<li><p><strong>filepath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+<li><p><strong>filepath_finegroup</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Cycle.extract_lattype">
+<span class="sig-name descname"><span class="pre">extract_lattype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/cycle.html#Cycle.extract_lattype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Cycle.extract_lattype" title="Link to this definition">#</a></dt>
+<dd><p>Extracts lattice type data from a PARCS pmax.dir file.
+NOTE: this method will be deprecated in the future NEUTHOS release in favour of user specification of reference polaris case</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filepath</strong> (<em>str</em><em> | </em><em>Path</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Cycle.extract_pinpower">
+<span class="sig-name descname"><span class="pre">extract_pinpower</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folderpath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/cycle.html#Cycle.extract_pinpower"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Cycle.extract_pinpower" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>geom</strong> (<a class="reference internal" href="#neuthos.Geometry" title="neuthos.Geometry"><em>Geometry</em></a>)</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="#neuthos.Outputs" title="neuthos.Outputs"><em>Outputs</em></a>)</p></li>
+<li><p><strong>folderpath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Cycle.extract_spectrum">
+<span class="sig-name descname"><span class="pre">extract_spectrum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ngroups</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/cycle.html#Cycle.extract_spectrum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Cycle.extract_spectrum" title="Link to this definition">#</a></dt>
+<dd><p>Extracts neutron spectrum from a Polaris (SCALE) spectrum file.
+The spectrum is extracted for a given statepoint (sp) and number of energy groups (ngroups).
+Returns a list of tuples containing (energy_bin_midpoint, chi_value).
+The extract spectrum function is used in two of the polarisoption for lattice composition extraction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>List</em>[<em>Tuple</em>[float, float]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Cycle.fuellat">
+<span class="sig-name descname"><span class="pre">fuellat</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#neuthos.Cycle.fuellat" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Cycle.groups">
+<span class="sig-name descname"><span class="pre">groups</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#neuthos.Cycle.groups" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Cycle.interpolnodes">
+<span class="sig-name descname"><span class="pre">interpolnodes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#neuthos.Cycle.interpolnodes" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Cycle.interpoption">
+<span class="sig-name descname"><span class="pre">interpoption</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#neuthos.Cycle.interpoption" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Cycle.latburn">
+<span class="sig-name descname"><span class="pre">latburn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#neuthos.Cycle.latburn" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Cycle.latcomp">
+<span class="sig-name descname"><span class="pre">latcomp</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#neuthos.Cycle.latcomp" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Cycle.lattype">
+<span class="sig-name descname"><span class="pre">lattype</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#neuthos.Cycle.lattype" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Cycle.nassembly_with_reflectors">
+<span class="sig-name descname"><span class="pre">nassembly_with_reflectors</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#neuthos.Cycle.nassembly_with_reflectors" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Cycle.nsteps">
+<span class="sig-name descname"><span class="pre">nsteps</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#neuthos.Cycle.nsteps" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Cycle.pinpowerdata">
+<span class="sig-name descname"><span class="pre">pinpowerdata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#neuthos.Cycle.pinpowerdata" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Cycle.pinpowerdatainterp">
+<span class="sig-name descname"><span class="pre">pinpowerdatainterp</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#neuthos.Cycle.pinpowerdatainterp" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Cycle.polarisoption">
+<span class="sig-name descname"><span class="pre">polarisoption</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#neuthos.Cycle.polarisoption" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Cycle.polariswidth">
+<span class="sig-name descname"><span class="pre">polariswidth</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#neuthos.Cycle.polariswidth" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Cycle.refllat">
+<span class="sig-name descname"><span class="pre">refllat</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#neuthos.Cycle.refllat" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="neuthos.Geometry">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neuthos.</span></span><span class="sig-name descname"><span class="pre">Geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">naxial:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nass:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">npin:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latsym:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ngtubes:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nitubes:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ass_pitch:</span> <span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pin_pitch:</span> <span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pin_radius:</span> <span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active_height:</span> <span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coremap:</span> <span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source:</span> <span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ngtubesqtr:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nitubesqtr:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coordinates:</span> <span class="pre">List[Tuple[int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">float]]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coordinatesVERA_with_index:</span> <span class="pre">List[Tuple[int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int]]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_core:</span> <span class="pre">List[float]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meshheight:</span> <span class="pre">numpy.ndarray</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nodevolume:</span> <span class="pre">List[float]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/geometry.html#Geometry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Geometry" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>naxial</strong> (<em>int</em>)</p></li>
+<li><p><strong>nass</strong> (<em>int</em>)</p></li>
+<li><p><strong>npin</strong> (<em>int</em>)</p></li>
+<li><p><strong>latsym</strong> (<em>str</em>)</p></li>
+<li><p><strong>ngtubes</strong> (<em>int</em>)</p></li>
+<li><p><strong>nitubes</strong> (<em>int</em>)</p></li>
+<li><p><strong>ass_pitch</strong> (<em>float</em>)</p></li>
+<li><p><strong>pin_pitch</strong> (<em>float</em>)</p></li>
+<li><p><strong>pin_radius</strong> (<em>float</em>)</p></li>
+<li><p><strong>active_height</strong> (<em>float</em>)</p></li>
+<li><p><strong>coremap</strong> (<em>list</em>)</p></li>
+<li><p><strong>source</strong> (<em>list</em>)</p></li>
+<li><p><strong>ngtubesqtr</strong> (<em>int</em>)</p></li>
+<li><p><strong>nitubesqtr</strong> (<em>int</em>)</p></li>
+<li><p><strong>coordinates</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>float</em><em>, </em><em>float</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>coordinatesVERA_with_index</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>float</em><em>, </em><em>float</em><em>, </em><em>int</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>z_core</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>)</p></li>
+<li><p><strong>meshheight</strong> (<em>numpy.ndarray</em>)</p></li>
+<li><p><strong>nodevolume</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Geometry.active_height">
+<span class="sig-name descname"><span class="pre">active_height</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#neuthos.Geometry.active_height" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Geometry.ass_pitch">
+<span class="sig-name descname"><span class="pre">ass_pitch</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#neuthos.Geometry.ass_pitch" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Geometry.compute_2D_coordinates_VERA_qtr">
+<span class="sig-name descname"><span class="pre">compute_2D_coordinates_VERA_qtr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/geometry.html#Geometry.compute_2D_coordinates_VERA_qtr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Geometry.compute_2D_coordinates_VERA_qtr" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Geometry.compute_3D_coordinates_VERA_qtr">
+<span class="sig-name descname"><span class="pre">compute_3D_coordinates_VERA_qtr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axial_header_token</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'axial_edit_bounds'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/geometry.html#Geometry.compute_3D_coordinates_VERA_qtr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Geometry.compute_3D_coordinates_VERA_qtr" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filepath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+<li><p><strong>axial_header_token</strong> (<em>str</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Geometry.compute_radial_coordinates_PARCS">
+<span class="sig-name descname"><span class="pre">compute_radial_coordinates_PARCS</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/geometry.html#Geometry.compute_radial_coordinates_PARCS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Geometry.compute_radial_coordinates_PARCS" title="Link to this definition">#</a></dt>
+<dd><p>Compute (i,j,m,n,x_pin,y_pin) for each pin inside each ass_pitch.
+Indices are 1-based to match typical PARCS-style indexing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Geometry.coordinates">
+<span class="sig-name descname"><span class="pre">coordinates</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#neuthos.Geometry.coordinates" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Geometry.coordinatesVERA_with_index">
+<span class="sig-name descname"><span class="pre">coordinatesVERA_with_index</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#neuthos.Geometry.coordinatesVERA_with_index" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Geometry.coremap">
+<span class="sig-name descname"><span class="pre">coremap</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#neuthos.Geometry.coremap" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Geometry.latsym">
+<span class="sig-name descname"><span class="pre">latsym</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#neuthos.Geometry.latsym" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Geometry.meshheight">
+<span class="sig-name descname"><span class="pre">meshheight</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#neuthos.Geometry.meshheight" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Geometry.nass">
+<span class="sig-name descname"><span class="pre">nass</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#neuthos.Geometry.nass" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Geometry.naxial">
+<span class="sig-name descname"><span class="pre">naxial</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#neuthos.Geometry.naxial" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Geometry.nfuelpins">
+<span class="sig-name descname"><span class="pre">nfuelpins</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#neuthos.Geometry.nfuelpins" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Geometry.ngtubes">
+<span class="sig-name descname"><span class="pre">ngtubes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#neuthos.Geometry.ngtubes" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Geometry.ngtubesqtr">
+<span class="sig-name descname"><span class="pre">ngtubesqtr</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#neuthos.Geometry.ngtubesqtr" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Geometry.nitubes">
+<span class="sig-name descname"><span class="pre">nitubes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#neuthos.Geometry.nitubes" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Geometry.nitubesqtr">
+<span class="sig-name descname"><span class="pre">nitubesqtr</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#neuthos.Geometry.nitubesqtr" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Geometry.nodevolume">
+<span class="sig-name descname"><span class="pre">nodevolume</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#neuthos.Geometry.nodevolume" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Geometry.npin">
+<span class="sig-name descname"><span class="pre">npin</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#neuthos.Geometry.npin" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Geometry.pin_pitch">
+<span class="sig-name descname"><span class="pre">pin_pitch</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#neuthos.Geometry.pin_pitch" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Geometry.pin_radius">
+<span class="sig-name descname"><span class="pre">pin_radius</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#neuthos.Geometry.pin_radius" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Geometry.read_axial_mesh_from_parcs">
+<span class="sig-name descname"><span class="pre">read_axial_mesh_from_parcs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header_token</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'</span> <span class="pre">Number</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">(cm)</span>&#160;&#160;&#160;&#160;&#160; <span class="pre">(cm)</span>&#160; <span class="pre">Integ.</span>&#160;&#160; <span class="pre">Assm.'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/geometry.html#Geometry.read_axial_mesh_from_parcs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Geometry.read_axial_mesh_from_parcs" title="Link to this definition">#</a></dt>
+<dd><p>Parse axial mesh information from a PARCS text file section that begins with <cite>Number (cm) (cm) Integ. Assm.</cite>.</p>
+<ul class="simple">
+<li><p>Reads exactly <cite>naxial_nodes</cite> rows after the header.</p></li>
+<li><p>Flips heights to bottom-to-top order (assuming the code provides this info as top-to-bottom).</p></li>
+<li><p>Computes node volumes: ass_pitch^2 * height.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filepath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+<li><p><strong>header_token</strong> (<em>str</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Geometry.source">
+<span class="sig-name descname"><span class="pre">source</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#neuthos.Geometry.source" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Geometry.z_core">
+<span class="sig-name descname"><span class="pre">z_core</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#neuthos.Geometry.z_core" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="neuthos.Outputs">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neuthos.</span></span><span class="sig-name descname"><span class="pre">Outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">PosixPath('.')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/outputs.html#Outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Outputs" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>base_dir</strong> (<em>Path</em>)</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Outputs.base_dir">
+<span class="sig-name descname"><span class="pre">base_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Path</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">PosixPath('.')</span></em><a class="headerlink" href="#neuthos.Outputs.base_dir" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Outputs.visualize_source_ass">
+<span class="sig-name descname"><span class="pre">visualize_source_ass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/outputs.html#Outputs.visualize_source_ass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Outputs.visualize_source_ass" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>geom</strong> (<a class="reference internal" href="#neuthos.Geometry" title="neuthos.Geometry"><em>Geometry</em></a>)</p></li>
+<li><p><strong>source</strong> (<a class="reference internal" href="#neuthos.Source" title="neuthos.Source"><em>Source</em></a>)</p></li>
+<li><p><strong>flag</strong> (<em>str</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Path</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Outputs.visualize_source_pin">
+<span class="sig-name descname"><span class="pre">visualize_source_pin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/outputs.html#Outputs.visualize_source_pin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Outputs.visualize_source_pin" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>geom</strong> (<a class="reference internal" href="#neuthos.Geometry" title="neuthos.Geometry"><em>Geometry</em></a>)</p></li>
+<li><p><strong>source</strong> (<a class="reference internal" href="#neuthos.Source" title="neuthos.Source"><em>Source</em></a>)</p></li>
+<li><p><strong>flag</strong> (<em>str</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Path</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Outputs.write_PARCS_pin_coordinates">
+<span class="sig-name descname"><span class="pre">write_PARCS_pin_coordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputpath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/outputs.html#Outputs.write_PARCS_pin_coordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Outputs.write_PARCS_pin_coordinates" title="Link to this definition">#</a></dt>
+<dd><p>Write PARCS pin-level coordinates from a Geometry instance to a CSV file.</p>
+<p>The output file is created at the given path (relative to the output base
+directory, if configured) and contains one row per pin with indices and
+Cartesian coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>geom</strong> (<a class="reference internal" href="#neuthos.Geometry" title="neuthos.Geometry"><em>Geometry</em></a>)</p></li>
+<li><p><strong>outputpath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Path</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Outputs.write_VERA_pin_coordinates">
+<span class="sig-name descname"><span class="pre">write_VERA_pin_coordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputpath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/outputs.html#Outputs.write_VERA_pin_coordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Outputs.write_VERA_pin_coordinates" title="Link to this definition">#</a></dt>
+<dd><p>Write VERA pin-level coordinates with VERA indices from a Geometry instance to a CSV file.</p>
+<p>The output file is created at the given path (relative to the output base
+directory, if configured) and contains one row per pin with indices, VERA index, and
+Cartesian coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>geom</strong> (<a class="reference internal" href="#neuthos.Geometry" title="neuthos.Geometry"><em>Geometry</em></a>)</p></li>
+<li><p><strong>outputpath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Path</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Outputs.write_asspower_to_csv">
+<span class="sig-name descname"><span class="pre">write_asspower_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cycle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputpath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/outputs.html#Outputs.write_asspower_to_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Outputs.write_asspower_to_csv" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cycle</strong> (<a class="reference internal" href="#neuthos.Cycle" title="neuthos.Cycle"><em>Cycle</em></a>)</p></li>
+<li><p><strong>outputpath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Path</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Outputs.write_asssourceinfo_to_csv">
+<span class="sig-name descname"><span class="pre">write_asssourceinfo_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputpath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/outputs.html#Outputs.write_asssourceinfo_to_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Outputs.write_asssourceinfo_to_csv" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<a class="reference internal" href="#neuthos.Source" title="neuthos.Source"><em>Source</em></a>)</p></li>
+<li><p><strong>outputpath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Path</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Outputs.write_assyaxial">
+<span class="sig-name descname"><span class="pre">write_assyaxial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cycle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputpath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/outputs.html#Outputs.write_assyaxial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Outputs.write_assyaxial" title="Link to this definition">#</a></dt>
+<dd><p>Write assembly axial configuration to a CSV file.</p>
+<p>The output file is created at the given path (relative to the output base
+directory, if configured) and contains one row per assembly type with its axial configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cycle</strong> (<a class="reference internal" href="#neuthos.Cycle" title="neuthos.Cycle"><em>Cycle</em></a>)</p></li>
+<li><p><strong>outputpath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Path</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Outputs.write_assyradial">
+<span class="sig-name descname"><span class="pre">write_assyradial</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cycle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputpath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/outputs.html#Outputs.write_assyradial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Outputs.write_assyradial" title="Link to this definition">#</a></dt>
+<dd><p>Write assembly radial configuration to a CSV file.</p>
+<p>The output file is created at the given path (relative to the output base
+directory, if configured) and contains one row per assembly with its radial configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cycle</strong> (<a class="reference internal" href="#neuthos.Cycle" title="neuthos.Cycle"><em>Cycle</em></a>)</p></li>
+<li><p><strong>outputpath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Path</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Outputs.write_custom_csv">
+<span class="sig-name descname"><span class="pre">write_custom_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputpath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/outputs.html#Outputs.write_custom_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Outputs.write_custom_csv" title="Link to this definition">#</a></dt>
+<dd><p>Write custom output data to a CSV file.</p>
+<p>The output file is created at the given path (relative to the output base
+directory, if configured) and contains the provided header and data rows.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>List</em><em>[</em><em>Tuple</em><em>]</em>)</p></li>
+<li><p><strong>outputpath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Path</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Outputs.write_exposureindex_to_csv">
+<span class="sig-name descname"><span class="pre">write_exposureindex_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cycle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputpath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/outputs.html#Outputs.write_exposureindex_to_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Outputs.write_exposureindex_to_csv" title="Link to this definition">#</a></dt>
+<dd><p>Write exposure matrix to a CSV file.</p>
+<p>The output file is created at the given path (relative to the output base
+directory, if configured) and contains one row per assembly with its radial configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cycle</strong> (<a class="reference internal" href="#neuthos.Cycle" title="neuthos.Cycle"><em>Cycle</em></a>)</p></li>
+<li><p><strong>outputpath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Path</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Outputs.write_latcomp_to_csv">
+<span class="sig-name descname"><span class="pre">write_latcomp_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cycle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputpath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/outputs.html#Outputs.write_latcomp_to_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Outputs.write_latcomp_to_csv" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cycle</strong> (<a class="reference internal" href="#neuthos.Cycle" title="neuthos.Cycle"><em>Cycle</em></a>)</p></li>
+<li><p><strong>outputpath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Path</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Outputs.write_lattype_to_csv">
+<span class="sig-name descname"><span class="pre">write_lattype_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cycle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputpath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/outputs.html#Outputs.write_lattype_to_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Outputs.write_lattype_to_csv" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cycle</strong> (<a class="reference internal" href="#neuthos.Cycle" title="neuthos.Cycle"><em>Cycle</em></a>)</p></li>
+<li><p><strong>outputpath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Path</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Outputs.write_pinpower_to_csv">
+<span class="sig-name descname"><span class="pre">write_pinpower_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputpath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/outputs.html#Outputs.write_pinpower_to_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Outputs.write_pinpower_to_csv" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<a class="reference internal" href="#neuthos.Source" title="neuthos.Source"><em>Source</em></a>)</p></li>
+<li><p><strong>outputpath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Path</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Outputs.write_pinsourceinfo_to_csv">
+<span class="sig-name descname"><span class="pre">write_pinsourceinfo_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputpath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/outputs.html#Outputs.write_pinsourceinfo_to_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Outputs.write_pinsourceinfo_to_csv" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<a class="reference internal" href="#neuthos.Source" title="neuthos.Source"><em>Source</em></a>)</p></li>
+<li><p><strong>outputpath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Path</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="neuthos.Source">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">neuthos.</span></span><span class="sig-name descname"><span class="pre">Source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bins:</span> <span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">truncoption:</span> <span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assytype_to_mcmaterial:</span> <span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sourceoption:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'pointsource'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trunc_ass_X:</span> <span class="pre">List[Tuple[int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int]]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trunc_ass_Y:</span> <span class="pre">List[Tuple[int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int]]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trunc_pin_X:</span> <span class="pre">List[Tuple[int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int]]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trunc_pin_Y:</span> <span class="pre">List[Tuple[int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int]]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sourceassy:</span> <span class="pre">List[Tuple[int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int]]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sourcepin:</span> <span class="pre">List[Tuple[int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">float]]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/source.html#Source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Source" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>step</strong> (<em>int</em>)</p></li>
+<li><p><strong>bins</strong> (<em>numpy.ndarray</em>)</p></li>
+<li><p><strong>truncoption</strong> (<em>bool</em>)</p></li>
+<li><p><strong>assytype_to_mcmaterial</strong> (<em>dict</em>)</p></li>
+<li><p><strong>sourceoption</strong> (<em>str</em>)</p></li>
+<li><p><strong>trunc_ass_X</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>trunc_ass_Y</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>trunc_pin_X</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>trunc_pin_Y</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>sourceassy</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>sourcepin</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>, </em><em>float</em><em>]</em><em>]</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Source.assytype_to_mcmaterial">
+<span class="sig-name descname"><span class="pre">assytype_to_mcmaterial</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#neuthos.Source.assytype_to_mcmaterial" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Source.bins">
+<span class="sig-name descname"><span class="pre">bins</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span></em><a class="headerlink" href="#neuthos.Source.bins" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Source.build_source_ass">
+<span class="sig-name descname"><span class="pre">build_source_ass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cycle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/source.html#Source.build_source_ass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Source.build_source_ass" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cycle</strong> (<a class="reference internal" href="#neuthos.Cycle" title="neuthos.Cycle"><em>Cycle</em></a>)</p></li>
+<li><p><strong>geom</strong> (<a class="reference internal" href="#neuthos.Geometry" title="neuthos.Geometry"><em>Geometry</em></a>)</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="#neuthos.Outputs" title="neuthos.Outputs"><em>Outputs</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Source.build_source_pin">
+<span class="sig-name descname"><span class="pre">build_source_pin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cycle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/source.html#Source.build_source_pin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Source.build_source_pin" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cycle</strong> (<a class="reference internal" href="#neuthos.Cycle" title="neuthos.Cycle"><em>Cycle</em></a>)</p></li>
+<li><p><strong>geom</strong> (<a class="reference internal" href="#neuthos.Geometry" title="neuthos.Geometry"><em>Geometry</em></a>)</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="#neuthos.Outputs" title="neuthos.Outputs"><em>Outputs</em></a>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Source.sourceassy">
+<span class="sig-name descname"><span class="pre">sourceassy</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#neuthos.Source.sourceassy" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Source.sourceoption">
+<span class="sig-name descname"><span class="pre">sourceoption</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'pointsource'</span></em><a class="headerlink" href="#neuthos.Source.sourceoption" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Source.sourcepin">
+<span class="sig-name descname"><span class="pre">sourcepin</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#neuthos.Source.sourcepin" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Source.step">
+<span class="sig-name descname"><span class="pre">step</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#neuthos.Source.step" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Source.trunc_ass_X">
+<span class="sig-name descname"><span class="pre">trunc_ass_X</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#neuthos.Source.trunc_ass_X" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Source.trunc_ass_Y">
+<span class="sig-name descname"><span class="pre">trunc_ass_Y</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#neuthos.Source.trunc_ass_Y" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Source.trunc_pin_X">
+<span class="sig-name descname"><span class="pre">trunc_pin_X</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#neuthos.Source.trunc_pin_X" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Source.trunc_pin_Y">
+<span class="sig-name descname"><span class="pre">trunc_pin_Y</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#neuthos.Source.trunc_pin_Y" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="neuthos.Source.truncoption">
+<span class="sig-name descname"><span class="pre">truncoption</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#neuthos.Source.truncoption" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Source.write_source_ass">
+<span class="sig-name descname"><span class="pre">write_source_ass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cycle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/source.html#Source.write_source_ass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Source.write_source_ass" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cycle</strong> (<a class="reference internal" href="#neuthos.Cycle" title="neuthos.Cycle"><em>Cycle</em></a>)</p></li>
+<li><p><strong>geom</strong> (<a class="reference internal" href="#neuthos.Geometry" title="neuthos.Geometry"><em>Geometry</em></a>)</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="#neuthos.Outputs" title="neuthos.Outputs"><em>Outputs</em></a>)</p></li>
+<li><p><strong>filepath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="neuthos.Source.write_source_pin">
+<span class="sig-name descname"><span class="pre">write_source_pin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cycle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geom</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/neuthos/source.html#Source.write_source_pin"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#neuthos.Source.write_source_pin" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cycle</strong> (<a class="reference internal" href="#neuthos.Cycle" title="neuthos.Cycle"><em>Cycle</em></a>)</p></li>
+<li><p><strong>geom</strong> (<a class="reference internal" href="#neuthos.Geometry" title="neuthos.Geometry"><em>Geometry</em></a>)</p></li>
+<li><p><strong>out</strong> (<a class="reference internal" href="#neuthos.Outputs" title="neuthos.Outputs"><em>Outputs</em></a>)</p></li>
+<li><p><strong>filepath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 
@@ -350,15 +1428,15 @@
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">neuthos</p>
+        <p class="prev-next-title">NEUTHOS</p>
       </div>
     </a>
     <a class="right-next"
-       href="neuthos.api.html"
+       href="neuthos.cycle.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">neuthos.api module</p>
+        <p class="prev-next-title">neuthos.cycle module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -382,7 +1460,112 @@
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-neuthos">Module contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-neuthos">Module contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle"><code class="docutils literal notranslate"><span class="pre">Cycle</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.asspower"><code class="docutils literal notranslate"><span class="pre">Cycle.asspower</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.asspowerdata"><code class="docutils literal notranslate"><span class="pre">Cycle.asspowerdata</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.assyaxial"><code class="docutils literal notranslate"><span class="pre">Cycle.assyaxial</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.assyexp"><code class="docutils literal notranslate"><span class="pre">Cycle.assyexp</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.assyradial"><code class="docutils literal notranslate"><span class="pre">Cycle.assyradial</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.avgpowdens"><code class="docutils literal notranslate"><span class="pre">Cycle.avgpowdens</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.coolant_density"><code class="docutils literal notranslate"><span class="pre">Cycle.coolant_density</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.corevol"><code class="docutils literal notranslate"><span class="pre">Cycle.corevol</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.cycleinfodays"><code class="docutils literal notranslate"><span class="pre">Cycle.cycleinfodays</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.cycleinfoexp"><code class="docutils literal notranslate"><span class="pre">Cycle.cycleinfoexp</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.cycleinfopow"><code class="docutils literal notranslate"><span class="pre">Cycle.cycleinfopow</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.exposure"><code class="docutils literal notranslate"><span class="pre">Cycle.exposure</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.extract_asspower"><code class="docutils literal notranslate"><span class="pre">Cycle.extract_asspower()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.extract_assyaxial"><code class="docutils literal notranslate"><span class="pre">Cycle.extract_assyaxial()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.extract_assyradial"><code class="docutils literal notranslate"><span class="pre">Cycle.extract_assyradial()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.extract_coolant_info"><code class="docutils literal notranslate"><span class="pre">Cycle.extract_coolant_info()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.extract_cycle_info"><code class="docutils literal notranslate"><span class="pre">Cycle.extract_cycle_info()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.extract_exposure"><code class="docutils literal notranslate"><span class="pre">Cycle.extract_exposure()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.extract_latcomp_scale62"><code class="docutils literal notranslate"><span class="pre">Cycle.extract_latcomp_scale62()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.extract_latcomp_scale63"><code class="docutils literal notranslate"><span class="pre">Cycle.extract_latcomp_scale63()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.extract_lattype"><code class="docutils literal notranslate"><span class="pre">Cycle.extract_lattype()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.extract_pinpower"><code class="docutils literal notranslate"><span class="pre">Cycle.extract_pinpower()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.extract_spectrum"><code class="docutils literal notranslate"><span class="pre">Cycle.extract_spectrum()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.fuellat"><code class="docutils literal notranslate"><span class="pre">Cycle.fuellat</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.groups"><code class="docutils literal notranslate"><span class="pre">Cycle.groups</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.interpolnodes"><code class="docutils literal notranslate"><span class="pre">Cycle.interpolnodes</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.interpoption"><code class="docutils literal notranslate"><span class="pre">Cycle.interpoption</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.latburn"><code class="docutils literal notranslate"><span class="pre">Cycle.latburn</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.latcomp"><code class="docutils literal notranslate"><span class="pre">Cycle.latcomp</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.lattype"><code class="docutils literal notranslate"><span class="pre">Cycle.lattype</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.nassembly_with_reflectors"><code class="docutils literal notranslate"><span class="pre">Cycle.nassembly_with_reflectors</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.nsteps"><code class="docutils literal notranslate"><span class="pre">Cycle.nsteps</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.pinpowerdata"><code class="docutils literal notranslate"><span class="pre">Cycle.pinpowerdata</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.pinpowerdatainterp"><code class="docutils literal notranslate"><span class="pre">Cycle.pinpowerdatainterp</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.polarisoption"><code class="docutils literal notranslate"><span class="pre">Cycle.polarisoption</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.polariswidth"><code class="docutils literal notranslate"><span class="pre">Cycle.polariswidth</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Cycle.refllat"><code class="docutils literal notranslate"><span class="pre">Cycle.refllat</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Geometry"><code class="docutils literal notranslate"><span class="pre">Geometry</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Geometry.active_height"><code class="docutils literal notranslate"><span class="pre">Geometry.active_height</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Geometry.ass_pitch"><code class="docutils literal notranslate"><span class="pre">Geometry.ass_pitch</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Geometry.compute_2D_coordinates_VERA_qtr"><code class="docutils literal notranslate"><span class="pre">Geometry.compute_2D_coordinates_VERA_qtr()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Geometry.compute_3D_coordinates_VERA_qtr"><code class="docutils literal notranslate"><span class="pre">Geometry.compute_3D_coordinates_VERA_qtr()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Geometry.compute_radial_coordinates_PARCS"><code class="docutils literal notranslate"><span class="pre">Geometry.compute_radial_coordinates_PARCS()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Geometry.coordinates"><code class="docutils literal notranslate"><span class="pre">Geometry.coordinates</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Geometry.coordinatesVERA_with_index"><code class="docutils literal notranslate"><span class="pre">Geometry.coordinatesVERA_with_index</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Geometry.coremap"><code class="docutils literal notranslate"><span class="pre">Geometry.coremap</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Geometry.latsym"><code class="docutils literal notranslate"><span class="pre">Geometry.latsym</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Geometry.meshheight"><code class="docutils literal notranslate"><span class="pre">Geometry.meshheight</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Geometry.nass"><code class="docutils literal notranslate"><span class="pre">Geometry.nass</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Geometry.naxial"><code class="docutils literal notranslate"><span class="pre">Geometry.naxial</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Geometry.nfuelpins"><code class="docutils literal notranslate"><span class="pre">Geometry.nfuelpins</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Geometry.ngtubes"><code class="docutils literal notranslate"><span class="pre">Geometry.ngtubes</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Geometry.ngtubesqtr"><code class="docutils literal notranslate"><span class="pre">Geometry.ngtubesqtr</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Geometry.nitubes"><code class="docutils literal notranslate"><span class="pre">Geometry.nitubes</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Geometry.nitubesqtr"><code class="docutils literal notranslate"><span class="pre">Geometry.nitubesqtr</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Geometry.nodevolume"><code class="docutils literal notranslate"><span class="pre">Geometry.nodevolume</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Geometry.npin"><code class="docutils literal notranslate"><span class="pre">Geometry.npin</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Geometry.pin_pitch"><code class="docutils literal notranslate"><span class="pre">Geometry.pin_pitch</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Geometry.pin_radius"><code class="docutils literal notranslate"><span class="pre">Geometry.pin_radius</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Geometry.read_axial_mesh_from_parcs"><code class="docutils literal notranslate"><span class="pre">Geometry.read_axial_mesh_from_parcs()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Geometry.source"><code class="docutils literal notranslate"><span class="pre">Geometry.source</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Geometry.z_core"><code class="docutils literal notranslate"><span class="pre">Geometry.z_core</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Outputs"><code class="docutils literal notranslate"><span class="pre">Outputs</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Outputs.base_dir"><code class="docutils literal notranslate"><span class="pre">Outputs.base_dir</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Outputs.visualize_source_ass"><code class="docutils literal notranslate"><span class="pre">Outputs.visualize_source_ass()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Outputs.visualize_source_pin"><code class="docutils literal notranslate"><span class="pre">Outputs.visualize_source_pin()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Outputs.write_PARCS_pin_coordinates"><code class="docutils literal notranslate"><span class="pre">Outputs.write_PARCS_pin_coordinates()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Outputs.write_VERA_pin_coordinates"><code class="docutils literal notranslate"><span class="pre">Outputs.write_VERA_pin_coordinates()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Outputs.write_asspower_to_csv"><code class="docutils literal notranslate"><span class="pre">Outputs.write_asspower_to_csv()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Outputs.write_asssourceinfo_to_csv"><code class="docutils literal notranslate"><span class="pre">Outputs.write_asssourceinfo_to_csv()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Outputs.write_assyaxial"><code class="docutils literal notranslate"><span class="pre">Outputs.write_assyaxial()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Outputs.write_assyradial"><code class="docutils literal notranslate"><span class="pre">Outputs.write_assyradial()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Outputs.write_custom_csv"><code class="docutils literal notranslate"><span class="pre">Outputs.write_custom_csv()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Outputs.write_exposureindex_to_csv"><code class="docutils literal notranslate"><span class="pre">Outputs.write_exposureindex_to_csv()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Outputs.write_latcomp_to_csv"><code class="docutils literal notranslate"><span class="pre">Outputs.write_latcomp_to_csv()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Outputs.write_lattype_to_csv"><code class="docutils literal notranslate"><span class="pre">Outputs.write_lattype_to_csv()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Outputs.write_pinpower_to_csv"><code class="docutils literal notranslate"><span class="pre">Outputs.write_pinpower_to_csv()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Outputs.write_pinsourceinfo_to_csv"><code class="docutils literal notranslate"><span class="pre">Outputs.write_pinsourceinfo_to_csv()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Source"><code class="docutils literal notranslate"><span class="pre">Source</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Source.assytype_to_mcmaterial"><code class="docutils literal notranslate"><span class="pre">Source.assytype_to_mcmaterial</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Source.bins"><code class="docutils literal notranslate"><span class="pre">Source.bins</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Source.build_source_ass"><code class="docutils literal notranslate"><span class="pre">Source.build_source_ass()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Source.build_source_pin"><code class="docutils literal notranslate"><span class="pre">Source.build_source_pin()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Source.sourceassy"><code class="docutils literal notranslate"><span class="pre">Source.sourceassy</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Source.sourceoption"><code class="docutils literal notranslate"><span class="pre">Source.sourceoption</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Source.sourcepin"><code class="docutils literal notranslate"><span class="pre">Source.sourcepin</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Source.step"><code class="docutils literal notranslate"><span class="pre">Source.step</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Source.trunc_ass_X"><code class="docutils literal notranslate"><span class="pre">Source.trunc_ass_X</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Source.trunc_ass_Y"><code class="docutils literal notranslate"><span class="pre">Source.trunc_ass_Y</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Source.trunc_pin_X"><code class="docutils literal notranslate"><span class="pre">Source.trunc_pin_X</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Source.trunc_pin_Y"><code class="docutils literal notranslate"><span class="pre">Source.trunc_pin_Y</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Source.truncoption"><code class="docutils literal notranslate"><span class="pre">Source.truncoption</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Source.write_source_ass"><code class="docutils literal notranslate"><span class="pre">Source.write_source_ass()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#neuthos.Source.write_source_pin"><code class="docutils literal notranslate"><span class="pre">Source.write_source_pin()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
