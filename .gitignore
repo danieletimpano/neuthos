@@ -3,4 +3,5 @@ examples/PWR_source_3D/parcs_files
 examples/PWR_source_3D/serpent_files
 examples/PWR_source_3D/output*
 examples/PWR_source_2D
+docs/build
 
