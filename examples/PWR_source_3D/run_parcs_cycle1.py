@@ -56,7 +56,7 @@ geom = nt.Geometry(
     nitubesqtr= 1
 )
 
-# Compute source coordinates
+# Compute source coordinates from PARCS
 geom.compute_radial_coordinates_PARCS()
 geom.read_axial_mesh_from_parcs("parcs_files/TP_cyc1_HFP3D.parcs_out")
 out.write_PARCS_pin_coordinates(geom, "00.parcs_pin_coordinates.csv")
