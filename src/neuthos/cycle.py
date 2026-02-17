@@ -82,6 +82,8 @@ class Cycle:
             List of pin power tuples (step, i_index, j_index, k_index, x_index, y_index, power_value).
         pinpowerdatainterp : List[Tuple[int, int, int, int, int, int, float]]
             List of interpolated pin power tuples (step, i_index, j_index, k_index, x_index, y_index, power_value).
+        pinpowerdata2D : List[Tuple[int, int, int, int, int, float]]
+            List of 2D pin power tuples (step, i_index, j_index, x_index, y_index, power_value).
     """
     # --- cycle inputs ---
     nassembly_with_reflectors: int                  # total number of assemblies including reflectors
@@ -112,6 +114,7 @@ class Cycle:
     asspowerdata: List[Tuple[int, int, int, int, float]] = field(default_factory=list)       # List of tuples (step, x_index, y_index, axial_plane, power_value)
     pinpowerdata: List[Tuple[int, int, int, int, int, int, float]] = field(default_factory=list) # List of tuples (step, i_index, j_index, k_index, x_index, y_index, power_value)
     pinpowerdatainterp: List[Tuple[int, int, int, int, int, int, float]] = field(default_factory=list) # List of tuples (step, i_index, j_index, k_index, x_index, y_index, power_value) for interpolated power values
+    pinpowerdata2D: List[Tuple[int, int, int, int, int, float]] = field(default_factory=list) # List of tuples (step, i_index, j_index, x_index, y_index, power_value) for 2D pin power data
 
     # PARCS related methods
 
@@ -483,14 +486,15 @@ class Cycle:
                         values = list(map(float, line.split()))
                         x_index = int(values.pop(0))
                         for y_index, value in zip(y_indices, values):
-                            self.pinpowerdata.append((case_number, i, j, k, x_index, y_index, value*self.avgpowdens*math.pi*(0.4677)**2*geom.meshheight[k-1]*(self.cycleinfopow[case_number-1]/100),value)) # ALTERNATIVE using node volume considering the whole assembly cls.nodevolume[k-1]/225
+                            self.pinpowerdata.append((case_number, i, j, k, x_index, y_index, value*self.avgpowdens*math.pi*(geom.pin_radius)**2*geom.meshheight[k-1]*(self.cycleinfopow[case_number-1]/100),value)) # ALTERNATIVE using node volume considering the whole assembly cls.nodevolume[k-1]/225
 
         # SANITY CHECK 
         outpath = Path(os.path.join(out.base_dir, 'sanity_checks/pin_source'))
         outpath.mkdir(parents=True, exist_ok=True)
-        total_power= 0
-        count = 0
+
         for step in range(self.nsteps):
+            total_power= 0
+            count = 0
             for power in self.pinpowerdata:
                 if (power[0] == (step + 1)):
                     count += 1
@@ -544,7 +548,7 @@ class Cycle:
                 for ijxy_index, power_values in pin_power_vec.items():
                     pin_power_vec_interp = np.interp(z_core_interp, z_core, np.flip(power_values))
                     for k, z_value in enumerate(z_core_interp):
-                        self.pinpowerdatainterp.append((step, ijxy_index[0], ijxy_index[1], k + 1, ijxy_index[2], ijxy_index[3], pin_power_vec_interp[k]*self.avgpowdens*math.pi*(0.4677)**2*mesheight_interp[k-1]*(self.infopow[case_number-1]/100), pin_power_vec_interp[k]))
+                        self.pinpowerdatainterp.append((step, ijxy_index[0], ijxy_index[1], k + 1, ijxy_index[2], ijxy_index[3], pin_power_vec_interp[k]*self.avgpowdens*math.pi*(geom.pin_radius)**2*mesheight_interp[k-1]*(self.cycleinfopow[case_number-1]/100), pin_power_vec_interp[k]))
 
                     # take sample case to plot and check interpolation
                     if ijxy_index == (9,16,9,15): 
@@ -577,6 +581,75 @@ class Cycle:
                 with open(outpath / f'sanity_check_pin_interp_{step}.txt', 'w') as f:
                     f.write(f'Total power: {total_power}\n')
                     f.write(f'Count: {count}')
+
+    def extract_pinpower2D(self, geom: "Geometry", out: "Outputs", folderpath: Union[str, Path]) -> None:
+        """
+            Extracts 2D pinpower from PARCS .parcs_pin files.
+        """   
+
+        print('The average power density is:')
+        self.corevol = geom.nfuelpins * math.pi * (geom.pin_radius)**2 * (geom.active_height)        # cm3
+        self.avgpowdens= self.asspower / (self.corevol)                                              # W/cm3
+        print(self.avgpowdens)                                                                       # W/cm3
+
+        print('The power level vector is:')
+        print(self.cycleinfopow)
+
+        print('Extracting pin power data ...')
+        c = 0 # assembly counter for printing 
+
+        for file in os.listdir(folderpath):
+            # check files which contain parcs_pin in the name
+            if ".parcs_pin" in file:
+
+            # open the file and save all the lines
+                with open(os.path.join(folderpath, file), 'r') as f:
+                    data = f.readlines()
+
+            # find all the lines in the file between two cases
+                data_str = ''.join(data)
+                cases = re.split(r'(?=Case:)', data_str)
+                cases = [case for case in cases if "Case:" in case]
+                if not cases:
+                    print("No power found.")
+                else:
+                    c += 1
+                    print(f'... Extracting non-dummy assembly n. ' + str(c))
+
+                for case in cases:
+                    lines = case.strip().split('\n')
+                    case_info = lines[0].split()
+                    case_number = int(case_info[1])  # save burnup point
+                    i = int(case_info[9])            # save x core index - check this (there is a different naming between Parcs and our coordinates system)
+                    j = int(case_info[8])            # save y core index - check this (there is a different naming between Parcs and our coordinates system)
+                    k = int(case_info[10])           # save z core index
+                    
+                    # Take only the cases where k = 0 as they correspond to the axial average
+                    if k == 0:
+                        if [i,j] in geom.source: # filter to extract only the sources of interest
+                            y_indices = list(map(int, lines[1].split()[:]))
+                            for line in lines[2:]:
+                                values = list(map(float, line.split()))
+                                x_index = int(values.pop(0))
+                                for y_index, value in zip(y_indices, values):
+                                    if value != 0: # check if the pin power is not zero
+                                        self.pinpowerdata2D.append((case_number, i, j, k, x_index, y_index, value*self.avgpowdens*math.pi*(geom.pin_radius)**2*self.cycleinfopow[case_number-1]/100)) 
+
+        # SANITY CHECK 
+        outpath = Path(os.path.join(out.base_dir, 'sanity_checks/pin_source'))
+        outpath.mkdir(parents=True, exist_ok=True)
+
+        for step in range(self.nsteps):
+            total_power= 0
+            count = 0
+            for power in self.pinpowerdata2D:
+                if (power[0] == (step + 1)):
+                    count += 1
+                    total_power += power[6]
+            
+            with open(outpath / f'sanity_check_pin_{step}.txt', 'w') as f:
+                f.write(f'Total power: {total_power}\n')
+                f.write(f'Count: {count}')
 
 
     def extract_lattype(

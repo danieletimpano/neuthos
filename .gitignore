@@ -2,6 +2,8 @@ examples/PWR_source_3D/vera_files
 examples/PWR_source_3D/parcs_files
 examples/PWR_source_3D/serpent_files
 examples/PWR_source_3D/output*
-examples/PWR_source_2D
+examples/PWR_source_2D/parcs_files_2D
+examples/PWR_source_2D/serpent_files
+examples/PWR_source_2D/output*
 docs/build
 

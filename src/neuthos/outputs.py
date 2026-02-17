@@ -225,7 +225,7 @@ class Outputs:
         return outputpath
 
     def write_pinpower_to_csv(
-            self, source: "Source", outputpath: Union[str, Path]) -> Path:
+            self, cycle: "Cycle", outputpath: Union[str, Path], flag: str = '3D') -> Path:
         """
         Write pin power data to a CSV file.
 
@@ -233,7 +233,7 @@ class Outputs:
         directory, if configured) and contains one row per pin with its power data.
         """
         
-        print('Saving pin source information to .csv ...')
+        print('Saving pin power information to .csv ...')
 
         outputpath = Path(outputpath)
         # Route relative paths under base_dir (so that outputs can be grouped)
@@ -243,8 +243,12 @@ class Outputs:
         with open(outputpath, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(['case_number', 'i', 'j', 'k', 'x_index', 'y_index', 'node_power'])
-            for power in source.pinpowerdata:
-                writer.writerow(power)
+            if flag == '2D':
+                for power in cycle.pinpowerdata2D:
+                    writer.writerow(power)
+            elif flag == '3D':
+                for power in cycle.pinpowerdata:
+                    writer.writerow(power)
         
         return outputpath
             
@@ -274,7 +278,7 @@ class Outputs:
         return outputpath
 
     def write_pinsourceinfo_to_csv(
-            self, source: "Source", outputpath: Union[str, Path]) -> Path:
+            self, source: "Source", outputpath: Union[str, Path], flag: str = '3D') -> Path:
         
         """
         Write pin source information to a CSV file.
@@ -292,8 +296,12 @@ class Outputs:
         with open(outputpath, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(['case_number', 'i', 'j', 'k', 'x_index', 'y_index', 'node_power','nsource'])
-            for source in source.sourcepin:
-                writer.writerow(source)
+            if flag == '2D':
+                for source in source.sourcepin2D:
+                    writer.writerow(source)
+            elif flag == '3D':
+                for source in source.sourcepin:
+                    writer.writerow(source)
 
         return outputpath
 
@@ -400,8 +408,14 @@ class Outputs:
             # Create a matrix to store the source values
             source_matrix = np.zeros((geom.nass * geom.npin, geom.nass * geom.npin))
 
-            for pin in source.sourcepin:
-                if pin[3] == 20:  # Only for k=20 in 2D
+            # check which one between sourcepin and sourcepin2D is not empty and use it for plotting
+            if source.sourcepin2D:
+                source_list = source.sourcepin2D
+            else:
+                source_list = source.sourcepin
+
+            for pin in source_list:
+                if pin[3] == geom.naxial // 2:  # Only for midplane in 2D
                     time = pin[0]
                     x_core = (pin[1] - 1) * geom.npin + (pin[4] - 1)
                     y_core = (pin[2] - 1) * geom.npin + (pin[5] - 1)
