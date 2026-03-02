@@ -32,7 +32,7 @@ release.
 
 ![](docs/build/html/_static/methodology_block_diagram.png)
 
-Documentation: ![](https://danieletimpano.github.io/neuthos/)
+Documentation: https://danieletimpano.github.io/neuthos/
 
 ## References
 
