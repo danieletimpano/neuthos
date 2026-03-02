@@ -32,6 +32,8 @@ release.
 
 ![](docs/build/html/_static/methodology_block_diagram.png)
 
+Documentation: ![](https://danieletimpano.github.io/neuthos/)
+
 ## References
 
 - Timpano, D., Hursin, M., 2025. *Development of a Polaris/PARCS/Serpent
