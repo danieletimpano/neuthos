@@ -1008,3 +1008,6 @@ class Cycle:
                         index += 1
 
                 self.latcomp.append((latcomp))
+
+    # VERA related methods
+    

@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 from scipy.integrate import quad
 import csv
 import os
+import re
 
 @dataclass
 class Source:
@@ -219,7 +220,8 @@ class Source:
                 plt.title('Assembly-wise burnup profile')
                 plt.legend(fontsize=3)
             plt.grid()
-        plt.savefig(plotpath / f'assembly_burnup_comparison.png')
+        plt.savefig(plotpath / f'assembly_burnup_comparison_{self.step}.png')
+        plt.close()
 
         #make a 3D checkerboard plot for the burnup profile, considering only the quarter checkerboard that is indicated in asso
         fig = plt.figure(dpi=300, figsize=(10, 6))
@@ -248,7 +250,8 @@ class Source:
         #change the orientation of the graph
         ax.view_init(elev=30, azim=45)
         #plt.title('3D Assembly-wise burnup profile')
-        plt.savefig(plotpath / f'3D_assembly_burnup_comparison.png', bbox_inches='tight')
+        plt.savefig(plotpath / f'3D_assembly_burnup_comparison_{self.step}.png', bbox_inches='tight')
+        plt.close()
 
         # save the data for these assemblies to a csv file
         with open(checkspath / f'burnup_profile.csv', 'w', newline='') as csvfile:
@@ -272,7 +275,8 @@ class Source:
                 plt.title('Assembly-wise U235 composition')
                 plt.legend(fontsize=3)
             plt.grid()
-        plt.savefig(plotpath / f'assembly_u235_comparison.png')
+        plt.savefig(plotpath / f'assembly_u235_comparison_{self.step}.png')
+        plt.close()
 
         #SANITY CHECK: plot U238 composition for each assembly
         plt.figure(dpi=300, figsize=(10, 6))
@@ -284,7 +288,8 @@ class Source:
                 plt.title('Assembly-wise U238 composition')
                 plt.legend(fontsize=3)
             plt.grid()
-        plt.savefig(plotpath / f'assembly_u238_comparison.png')
+        plt.savefig(plotpath / f'assembly_u238_comparison_{self.step}.png')
+        plt.close()
 
         #SANITY CHECK: plot PU239 composition for each assembly
         plt.figure(dpi=300, figsize=(10, 6))
@@ -296,7 +301,8 @@ class Source:
                 plt.title('Assembly-wise PU239 composition')
                 plt.legend(fontsize=3)
             plt.grid()
-        plt.savefig(plotpath / f'assembly_pu239_comparison.png')
+        plt.savefig(plotpath / f'assembly_pu239_comparison_{self.step}.png')
+        plt.close()
 
         #SANITY CHECK: plot PU241 composition for each assembly
         plt.figure(dpi=300, figsize=(10, 6))
@@ -308,7 +314,8 @@ class Source:
                 plt.title('Assembly-wise PU241 composition')
                 plt.legend(fontsize=3)
             plt.grid()
-        plt.savefig(plotpath / f'assembly_pu241_comparison.png')
+        plt.savefig(plotpath / f'assembly_pu241_comparison_{self.step}.png')
+        plt.close()
 
         # save plutonium content to txt
         with open(checkspath / f'plutonium_content.txt', 'a', newline='') as f:
@@ -471,11 +478,12 @@ class Source:
                     plt.ylabel('Probability(-)')
                     plt.title('Weighted Fission Spectrum')
         plt.grid()
-        plt.savefig(plotpath / f'fission_spectrum.png')
+        plt.savefig(plotpath / f'fission_spectrum_{self.step}.png')
+        plt.close()
 
         # Save fission spectrum to CSV
         if (cycle.polarisoption==0) or (cycle.polarisoption==1) :
-            with open(checkspath / f'fission_spectrum.csv', 'w', newline='') as csvfile:
+            with open(checkspath / f'fission_spectrum_{self.step}.csv', 'w', newline='') as csvfile:
                 writer = csv.writer(csvfile)
                 headers = ['Energy (MeV)'] + [f'Assembly {assembly["coordinates"]}' for assembly in assembly_list if assembly['coordinates'] in geom.source]
                 writer.writerow(headers)
@@ -789,7 +797,8 @@ class Source:
                 plt.title('Assembly-wise burnup profile')
                 plt.legend(fontsize=3)
             plt.grid()
-        plt.savefig(plotpath / 'assembly_burnup_comparison.png')
+        plt.savefig(plotpath / f'assembly_burnup_comparison_{self.step}.png')
+        plt.close()
 
         #make a 3D checkerboard plot for the burnup profile, considering only the quarter checkerboard that is indicated in asso
         fig = plt.figure(dpi=300, figsize=(10, 6))
@@ -818,10 +827,11 @@ class Source:
         #change the orientation of the graph
         ax.view_init(elev=30, azim=45)
         #plt.title('3D Assembly-wise burnup profile')
-        plt.savefig(plotpath / '3D_assembly_burnup_comparison.png', bbox_inches='tight')
+        plt.savefig(plotpath / f'3D_assembly_burnup_comparison_{self.step}.png', bbox_inches='tight')
+        plt.close()
 
         # save the data for these assemblies to a csv file
-        with open(checkspath / 'burnup_profile.csv', 'w', newline='') as csvfile:
+        with open(checkspath / f'burnup_profile_{self.step}.csv', 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             headers = ['Axial Node'] + [f'Assembly {assembly["coordinates"]}' for assembly in assembly_list if assembly['coordinates'] in geom.source]
             writer.writerow(headers)
@@ -842,7 +852,8 @@ class Source:
                 plt.title('Assembly-wise U235 composition')
                 plt.legend(fontsize=3)
             plt.grid()
-        plt.savefig(plotpath / 'assembly_u235_comparison.png')
+        plt.savefig(plotpath / f'assembly_u235_comparison_{self.step}.png')
+        plt.close()
 
         #SANITY CHECK: plot U238 composition for each assembly
         plt.figure(dpi=300, figsize=(10, 6))
@@ -854,7 +865,8 @@ class Source:
                 plt.title('Assembly-wise U238 composition')
                 plt.legend(fontsize=3)
             plt.grid()
-        plt.savefig(plotpath / 'assembly_u238_comparison.png')
+        plt.savefig(plotpath / f'assembly_u238_comparison_{self.step}.png')
+        plt.close()
 
         #SANITY CHECK: plot PU239 composition for each assembly
         plt.figure(dpi=300, figsize=(10, 6))
@@ -866,7 +878,8 @@ class Source:
                 plt.title('Assembly-wise PU239 composition')
                 plt.legend(fontsize=3)
             plt.grid()
-        plt.savefig(plotpath / 'assembly_pu239_comparison.png')
+        plt.savefig(plotpath / f'assembly_pu239_comparison_{self.step}.png')
+        plt.close()
 
         #SANITY CHECK: plot PU241 composition for each assembly
         plt.figure(dpi=300, figsize=(10, 6))
@@ -878,7 +891,8 @@ class Source:
                 plt.title('Assembly-wise PU241 composition')
                 plt.legend(fontsize=3)
             plt.grid()
-        plt.savefig(plotpath / 'assembly_pu241_comparison.png')
+        plt.savefig(plotpath / f'assembly_pu241_comparison_{self.step}.png')
+        plt.close()
 
         # extract the factors necessary for the source term
 
@@ -1029,10 +1043,11 @@ class Source:
                     plt.ylabel('Probability(-)')
                     plt.title('Weighted Fission Spectrum')
         plt.grid()
-        plt.savefig(os.path.join(plotpath, 'fission_spectrum.png'))
+        plt.savefig(os.path.join(plotpath, f'fission_spectrum_{self.step}.png'))
+        plt.close()
 
         # Save fission spectrum to CSV
-        with open(os.path.join(checkspath, 'fission_spectrum.csv'), 'w', newline='') as csvfile:
+        with open(os.path.join(checkspath, f'fission_spectrum_{self.step}.csv'), 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             headers = ['Energy (MeV)'] + [f'Assembly {assembly["coordinates"]}' for assembly in assembly_list if assembly['coordinates'] in geom.source]
             writer.writerow(headers)
@@ -1506,7 +1521,8 @@ class Source:
                 plt.title('Assembly-wise burnup profile')
                 plt.legend(fontsize=3)
             plt.grid()
-        plt.savefig(plotpath / 'assembly_burnup_comparison.png')
+        plt.savefig(plotpath / f'assembly_burnup_comparison_{self.step}.png')
+        plt.close()
 
         #make a 3D checkerboard plot for the burnup profile, considering only the quarter checkerboard that is indicated in asso
         fig = plt.figure(dpi=300, figsize=(10, 6))
@@ -1535,10 +1551,11 @@ class Source:
         #change the orientation of the graph
         ax.view_init(elev=30, azim=45)
         #plt.title('3D Assembly-wise burnup profile')
-        plt.savefig(plotpath / '3D_assembly_burnup_comparison.png', bbox_inches='tight')
+        plt.savefig(plotpath / f'3D_assembly_burnup_comparison_{self.step}.png', bbox_inches='tight')
+        plt.close()
 
         # save the data for these assemblies to a csv file
-        with open(checkspath / 'burnup_profile.csv', 'w', newline='') as csvfile:
+        with open(checkspath / f'burnup_profile_{self.step}.csv', 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             headers = ['Axial Node'] + [f'Assembly {assembly["coordinates"]}' for assembly in assembly_list if assembly['coordinates'] in geom.source]
             writer.writerow(headers)
@@ -1559,7 +1576,8 @@ class Source:
                 plt.title('Assembly-wise U235 composition')
                 plt.legend(fontsize=3)
             plt.grid()
-        plt.savefig(plotpath / 'assembly_u235_comparison.png')
+        plt.savefig(plotpath / f'assembly_u235_comparison_{self.step}.png')
+        plt.close()
 
         #SANITY CHECK: plot U238 composition for each assembly
         plt.figure(dpi=300, figsize=(10, 6))
@@ -1571,7 +1589,8 @@ class Source:
                 plt.title('Assembly-wise U238 composition')
                 plt.legend(fontsize=3)
             plt.grid()
-        plt.savefig(plotpath / 'assembly_u238_comparison.png')
+        plt.savefig(plotpath / f'assembly_u238_comparison_{self.step}.png')
+        plt.close()
 
         #SANITY CHECK: plot PU239 composition for each assembly
         plt.figure(dpi=300, figsize=(10, 6))
@@ -1583,7 +1602,8 @@ class Source:
                 plt.title('Assembly-wise PU239 composition')
                 plt.legend(fontsize=3)
             plt.grid()
-        plt.savefig(plotpath / 'assembly_pu239_comparison.png')
+        plt.savefig(plotpath / f'assembly_pu239_comparison_{self.step}.png')
+        plt.close()
 
         #SANITY CHECK: plot PU241 composition for each assembly
         plt.figure(dpi=300, figsize=(10, 6))
@@ -1595,7 +1615,8 @@ class Source:
                 plt.title('Assembly-wise PU241 composition')
                 plt.legend(fontsize=3)
             plt.grid()
-        plt.savefig(plotpath / 'assembly_pu241_comparison.png')
+        plt.savefig(plotpath / f'assembly_pu241_comparison_{self.step}.png')
+        plt.close()
 
         # extract the factors necessary for the source term
 
@@ -1737,10 +1758,11 @@ class Source:
                     plt.ylabel('Probability(-)')
                     plt.title('Weighted Fission Spectrum')
         plt.grid()
-        plt.savefig(os.path.join(plotpath, 'fission_spectrum.png'))
+        plt.savefig(os.path.join(plotpath, f'fission_spectrum_{self.step}.png'))
+        plt.close()
 
         # Save fission spectrum to CSV
-        with open(os.path.join(checkspath, 'fission_spectrum.csv'), 'w', newline='') as csvfile:
+        with open(os.path.join(checkspath, f'fission_spectrum_{self.step}.csv'), 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
             headers = ['Energy (MeV)'] + [f'Assembly {assembly["coordinates"]}' for assembly in assembly_list if assembly['coordinates'] in geom.source]
             writer.writerow(headers)
@@ -1981,3 +2003,217 @@ class Source:
                     lines[i] = f'set srcrate {source_sum:.5e}\n'
                     break
             f.writelines(lines)
+
+    def timeaverage(
+            self, cycle: "Cycle", geom: "Geometry", out: "Outputs", average_method: str = 'corexp') -> None:
+        """
+        Time-average the external source distribution over the cycle based on either equivalent
+        full power days (efpd) or core exposure (corexp).
+
+        This method collects the per-step external source and main files previously written by
+        the write_source_ass / write_source_pin / write_source_pin2D methods, weights the source
+        strengths and energy spectra of each state point by the corresponding time-integration
+        weight, and writes a single cycle-averaged source specification and main input file.
+
+        Parameters
+        ----------
+        cycle : Cycle
+            Cycle object containing the state point information (cycleinfodays, cycleinfopow,
+            cycleinfoexp), polaris options, energy group information and Polaris group widths.
+        geom : Geometry
+            Geometry object. Accepted for signature consistency with the other Source methods;
+            not used by the averaging procedure.
+        out : Outputs
+            Outputs object for managing output directories. The per-step source files are read
+            from the neutron_source directory and the averaged files are written to
+            neutron_source/average.
+        filepath : Union[str, Path]
+            Path to the Serpent main input file used as template for the averaged main file.
+        flag : str, optional
+            Time-integration variable: 'efpd' weights by equivalent full power days, 'corexp'
+            weights by core exposure increase. Default is 'corexp'.
+
+        Returns
+        -------
+        None
+            Writes LWR-10-external_source_avg.ser and LWR-09-main_avg.ser to the
+            neutron_source/average directory.
+
+        Notes
+        -----
+        - The current integration strategy neglects the last timestep. One alternative could be to neglect the first timestep instead or to use a trapezoidal integration scheme. 
+          This is a modeling choice that can be revisited. See "A Versatile Methodology for Reactor Pressure Vessel Aging Assessments, R.Vuiart et al." for a detailed discussion.
+        - Guide tubes and instrument tubes are filtered out via their zero source weight.
+        - Averaged files are written to a dedicated sub-directory so that they are not picked
+          up as state points on a subsequent call.
+
+        See Also
+        --------
+        write_source_ass : Assembly-level source term output.
+        write_source_pin : Pin-level source term output.
+        """
+
+        print('Selected class method to time average - Step 1: Averaging Source Distribution and Weight')
+
+        days = cycle.cycleinfodays
+        powlevel= cycle.cycleinfopow
+        corexp= cycle.cycleinfoexp
+        efpd_dt= np.zeros(len(days)-1)
+        corexp_dt= np.zeros(len(days)-1)
+
+        for i in range(len(days)-1):
+            #efpd_dt[i]= (powlevel[i+1]/100)*(days[i+1]-days[i])    old
+            efpd_dt[i]= 0.5*((powlevel[i+1]+powlevel[i])/100)*((days[i+1]-days[i])/days[-1])
+            corexp_dt[i]= (corexp[i+1]-corexp[i])
+            #efpd[i+1]= efpd[i]+ efpd_dt[i]
+
+        # define weight to time average based on equivalent full power and exposure
+        efpdw= efpd_dt/sum(efpd_dt)
+        corexpw= corexp_dt/sum(corexp_dt)
+
+        # define input/output directories for source averaging (consistent with write_source_* methods)
+        srcpath = Path(os.path.join(out.base_dir, 'neutron_source'))
+        avgpath = srcpath / 'average'
+        avgpath.mkdir(parents=True, exist_ok=True)
+
+        # collect the per-step files written by the write_source_* methods, keyed by step number
+        steppattern = re.compile(r'_(\d+)(?:AWS|PWS)\.ser$')
+        sourcefiles= {}
+        mainfiles= {}
+        for file in sorted(os.listdir(srcpath)):
+            match = steppattern.search(file)
+            if match is None:
+                continue
+            if file.startswith('LWR-10-external_source_'):
+                sourcefiles[int(match.group(1))]= srcpath / file
+            elif file.startswith('LWR-09-main_'):
+                mainfiles[int(match.group(1))]= srcpath / file
+
+        if not sourcefiles:
+            print(f'No external source files found in {srcpath}: run the write_source_* methods first.')
+            raise SystemExit
+
+        #open sample file: the first available state point defines the source headings and positions
+        with open(sourcefiles[min(sourcefiles)], 'r') as f:
+            lines= f.readlines()
+
+        #extract source heading
+        headings= []
+        posheadings= []
+        for line in lines:
+            if 'src' in line:
+                data= line.split()
+                #insert a filter to neglect guide tubes and instrument tubes
+                if float(data[4]) != 0.0:
+                    # save source name
+                    head= str('src ') + str(data[1])
+                    headings.append(head)
+                    # save source position
+                    pos= data[5:]
+                    posheadings.append(pos)
+
+        # Create a dictionary to store the source data for each heading
+        if (cycle.polarisoption == 0) or (cycle.polarisoption == 1) :
+            source_data = {heading: {'posheading': posheading, 'weight': 0, 'energy': np.zeros(len(self.bins)), 'ubound': np.zeros(len(self.bins))} for heading, posheading in zip(headings, posheadings)}
+            rangeselection= len(self.bins)
+        elif (cycle.polarisoption == 2) or (cycle.polarisoption == 3):
+            source_data = {heading: {'posheading': posheading, 'weight': 0, 'energy': np.zeros(cycle.groups), 'ubound': np.zeros(cycle.groups)} for heading, posheading in zip(headings, posheadings)}
+            rangeselection= cycle.groups
+
+        # Iterate over all files once and accumulate data
+        for file_number, file in sorted(sourcefiles.items()):
+            print(f'Processing file: {file.name}')
+            if file_number != (len(cycle.cycleinfopow)-1): # the current integration strategy neglects the last timestep
+
+                with open(file, 'r') as f:
+                    lines = f.readlines()
+
+                for i, line in enumerate(lines):
+                    if 'src' in line:
+                        data= line.split()
+                        heading= str('src ') + str(data[1])
+                        if heading in source_data:
+
+                            if average_method == 'efpd':
+                                source_data[heading]['weight'] += float(data[4])*efpdw[file_number]
+                            elif average_method == 'corexp':
+                                source_data[heading]['weight'] += float(data[4])*corexpw[file_number]
+
+
+                            for j in range(rangeselection):
+                                energy_line = lines[i + 1 + j]
+                                energy_data = energy_line.split()
+
+                                if average_method == 'efpd':
+                                    source_data[heading]['energy'][j] += float(energy_data[1])*efpdw[file_number]
+                                elif average_method == 'corexp':
+                                    source_data[heading]['energy'][j] += float(energy_data[1])*corexpw[file_number]
+
+                                # the group structure is a property of the energy grid, not of the
+                                # time weighting: it is read for every flag (used by polarisoption 2/3)
+                                source_data[heading]['ubound'][j] = float(energy_data[0])
+
+        # Normalize weights
+        print('Normalizing weights')
+        total_weight = sum(data['weight'] for data in source_data.values())
+        for heading in source_data:
+            source_data[heading]['weight'] /= total_weight
+
+        # Integrate and normalize spectra
+        print('Integrating and normalizing energy spectra')
+        bin_widths = np.diff(self.bins)
+        polaris_widths= cycle.polariswidth
+        #print(polaris_widths)
+        for heading in source_data:
+            if (cycle.polarisoption == 0) or (cycle.polarisoption == 1):
+                integral = np.sum(source_data[heading]['energy'][1:] * bin_widths)
+                source_data[heading]['energy'][1:] /= integral
+            elif (cycle.polarisoption == 2) or (cycle.polarisoption == 3):
+                integral = np.sum(source_data[heading]['energy'][1:] * polaris_widths)
+                source_data[heading]['energy'][1:] /= integral
+
+        # Write time-averaged source
+        with open(os.path.join(avgpath,'LWR-10-external_source_avg.ser'), 'w') as f:
+            for heading in source_data:
+                new_heading = heading + f" n sw {source_data[heading]['weight']:.5e} " + " ".join(source_data[heading]['posheading'])
+                f.write(new_heading + "\n")
+                f.write("1E-11 0.0 \n")
+                for j in range(rangeselection - 1):
+                    if (cycle.polarisoption == 0) or (cycle.polarisoption == 1):
+                        f.write(f"{self.bins[j+1]:.5e} {source_data[heading]['energy'][j+1]:.5e}\n")
+                    elif (cycle.polarisoption == 2) or (cycle.polarisoption == 3):
+                        f.write(f"{source_data[heading]['ubound'][j+1]:.5e} {source_data[heading]['energy'][j+1]:.5e}\n")
+
+        print('Selected class method to time average - Step 2: Averaging Source Distribution and Weight')
+
+        srcrate= np.zeros(len(mainfiles))
+
+        for file_number, file in sorted(mainfiles.items()):
+            print(f'Processing file for source rate: {file_number}')
+
+            with open(file, 'r') as f:
+                lines= f.readlines()
+            for line in lines:
+                if 'set srcrate' in line:
+                    data= line.split()
+                    srcrate[file_number]= float(data[2])
+        # define weight to time average based on equivalent full power
+        if average_method == 'efpd':
+            wsrcrate= srcrate[:-1]*efpdw # the current time integration strategy neglects the last timestep
+            avg_srcrate= sum(wsrcrate)/sum(efpdw)
+        elif average_method == 'corexp':
+            wsrcrate= srcrate[:-1]*corexpw # the current time integration strategy neglects the last timestep
+            avg_srcrate= sum(wsrcrate)/sum(corexpw)
+
+        # read the template main file used to write the averaged source rate
+        with open(sourcefiles[min(sourcefiles)], 'r') as f:
+            lines= f.readlines()
+
+        # create main file based on average srcrate
+        with open(os.path.join(avgpath,'LWR-09-main_avg.ser'), 'w') as f:
+            for line in lines:
+                if 'set srcrate ' in line:
+                    sub= 'set srcrate ' + f"{avg_srcrate:.5e}\n"
+                    f.write(sub)
+                else:
+                    f.write(line)
