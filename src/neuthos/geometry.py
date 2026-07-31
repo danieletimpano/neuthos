@@ -176,33 +176,53 @@ class Geometry:
         a2 = (self.ass_pitch ** 2)
         self.nodevolume = [a2 * h for h in self.meshheight]
 
-    def compute_2D_coordinates_VERA_qtr(self) -> None:
+    def compute_2D_coordinates_VERA_qtr(
+        self,
+        filepath: Union[str, Path] = None,
+        axial_header_token: str = "axial_edit_bounds",
+        ) -> None:
         """
         Compute 2D radial coordinates for VERA southeast quarter core with VERA indexing.
-        
+
         This method generates pin coordinates (i, j, m, n, x_pin, y_pin) for all pins in the core,
-        then maps assemblies in the southeast quarter to VERA indices. Only pins belonging to 
+        then maps assemblies in the southeast quarter to VERA indices. Only pins belonging to
         assemblies in the source list are included in the output with their VERA indices.
-        
+
         The method:
         - Computes full 2D pin coordinates in PARCS format
         - Identifies southeast quarter assemblies from the full core map
         - Creates a mapping between assembly positions and VERA indices
         - Stores coordinates with VERA indices in coordinatesVERA_with_index
-        
+        - Populates the single-node axial mesh (z_core, meshheight, nodevolume) so that the
+          2D source writer can place the source slab consistently with the 3D case
+
+        Parameters
+        ----------
+        filepath : Union[str, Path], optional
+            Path to the VERA input file (.inp). When provided, the axial extent of the single
+            2D node is read from the `axial_header_token` card (e.g. `axial_edit_bounds 0.0 1.0`
+            for a 2D VERA case) and collapsed to a single node spanning [first, last] bound, so
+            that the source slab matches the axial extent of the VERA/Serpent 2D geometry.
+            When omitted, the node spans [0, active_height] using the Geometry active_height.
+        axial_header_token : str, optional
+            Header token identifying the axial mesh line in the input file. Default is
+            "axial_edit_bounds" (same token as compute_3D_coordinates_VERA_qtr).
+
         Raises
         ------
         None
-        
+
         Notes
         -----
         Only assemblies listed in self.source are processed for VERA indexing.
         The VERA indexing starts from 0 for the first southeast quarter assembly.
+        The 2D case has a single axial node, so z_core holds two edges [z_bot, z_top] and
+        meshheight holds a single value (z_top - z_bot).
         """
 
         print("Computing core VERA coordinates ...")
 
-        self.coordinates.clear() 
+        self.coordinates.clear()
 
         a_mid = (self.nass + 1) // 2
         p_mid = (self.npin + 1) // 2
@@ -244,13 +264,45 @@ class Geometry:
         # Now map the pin coordinates to VERA indices
         for coord in self.coordinates:
             # This is valid only for the quarter bottom right of the core
-            if ([coord[0],coord[1]] in self.source):  
+            if ([coord[0],coord[1]] in self.source):
                 for i in range(len(connect)):
                     if (connect.iloc[i, 0] == coord[0]) and (connect.iloc[i, 1] == coord[1]):
                         vera_index = connect.iloc[i, 2]
                         self.coordinatesVERA_with_index.append((coord[0], coord[1], coord[2], coord[3], coord[4], coord[5], vera_index))
                         print(f'Assembly {coord[0]},{coord[1]} has VERA index {vera_index}')
                         break
+
+        # Populate the single-node axial mesh (core height) so the 2D source writer has z_core /
+        # meshheight, consistently with compute_3D_coordinates_VERA_qtr.
+        self.z_core.clear()
+        self.nodevolume.clear()
+
+        z_bot, z_top = None, None
+        if filepath is not None:
+            filepath = Path(filepath)
+            with open(filepath, 'r') as f:
+                lines = f.readlines()
+            for line in lines:
+                if axial_header_token in line:
+                    bounds = [float(x) for x in line.split()[1:]]
+                    if len(bounds) >= 2:
+                        # collapse to a single 2D node spanning the full axial extent
+                        z_bot, z_top = bounds[0], bounds[-1]
+                    break
+
+        if z_bot is None:
+            # no file (or malformed card): fall back to [0, active_height]
+            z_bot, z_top = 0.0, self.active_height
+            print(f'Axial mesh not read from file: using single node [0, active_height] = [0, {self.active_height}]')
+        else:
+            print(f'Axial mesh (2D single node) read from {axial_header_token}: [{z_bot}, {z_top}]')
+
+        # z_core holds the two node edges; meshheight the single node height
+        self.z_core = [z_bot, z_top]
+        self.meshheight = np.diff(self.z_core)
+        self.nodevolume = [(self.ass_pitch ** 2) * h for h in self.meshheight]
+        print('Mesh heights:')
+        print(self.meshheight)
 
     def compute_3D_coordinates_VERA_qtr(self,
         filepath: Union[str, Path], # users can pass str or Path

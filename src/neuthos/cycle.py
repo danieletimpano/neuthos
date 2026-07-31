@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import List, Tuple, Union
 from matplotlib import pyplot as plt
 import numpy as np
+import h5py
 import re
 import os
 import math
@@ -84,6 +85,13 @@ class Cycle:
             List of interpolated pin power tuples (step, i_index, j_index, k_index, x_index, y_index, power_value).
         pinpowerdata2D : List[Tuple[int, int, int, int, int, float]]
             List of 2D pin power tuples (step, i_index, j_index, x_index, y_index, power_value).
+        pinpowerdataVERA : List[Tuple]
+            List of 3D VERA pin power tuples (step, vera_index, i_index, j_index, k_index,
+            m_index, n_index, x_pin, y_pin, power_value, normalized_power) extended with
+            (U235, U238, Pu239, Pu241) number densities when explicitdeploption is True.
+        pinpowerdataVERA2D : List[Tuple]
+            List of 2D VERA pin power tuples (step, vera_index, i_index, j_index, k_index,
+            m_index, n_index, x_pin, y_pin, power_value, normalized_power).
     """
     # --- cycle inputs ---
     nassembly_with_reflectors: int                  # total number of assemblies including reflectors
@@ -93,6 +101,7 @@ class Cycle:
     groups: int = None                              # number of energy groups in Polaris finegroup output (default: 252) - input is ignored if polarisoption is 0 or 1
     interpoption: bool = False                      # whether to perform power interpolation (default: False) - input is ignored if polarisoption is 0 or 1 
     interpolnodes: int = None                       # number of nodes to use for power interpolation (default: None) -- option only possible for pin power source
+    explicitdeploption: bool = True                # whether the MPACT explicit depletion module was used (VERA only): if True, pin-wise U-235/U-238/Pu-239/Pu-241 densities are read alongside the pin powers
 
     # --- computed / parsed outputs ---
     cycleinfopow: List[float] = field(default_factory=list)
@@ -115,6 +124,8 @@ class Cycle:
     pinpowerdata: List[Tuple[int, int, int, int, int, int, float]] = field(default_factory=list) # List of tuples (step, i_index, j_index, k_index, x_index, y_index, power_value)
     pinpowerdatainterp: List[Tuple[int, int, int, int, int, int, float]] = field(default_factory=list) # List of tuples (step, i_index, j_index, k_index, x_index, y_index, power_value) for interpolated power values
     pinpowerdata2D: List[Tuple[int, int, int, int, int, float]] = field(default_factory=list) # List of tuples (step, i_index, j_index, x_index, y_index, power_value) for 2D pin power data
+    pinpowerdataVERA: List[Tuple] = field(default_factory=list)                              # List of tuples (step, vera_index, i, j, k, m, n, x_pin, y_pin, power_value, normalized_power[, U235, U238, Pu239, Pu241]) for 3D VERA pin power data
+    pinpowerdataVERA2D: List[Tuple] = field(default_factory=list)                            # List of tuples (step, vera_index, i, j, k, m, n, x_pin, y_pin, power_value, normalized_power) for 2D VERA pin power data
 
     # PARCS related methods
 
@@ -125,33 +136,55 @@ class Cycle:
         The information extracted includes power levels, days, and exposure for each step in the cycle.
         """
         
-        print(f'Extracting cycle information from file: {filepath}')
-        
-        with open(filepath, 'r') as f:
-            file_content = f.read()
+        if filepath.endswith('.parcs_dpl'): 
+            print(f'Extracting cycle information from file: {filepath}')
+            
+            with open(filepath, 'r') as f:
+                file_content = f.read()
 
-        file_content_statepoint = file_content.find('   PT   RE     Keff  Power  AxOff     Pz    Pxy   Pxyz   PPin    Days B(GW/T)    Bmax   Beta  notch    ppm  Tf(K)  Tm(K)  d(g/cc) void(%) Xe(1/cc)  Sm(1/cc)     Fdh      Fq    CHFR', 0)  
-        file_content_end = file_content.find('_______________________________________________________________________________', 0)
-        summary_content = file_content[file_content_statepoint:file_content_end].split('\n')[:]
-        #print(summary_content)
+            file_content_statepoint = file_content.find('   PT   RE     Keff  Power  AxOff     Pz    Pxy   Pxyz   PPin    Days B(GW/T)    Bmax   Beta  notch    ppm  Tf(K)  Tm(K)  d(g/cc) void(%) Xe(1/cc)  Sm(1/cc)     Fdh      Fq    CHFR', 0)  
+            file_content_end = file_content.find('_______________________________________________________________________________', 0)
+            summary_content = file_content[file_content_statepoint:file_content_end].split('\n')[:]
+            #print(summary_content)
 
-        # Loop through the lines to extract the numerical data
-        for line in summary_content:
-            # Split the line into columns
-            cols = line.split()
-            # Ignore header lines and process only rows with numerical data
-            if len(cols) > 0: # avoid empty lines
-                if cols[0].isdigit():  # The first value in a valid row should be a number
-                    self.cycleinfopow.append(float(cols[3]))
-                    self.cycleinfodays.append(float(cols[9]))
-                    self.cycleinfoexp.append(float(cols[10]))
+            # Loop through the lines to extract the numerical data
+            for line in summary_content:
+                # Split the line into columns
+                cols = line.split()
+                # Ignore header lines and process only rows with numerical data
+                if len(cols) > 0: # avoid empty lines
+                    if cols[0].isdigit():  # The first value in a valid row should be a number
+                        self.cycleinfopow.append(float(cols[3]))
+                        self.cycleinfodays.append(float(cols[9]))
+                        self.cycleinfoexp.append(float(cols[10]))
 
-        print('The cycle Power Levels are:')
-        print(self.cycleinfopow)
-        print('The cycle corresponding days are:')
-        print(self.cycleinfodays)
-        print('The cycle corresponding exposure are:')
-        print(self.cycleinfoexp)
+            print('The cycle Power Levels are:')
+            print(self.cycleinfopow)
+            print('The cycle corresponding days are:')
+            print(self.cycleinfodays)
+            print('The cycle corresponding exposure are:')
+            print(self.cycleinfoexp)
+
+        elif filepath.endswith(".h5"):
+            print(f'Extracting cycle information from HDF5 file: {filepath}')
+
+            self.cycleinfopow = []
+            self.cycleinfodays = []
+            self.cycleinfoexp = []
+
+            with h5py.File(filepath, 'r') as h5file:
+                for step in range(self.nsteps):
+                    print(f'Extracting data for step {step+1} from HDF5 file...')
+                    self.cycleinfopow.append(float(h5file[f'STATE_{step+1:04d}/power'][()]))
+                    self.cycleinfodays.append(float(h5file[f'STATE_{step+1:04d}/exposure_efpd'][()]))
+                    self.cycleinfoexp.append(float(h5file[f'STATE_{step+1:04d}/exposure'][()]))
+
+            print('The cycle Power Levels are:')
+            print(self.cycleinfopow)
+            print('The cycle corresponding days are:')
+            print(self.cycleinfodays)
+            print('The cycle corresponding exposure are:')
+            print(self.cycleinfoexp)
 
     def extract_coolant_info(
             self,  geom: "Geometry", filepath: Union[str, Path]) -> None:
@@ -651,7 +684,6 @@ class Cycle:
                 f.write(f'Total power: {total_power}\n')
                 f.write(f'Count: {count}')
 
-
     def extract_lattype(
             self, filepath: Union[str, Path]) -> None:
         """
@@ -1010,4 +1042,444 @@ class Cycle:
                 self.latcomp.append((latcomp))
 
     # VERA related methods
-    
+
+    def _read_vera_card_block(self, lines: List[str], card: str) -> List[List[str]]:
+        """
+        Collect the token rows belonging to a VERA map card (assm_map, core_shape, ...).
+
+        The rows of a VERA map card follow the card name on the subsequent lines and the
+        block is terminated by the first blank line. Inline comments (introduced by '!')
+        are stripped before tokenising.
+        """
+        rows = []
+        found = False
+        for line in lines:
+            stripped = line.split('!')[0].rstrip()
+            if not found:
+                if stripped.strip().startswith(card):
+                    found = True
+                    # a card may carry its first row on the same line
+                    tail = stripped.strip()[len(card):].split()
+                    if tail:
+                        rows.append(tail)
+                continue
+            if not stripped.strip():
+                break
+            rows.append(stripped.split())
+        return rows
+
+    def _expand_vera_map(self, rows: List[List[str]], nvera: int) -> np.ndarray:
+        """
+        Expand a VERA map given as an octant, a quarter or a full map into a full nvera x nvera map.
+
+        VERA maps are written outwards from the core centre. An octant is stored as a triangular
+        block (row r holds at most r+1 entries) and is mirrored across the diagonal to recover the
+        quarter; the quarter is then mirrored about the centre row and column to recover the full
+        core. Entries falling outside the core shape are truncated by the caller.
+        """
+        centre = nvera // 2
+        half = centre + 1
+
+        # classify the layout from the row lengths
+        if len(rows) == nvera and all(len(r) == nvera for r in rows):
+            layout = 'full'
+        elif all(len(r) <= i + 1 for i, r in enumerate(rows)):
+            layout = 'octant'
+        else:
+            layout = 'quarter'
+        print(f'VERA map layout recognised as: {layout}')
+
+        if layout == 'full':
+            return np.array([[self._vera_label_to_type(v) for v in r] for r in rows], dtype=int)
+
+        quarter = np.zeros((half, half), dtype=int)
+        for r, row in enumerate(rows):
+            for c, val in enumerate(row):
+                quarter[r, c] = self._vera_label_to_type(val)
+
+        if layout == 'octant':
+            # mirror across the diagonal to complete the quarter
+            for r in range(half):
+                for c in range(half):
+                    if quarter[r, c] == 0 and quarter[c, r] != 0:
+                        quarter[r, c] = quarter[c, r]
+
+        # mirror the quarter about the centre row and column
+        full = np.zeros((nvera, nvera), dtype=int)
+        for i in range(nvera):
+            for j in range(nvera):
+                full[i, j] = quarter[abs(i - centre), abs(j - centre)]
+        return full
+
+    def _vera_label_to_type(self, label: str) -> int:
+        """
+        Convert a VERA assembly label to the integer assembly type used by the PARCS structures.
+
+        Numeric labels are taken as-is; non-numeric labels ('-', 'A', ...) are mapped to 0 when
+        they denote an empty position and to a stable sequential index otherwise.
+        """
+        label = label.strip()
+        if label in ('-', '', '0'):
+            return 0
+        if label.lstrip('-').isdigit():
+            return int(label)
+        # non numeric label: assign a stable id based on first appearance
+        if not hasattr(self, '_vera_label_ids'):
+            self._vera_label_ids = {}
+        if label not in self._vera_label_ids:
+            self._vera_label_ids[label] = len(self._vera_label_ids) + 1
+        return self._vera_label_ids[label]
+
+    def extract_assyradial_VERA(
+            self, geom: "Geometry", filepath: Union[str, Path]) -> None:
+        """
+        Extracts assembly radial configuration from a VERA input file (assm_map card).
+
+        Produces the same structure as extract_assyradial: a list of (x_index, y_index, value)
+        tuples covering the full geom.nass x geom.nass map, where value is the assembly type and
+        0 marks a position without a fuel assembly.
+
+        The assm_map card may be given as an octant, a quarter or a full map; the layout is
+        recognised automatically and expanded to the full core. The VERA map covers only the
+        fuel region (core_shape), whereas the PARCS/neuthos map carries an additional reflector
+        ring, so the VERA map is inserted with an offset of (geom.nass - nvera) // 2.
+
+        Parameters
+        ----------
+        geom : Geometry
+            Geometry object providing the neuthos core map size (nass).
+        filepath : Union[str, Path]
+            Path to the VERA input file (.inp).
+
+        Returns
+        -------
+        None
+            Populates self.assyradial.
+        """
+
+        print('Extracting assembly radial configuration from VERA input ...')
+
+        with open(filepath, 'r') as f:
+            lines = f.readlines()
+
+        # core size: prefer the core_shape block, fall back to the 'size' card
+        shape_rows = self._read_vera_card_block(lines, 'core_shape')
+        if shape_rows:
+            core_shape = np.array([[int(v) for v in r] for r in shape_rows], dtype=int)
+            nvera = core_shape.shape[0]
+        else:
+            core_shape = None
+            nvera = None
+            for line in lines:
+                parts = line.split('!')[0].split()
+                if len(parts) >= 2 and parts[0] == 'size':
+                    nvera = int(parts[1])
+                    break
+            if nvera is None:
+                print('No core_shape or size card found in the VERA input.')
+                raise SystemExit
+
+        map_rows = self._read_vera_card_block(lines, 'assm_map')
+        if not map_rows:
+            print('No assm_map card found in the VERA input.')
+            raise SystemExit
+
+        full = self._expand_vera_map(map_rows, nvera)
+
+        # positions outside the core shape carry no assembly
+        if core_shape is not None:
+            full = full * core_shape
+
+        # the neuthos/PARCS map carries a reflector ring around the VERA fuel map
+        offset = (geom.nass - nvera) // 2
+        if offset < 0:
+            print(f'geom.nass ({geom.nass}) is smaller than the VERA core size ({nvera}).')
+            raise SystemExit
+        print(f'VERA core size {nvera} inserted in a {geom.nass} map with offset {offset}')
+
+        for x_index in range(1, geom.nass + 1):
+            for y_index in range(1, geom.nass + 1):
+                i = x_index - 1 - offset
+                j = y_index - 1 - offset
+                if 0 <= i < nvera and 0 <= j < nvera:
+                    value = int(full[i, j])
+                else:
+                    value = 0
+                self.assyradial.append((x_index, y_index, value))
+
+    def extract_assyaxial_VERA(
+            self, geom: "Geometry", filepath: Union[str, Path]) -> None:
+        """
+        Extracts assembly axial configuration from a VERA input file (axial cards).
+
+        Produces the same structure as extract_assyaxial: a list of
+        ['FUEL'|'REFL', assy_type, assy_geom] entries, where assy_geom holds one lattice id per
+        axial node ordered from top to bottom (the ordering used by the PARCS burnup profiles).
+
+        Only the axial cards of the [ASSEMBLY] section are considered, so that the axial cards of
+        [INSERT] (control rods, burnable poisons) are not mistaken for assembly types. An axial
+        card reads 'axial <type> <z0> <label1> <z1> <label2> <z2> ...'; a segment whose label
+        starts with 'LAT' is a fuel segment and its lattice id is the numeric part of the label
+        (LAT18 -> 18). Nodes outside every fuel segment are axial reflector and take the id 0.
+
+        Parameters
+        ----------
+        geom : Geometry
+            Geometry object providing the axial node mesh (z_core) and the total node count
+            (naxial). If geom.z_core is empty the axial_edit_bounds card of the input is used.
+        filepath : Union[str, Path]
+            Path to the VERA input file (.inp).
+
+        Returns
+        -------
+        None
+            Populates self.assyaxial, and self.fuellat / self.refllat when these are still empty.
+        """
+
+        print('Extracting assembly axial configuration from VERA input ...')
+
+        with open(filepath, 'r') as f:
+            lines = f.readlines()
+
+        # axial node boundaries: prefer the mesh already used by the Geometry object
+        if len(geom.z_core) > 1:
+            bounds = [float(z) for z in geom.z_core]
+            print('Using the axial mesh already stored in geom.z_core')
+        else:
+            bounds = []
+            for line in lines:
+                parts = line.split('!')[0].split()
+                if parts and parts[0] == 'axial_edit_bounds':
+                    bounds = [float(x) for x in parts[1:]]
+                    break
+            if not bounds:
+                print('No axial mesh available: populate geom.z_core or provide an axial_edit_bounds card.')
+                raise SystemExit
+            print('Using the axial_edit_bounds card of the VERA input')
+
+        nactive = len(bounds) - 1
+
+        # collect the axial cards of the [ASSEMBLY] section only
+        section = None
+        cards = []
+        for line in lines:
+            stripped = line.split('!')[0].strip()
+            if stripped.startswith('['):
+                section = stripped.strip('[]').upper()
+                continue
+            parts = stripped.split()
+            if section == 'ASSEMBLY' and parts and parts[0] == 'axial':
+                cards.append(parts)
+
+        if not cards:
+            print('No axial cards found in the [ASSEMBLY] section of the VERA input.')
+            raise SystemExit
+
+        fuel_ids = set()
+        for parts in cards:
+            assy_type = self._vera_label_to_type(parts[1])
+
+            # the card alternates elevation / label / elevation / label / ... / elevation
+            tokens = parts[2:]
+            segments = []
+            for idx in range(1, len(tokens) - 1, 2):
+                label = tokens[idx]
+                z_lo = float(tokens[idx - 1])
+                z_hi = float(tokens[idx + 1])
+                segments.append((z_lo, z_hi, label))
+
+            # assign a lattice id to every active axial node
+            assy_geom = []
+            for k in range(nactive):
+                centre = 0.5 * (bounds[k] + bounds[k + 1])
+                lattice = 0
+                for z_lo, z_hi, label in segments:
+                    if z_lo <= centre <= z_hi and label.upper().startswith('LAT'):
+                        digits = re.findall(r'\d+', label)
+                        lattice = int(digits[0]) if digits else self._vera_label_to_type(label)
+                        break
+                assy_geom.append(lattice)
+
+            # pad with axial reflector nodes so that the profile spans geom.naxial nodes
+            pad = geom.naxial - nactive
+            if pad < 0:
+                print(f'geom.naxial ({geom.naxial}) is smaller than the number of active nodes ({nactive}).')
+                raise SystemExit
+            bottom = pad // 2
+            top = pad - bottom
+            assy_geom = [0] * bottom + assy_geom + [0] * top
+
+            fuel_ids.update(l for l in assy_geom if l != 0)
+            kind = 'FUEL' if any(l != 0 for l in assy_geom) else 'REFL'
+            # NOTE: reverse the list to have the lattice from top to bottom, REASON: burnup profiles are provided from top to bottom
+            self.assyaxial.append([kind, assy_type, assy_geom[::-1]])
+            print(f'Assembly type {assy_type} ({kind}): {nactive} active nodes, {pad} reflector nodes')
+
+        # the downstream source builders classify each node through fuellat / refllat: fill them
+        # in from the VERA cards when the PARCS lattice tables have not been read
+        if not self.fuellat and not self.refllat:
+            self.fuellat = sorted(fuel_ids)
+            self.refllat = [0]
+            print(f'fuellat / refllat populated from the VERA input: fuellat={self.fuellat}, refllat={self.refllat}')
+        else:
+            print('fuellat / refllat already populated: leaving the existing lattice tables untouched')
+
+    def extract_pinpowerVERA_2D(
+            self, geom: "Geometry", out: "Outputs", filepath: Union[str, Path], step: int) -> None:
+        """
+            Extracts 2D pinpower from a VERA (MPACT) .h5 output file.
+
+            Parameters
+            ----------
+            geom : Geometry
+                Geometry object providing the VERA pin coordinates (coordinatesVERA_with_index),
+                the number of fuel pins, the pin radius and the active height.
+            out : Outputs
+                Outputs object for managing output directories (sanity checks).
+            filepath : Union[str, Path]
+                Path to the VERA .h5 output file containing the pin power datasets.
+            step : int, optional
+                Burnup state point to extract, counted from 0. Default is 0.
+
+            Returns
+            -------
+            None
+                Populates self.pinpowerdataVERA2D with the extracted pin power data.
+
+            Notes
+            -----
+            - Pin powers are assumed to be at full power (powlevel = 1).
+            - The output power is expressed in W/cm (linear power, no axial mesh weighting).
+            - If self.explicitdeploption is True, the pin-wise U-235, U-238, Pu-239 and Pu-241
+              number densities are read from the same state point (axial slice 0) and appended
+              to each tuple, matching the layout produced by extract_pinpowerVERA.
+        """
+
+        print('The average power density is:')
+        self.corevol = geom.nfuelpins * math.pi * (geom.pin_radius)**2 * (geom.active_height)        # cm3
+        self.avgpowdens= self.asspower / (self.corevol)                                              # W/cm3
+        print(self.avgpowdens)                                                                       # W/cm3
+
+        print('Step 2.0: extracting pin power level ...')
+        with h5py.File(filepath, 'r') as h5file:
+            pin_powers = h5file[f'STATE_{step+1:04d}/pin_powers'][:]
+            if self.explicitdeploption:
+                u235 = h5file[f'STATE_{step+1:04d}/pin_isotopes_U-235'][:]
+                u238 = h5file[f'STATE_{step+1:04d}/pin_isotopes_U-238'][:]
+                pu239 = h5file[f'STATE_{step+1:04d}/pin_isotopes_Pu-239'][:]
+                pu241 = h5file[f'STATE_{step+1:04d}/pin_isotopes_Pu-241'][:]
+            case_number= step # steps are counted from 0
+            k= 0 #2D case
+            powlevel= 1 # FULL POWER ASSUMPTION
+            for coord_info in geom.coordinatesVERA_with_index:
+                # burnup statepoint, VERA unique assembly index, assembly row index, assembly column index, assembly z index, pin row index, pin column index, pin x-coordinate, pin y-coordinate, power
+                if pin_powers[coord_info[2]-1, coord_info[3]-1, 0, coord_info[6]] != 0: # check if the pin power is not zero
+                    print(f'... Extracting VERA pin power data for assembly {coord_info[6]} ...')
+                    # NOTE 1: the output will be in W/cm | ALTERNATIVE using node volume considering the whole assembly geom.nodevolume[k-1]/225
+                    # NOTE 2: added a field for U-235, U-238, Pu-239, Pu-241 (2D uses axial slice 0)
+                    if self.explicitdeploption:
+                        self.pinpowerdataVERA2D.append((case_number, coord_info[6], coord_info[0], coord_info[1], k, coord_info[2], coord_info[3], coord_info[4], coord_info[5],
+                                                 pin_powers[coord_info[2]-1, coord_info[3]-1, 0, coord_info[6]]*self.avgpowdens*math.pi*(geom.pin_radius)**2*powlevel,
+                                                 pin_powers[coord_info[2]-1, coord_info[3]-1, 0, coord_info[6]], u235[coord_info[2]-1, coord_info[3]-1, 0, coord_info[6]],
+                                                 u238[coord_info[2]-1, coord_info[3]-1, 0, coord_info[6]], pu239[coord_info[2]-1, coord_info[3]-1, 0, coord_info[6]],
+                                                 pu241[coord_info[2]-1, coord_info[3]-1, 0, coord_info[6]]))
+                    else :
+                        self.pinpowerdataVERA2D.append((case_number, coord_info[6], coord_info[0], coord_info[1], k, coord_info[2], coord_info[3], coord_info[4], coord_info[5],
+                                                 pin_powers[coord_info[2]-1, coord_info[3]-1, 0, coord_info[6]]*self.avgpowdens*math.pi*(geom.pin_radius)**2*powlevel,
+                                                 pin_powers[coord_info[2]-1, coord_info[3]-1, 0, coord_info[6]]))
+
+        # SANITY CHECK: total power (check for one burnup step)
+        outpath = Path(os.path.join(out.base_dir, 'sanity_checks/pin_source'))
+        outpath.mkdir(parents=True, exist_ok=True)
+
+        total_power= 0
+        count = 0
+        for power in self.pinpowerdataVERA2D:
+            if (power[0] == step):
+                count += 1
+                total_power += power[9]
+
+        with open(outpath / f'sanity_check_VERA2Dpin_{step}.txt', 'w') as f:
+            f.write(f'Average linear power: {total_power/count if count else 0.0}\n')
+            f.write(f'Count: {count}')
+
+    def extract_pinpowerVERA(
+            self, geom: "Geometry", out: "Outputs", filepath: Union[str, Path], step: int) -> None: 
+        """
+            Extracts 3D pinpower from a VERA (MPACT) .h5 output file.
+
+            Parameters
+            ----------
+            geom : Geometry
+                Geometry object providing the VERA pin coordinates (coordinatesVERA_with_index),
+                the axial mesh heights, the number of fuel pins, the pin radius and the active height.
+            out : Outputs
+                Outputs object for managing output directories (sanity checks).
+            filepath : Union[str, Path]
+                Path to the VERA .h5 output file containing the pin power datasets.
+            step : int, optional
+                Burnup state point to extract, counted from 0. Default is 0. The corresponding
+                VERA state is STATE_{step+1:04d}, as VERA numbers its state points from 1.
+
+            Returns
+            -------
+            None
+                Populates self.pinpowerdataVERA with the extracted pin power data.
+
+            Notes
+            -----
+            - Pin powers are assumed to be at full power (powlevel = 1).
+            - The output power is weighted by the axial mesh height, so it is expressed in W.
+            - If self.explicitdeploption is True, the pin-wise U-235, U-238, Pu-239 and Pu-241
+              number densities are read from the same state point and appended to each tuple.
+        """
+
+        print('The average power density is:')
+        self.corevol = geom.nfuelpins * math.pi * (geom.pin_radius)**2 * (geom.active_height)        # cm3
+        self.avgpowdens= self.asspower / (self.corevol)                                              # W/cm3
+        print(self.avgpowdens)                                                                       # W/cm3
+
+        print('Step 2.0: extracting pin power level ...')
+        with h5py.File(filepath, 'r') as h5file:
+            pin_powers = h5file[f'STATE_{step+1:04d}/pin_powers'][:]
+            if self.explicitdeploption:
+                u235 = h5file[f'STATE_{step+1:04d}/pin_isotopes_U-235'][:]
+                u238 = h5file[f'STATE_{step+1:04d}/pin_isotopes_U-238'][:]
+                pu239 = h5file[f'STATE_{step+1:04d}/pin_isotopes_Pu-239'][:]
+                pu241 = h5file[f'STATE_{step+1:04d}/pin_isotopes_Pu-241'][:]
+            case_number= step # case numbers are counted from zero
+            powlevel= 1 # FULL POWER ASSUMPTION
+            for coord_info in geom.coordinatesVERA_with_index:
+                # burnup statepoint, VERA unique assembly index, assembly row index, assembly column index, assembly z index, pin row index, pin column index, pin x-coordinate, pin y-coordinate, power
+                if pin_powers[coord_info[2]-1, coord_info[3]-1, coord_info[8], coord_info[6]] != 0: # check if the pin power is not zero
+                    print(f'... Extracting VERA pin power data for assembly {coord_info[6]} ...')
+                    # NOTE 1: the output will be in W/cm | ALTERNATIVE using node volume considering the whole assembly geom.nodevolume[k-1]/225
+                    # NOTE 2: added a filed for U-235, U-238, Pu-239, Pu-241
+                    if self.explicitdeploption:
+                        self.pinpowerdataVERA.append((case_number, coord_info[6], coord_info[0], coord_info[1], coord_info[8], coord_info[2], coord_info[3], coord_info[4], coord_info[5],
+                                                 pin_powers[coord_info[2]-1, coord_info[3]-1, coord_info[8], coord_info[6]]*self.avgpowdens*math.pi*(geom.pin_radius)**2*powlevel*geom.meshheight[coord_info[8]],
+                                                 pin_powers[coord_info[2]-1, coord_info[3]-1, coord_info[8], coord_info[6]], u235[coord_info[2]-1, coord_info[3]-1, coord_info[8], coord_info[6]],
+                                                 u238[coord_info[2]-1, coord_info[3]-1, coord_info[8], coord_info[6]], pu239[coord_info[2]-1, coord_info[3]-1, coord_info[8], coord_info[6]],
+                                                 pu241[coord_info[2]-1, coord_info[3]-1, coord_info[8], coord_info[6]]))
+                    else :
+                        self.pinpowerdataVERA.append((case_number, coord_info[6], coord_info[0], coord_info[1], coord_info[8], coord_info[2], coord_info[3], coord_info[4], coord_info[5],
+                                                 pin_powers[coord_info[2]-1, coord_info[3]-1, coord_info[8], coord_info[6]]*self.avgpowdens*math.pi*(geom.pin_radius)**2*powlevel*geom.meshheight[coord_info[8]],
+                                                 pin_powers[coord_info[2]-1, coord_info[3]-1, coord_info[8], coord_info[6]]))
+
+        # Sort the pin power data based on i, j, k (to keep the same order as PARCS for readability)
+        self.pinpowerdataVERA.sort(key=lambda x: (x[2], x[3], x[4]))
+
+        # SANITY CHECK: total power (check for one burnup step)
+        outpath = Path(os.path.join(out.base_dir, 'sanity_checks/pin_source'))
+        outpath.mkdir(parents=True, exist_ok=True)
+
+        total_power= 0
+        count = 0
+        for power in self.pinpowerdataVERA:
+            if (power[0] == step):
+                count += 1
+                total_power += power[9]
+
+        with open(outpath / f'sanity_check_VERA3Dpin_{step}.txt', 'w') as f:
+            f.write(f'Average pin power: {total_power/count if count else 0.0}\n')
+            f.write(f'Count: {count}')

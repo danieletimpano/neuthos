@@ -6,4 +6,6 @@ examples/PWR_source_2D/parcs_files_2D
 examples/PWR_source_2D/serpent_files
 examples/PWR_source_2D/output*
 docs/build
-
+*__pycache__*
+*runme_veractf_memcontrol*
+runme_vera_memcontrol

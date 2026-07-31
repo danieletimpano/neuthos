@@ -1,0 +1,335 @@
+[CASEID]
+  title 'Turkey Point 3 Cycle 1 - HFP with assumptions'
+
+[STATE]
+  title 'HFP TP3 Case'
+  power    100.0        ! % 2200 MW
+  boron    1167.9       ! ppm 
+  tinlet   326.85 C     ! 281.67 °C
+  tfuel    627.00 C     ! 286.11 °C
+  modden   0.74295      ! g/cm3 (taken from Serpent average output)
+  pressure 2250         ! psia
+  thexp    off          ! thermal expansion options 
+  edit  pin_isotopes_U-235 pin_isotopes_U-238 pin_isotopes_Pu-239 pin_isotopes_Pu-241   
+
+  sym      qtr  
+  feedback off 
+  search   keff
+  xenon    zero        ! zero xenon as simulated in Serpent
+
+  rodbank A  144.0
+          B  144.0
+          C  144.0
+          D  144.0
+          S  144.0 
+          P  144.0
+
+[CORE]
+  name   TP3
+  size   15              ! assemblies across core
+  apitch 21.60912
+  rated  2200 139.0201965  ! MW, Mlbs/hr = 0.61786754*225 
+  height 1
+
+  mat he 0.00000001786                  ! try to force it as zero collision regions
+  mat ss304 8.03 cr-50 -8.73150E-03
+                 cr-52 -1.68380E-01
+                 cr-53 -1.90931E-02
+                 cr-54 -4.75264E-03
+                 fe-54 -3.93712E-02
+                 fe-56 -6.18033E-01
+                 fe-57 -1.42735E-02
+                 fe-58 -1.89953E-03
+                 mn-55 -2.00200E-02
+                 ni-58 -6.37866E-02
+                 ni-60 -2.45701E-02
+                 ni-61 -1.06806E-03
+                 ni-62 -3.40546E-03
+                 ni-64 -8.67270E-04
+                 si-00 -1.1748608E-02
+
+  mat zirc 6.52764 o-16   -7.09463E-03
+                   cr-50  -7.58824E-05
+                   cr-52  -1.46332E-03
+                   cr-53  -1.65927E-04
+                   cr-54  -4.13023E-05
+                   fe-54  -1.99591E-04
+                   fe-56  -3.13318E-03
+                   fe-57  -7.23579E-05
+                   fe-58  -9.62953E-06
+                   zr-90  -5.02483E-01
+                   zr-91  -1.09581E-01
+                   zr-92  -1.67497E-01
+                   zr-94  -1.69744E-01
+                   zr-96  -2.73469E-02
+                   sn-112 -1.07589E-04
+                   sn-114 -7.32049E-05
+                   sn-115 -3.77110E-05
+                   sn-116 -1.61275E-03
+                   sn-117 -8.51851E-04
+                   sn-118 -2.68635E-03
+                   sn-119 -9.52778E-04
+                   sn-120 -3.61363E-03
+                   sn-122 -5.13555E-04
+                   sn-124 -6.42222E-04
+
+  core_shape
+    0 0 0 0 0 0 1 1 1 0 0 0 0 0 0
+    0 0 0 0 1 1 1 1 1 1 1 0 0 0 0
+    0 0 0 1 1 1 1 1 1 1 1 1 0 0 0
+    0 0 1 1 1 1 1 1 1 1 1 1 1 0 0
+    0 1 1 1 1 1 1 1 1 1 1 1 1 1 0
+    0 1 1 1 1 1 1 1 1 1 1 1 1 1 0
+    1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+    1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+    1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+    0 1 1 1 1 1 1 1 1 1 1 1 1 1 0
+    0 1 1 1 1 1 1 1 1 1 1 1 1 1 0
+    0 0 1 1 1 1 1 1 1 1 1 1 1 0 0
+    0 0 0 1 1 1 1 1 1 1 1 1 0 0 0
+    0 0 0 0 1 1 1 1 1 1 1 0 0 0 0
+    0 0 0 0 0 0 1 1 1 0 0 0 0 0 0
+
+  assm_map
+    1
+    2 1
+    1 2 1
+    2 1 2 1
+    1 2 1 2 1
+    2 1 2 3 3
+    1 3 3 3 
+    3 3 
+
+  insert_map
+    -
+    G -
+    - G -
+    G - G -
+    - G - G -
+    G - G G -
+    - G - - 
+    - - 
+
+  crd_map
+    1 
+    - - 
+    1 - 1 
+    - 1 - 1 
+    1 - 1 - - 
+    - 1 - - -  
+    1 - 1 -  
+    - -  
+ 
+  crd_bank
+    P 
+    - - 
+    S - P 
+    - A - S 
+    D - C - - 
+    - S - - -  
+    P - B -  
+    - -  
+
+  baffle ss304 0.0 2.54
+
+  vessel  mod 170.021250        ! barrel IR (cm)
+          ss304 175.101250        ! barrel OR (cm)
+          mod 197.490000        ! vessel liner IR (cm)
+          ss304 198.050000        ! vessel liner OR / vessel IR (cm)
+          cs 217.490000        ! vessel OR (cm)
+
+  pad ss304  181.133750 187.960000 360 270 ! neutron pad ID,OD arc lenth (degrees), and angular positions (degrees), NOTE: neutron pad here refers to the thermal shield
+
+  xlabel  R P N M L K J H G  F  E  D  C  B  A
+  ylabel  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
+
+  bc_bot reflecting
+  bc_top reflecting
+  bc_rad vacuum 
+
+[ASSEMBLY]
+  title "Westinghouse 15x15"
+  npin 15 
+  ppitch 1.43511
+
+  fuel U18 9.946 100.0 / 1.861  u-236=0 u-234=2.9496E-02
+  fuel U25 9.865 100.0 / 2.560  u-236=0 u-234=2.9507E-02
+  fuel U31 9.712 100.0 / 3.101  u-236=0 u-234=2.9509E-02
+
+  cell 1 0.46773 0.47500 0.53682 / U18 he zirc
+  cell 2 0.46773 0.47500 0.53682 / U25 he zirc
+  cell 3 0.46773 0.47500 0.53682 / U31 he zirc
+  cell 4         0.60806 0.69456 / mod zirc       ! guide/instrument tube
+  cell 5         0.47500 0.53682 / he zirc        ! plenum
+  cell 6                 0.53682 /    zirc        ! plug
+  cell 7                 0.53682 /     mod        ! empty
+
+  lattice LAT18 
+       4
+       1 1
+       1 1 1
+       1 1 1 4
+       4 1 1 1 1
+       1 1 4 1 1 4
+       1 1 1 1 1 1 1
+       1 1 1 1 1 1 1 1
+
+  lattice LAT25  
+       4
+       2 2
+       2 2 2
+       2 2 2 4
+       4 2 2 2 2
+       2 2 4 2 2 4
+       2 2 2 2 2 2 2
+       2 2 2 2 2 2 2 2
+
+  lattice LAT31 
+       4
+       3 3
+       3 3 3
+       3 3 3 4
+       4 3 3 3 3
+       3 3 4 3 3 4
+       3 3 3 3 3 3 3
+       3 3 3 3 3 3 3 3
+
+  lattice PLEN
+       4
+       5 5
+       5 5 5
+       5 5 5 4
+       4 5 5 5 5
+       5 5 4 5 5 4
+       5 5 5 5 5 5 5
+       5 5 5 5 5 5 5 5
+
+  lattice PLUG
+       4
+       6 6
+       6 6 6
+       6 6 6 4
+       4 6 6 6 6
+       6 6 4 6 6 4
+       6 6 6 6 6 6 6
+       6 6 6 6 6 6 6 6
+
+  lattice GAP 
+       4
+       7 7
+       7 7 7
+       7 7 7 4
+       4 7 7 7 7
+       7 7 4 7 7 4
+       7 7 7 7 7 7 7
+       7 7 7 7 7 7 7 7
+
+  axial 1 0.0 LAT18 1.0
+  axial 2 0.0 LAT25 1.0
+  axial 3 0.0 LAT31 1.0
+
+[INSERT]
+  title "Pyrex"
+  npin 15
+  mat pyrx1 2.2599  b-10 -1.29999E-02
+                    b-11 -5.22993E-02
+                    o-16 -6.37602E-01
+                    na-23 -3.40002E-02
+                    al-27 -7.09991E-03
+                    si-00 -2.55998E-01
+
+  cell X 0.2816 0.3004 0.3207 0.5084 0.52070 0.5582 / he ss304 he pyrx1 he ss304 ! (modeling of the absorber rod as from specifications)
+  cell P                             0.52070 0.5582 /                   he ss304 ! plenum
+  cell T                                     0.5582 /                      ss304 ! plug/cap
+ 
+  rodmap  PY12 
+   -
+   - -
+   - - - 
+   - - - - 
+   - - - - - 
+   - - X - - X 
+   - - - - - - - 
+   - - - - - - - -
+
+  rodmap  PL12
+   -
+   - -
+   - - - 
+   - - - - 
+   - - - - - 
+   - - P - - P 
+   - - - - - - - 
+   - - - - - - - -
+
+  rodmap  PG12
+   -
+   - -
+   - - - 
+   - - - - 
+   - - - - - 
+   - - T - - T 
+   - - - - - - - 
+   - - - - - - - -
+
+  axial G 0.0 PY12 1.0 !! assumption on pyrex content
+
+[CONTROL]
+  title "B4C with AIC tips"
+  npin 15
+  stroke  1.0 144     ! approx for 2.557 step sizes and 144 max stroke
+
+! NOTE: the TP3 benchmark does not consider a gap in the control rods (but in any case they are not used in this 2D model)
+
+  cell A  0.5245 0.5728 / aic ss304 
+  cell P  0.5245 0.5728 / he ss304         ! plenum
+  cell G         0.5728 /    ss304         ! plug   
+
+  rodmap AIC
+   -
+   - -
+   - - - 
+   - - - A 
+   A - - - - 
+   - - A - - A 
+   - - - - - - - 
+   - - - - - - - -
+
+  rodmap PLEN
+   -
+   - -
+   - - - 
+   - - - P 
+   P - - - - 
+   - - P - - P 
+   - - - - - - - 
+   - - - - - - - -
+
+  rodmap PLUG
+   -
+   - -
+   - - - 
+   - - - G 
+   G - - - - 
+   - - G - - G 
+   - - - - - - - 
+   - - - - - - - -
+
+  axial 1 0.0 AIC 1.0
+
+ [EDITS]
+  axial_edit_bounds 0.0 1.0
+
+
+[MPACT]
+  num_space         53
+  ray_spacing 0.03
+  quad_type CHEBYSHEV-YAMAMOTO
+  azimuthals_octant 24
+  polars_octant 3
+  shield_azimuthals_octant 8
+  shield_ray_spacing 0.02
+  scattering TCP0
+  res_up_scatter false
+  vis_edits core
+  xs_filename /opt/vera/VERA_4.3/share/data/MPACT/mpact51g_71_4.3m2_03262018.fmt
