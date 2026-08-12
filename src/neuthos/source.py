@@ -106,7 +106,7 @@ class Source:
 
         # create a dictionary to store assembly information based on the assembly location
         for assy in cycle.assyradial:
-            assembly= {'coordinates': [assy[0],assy[1]], 'assytype':assy[2], 'r-f-d':[], 'burnupID':[], 'nz':np.linspace(41,1,1), 'latID':[], 'buprofile':[], 'bu_clos':[], 'nubar':[], 'ERC':[], 'U235':[], 'U238':[], 'Pu239':[], 'Pu241':[], 'nu': [], 'erf':[], 'chi':[], 'F':[], 'eubound':[]}
+            assembly= {'coordinates': [assy[0],assy[1]], 'assytype':assy[2], 'r-f-d':[], 'burnupID':[], 'nz':np.linspace(geom.naxial,1,1), 'latID':[], 'buprofile':[], 'bu_clos':[], 'nubar':[], 'ERC':[], 'U235':[], 'U238':[], 'Pu239':[], 'Pu241':[], 'nu': [], 'erf':[], 'chi':[], 'F':[], 'eubound':[]}
             assembly_list.append(assembly)
 
         # define which assemblies are fuel and which are reflector or dummies
@@ -584,8 +584,8 @@ class Source:
                 print('Writing source for assembly ...' + str(index))
 
                 # compute assembly center coordinates
-                x_core = (ass[2] - (geom.nass + 1) // 2) * geom.ass_pitch
-                y_core = ((geom.nass + 1) // 2 - ass[1]) * geom.ass_pitch
+                x_core = (ass[2] - (geom.nass + 1) / 2) * geom.ass_pitch
+                y_core = ((geom.nass + 1) / 2 - ass[1]) * geom.ass_pitch
                 z_core = z_core_flip[ass[3]-1]
                 node_height= geom.meshheight[ass[3]-1]
             
@@ -707,7 +707,7 @@ class Source:
 
         # create a dictionary to store assembly information based on the assembly location
         for assy in cycle.assyradial:
-            assembly= {'coordinates': [assy[0],assy[1]], 'assytype':assy[2], 'r-f-d':[], 'burnupID':[], 'nz':np.linspace(41,1,1), 'latID':[], 'buprofile':[], 'bu_clos':[], 'nubar':[], 'ERC':[], 'U235':[], 'U238':[], 'Pu239':[], 'Pu241':[], 'nu': [], 'erf':[], 'chi':[], 'F':[]}
+            assembly= {'coordinates': [assy[0],assy[1]], 'assytype':assy[2], 'r-f-d':[], 'burnupID':[], 'nz':np.linspace(geom.naxial,1,1), 'latID':[], 'buprofile':[], 'bu_clos':[], 'nubar':[], 'ERC':[], 'U235':[], 'U238':[], 'Pu239':[], 'Pu241':[], 'nu': [], 'erf':[], 'chi':[], 'F':[]}
             assembly_list.append(assembly)
 
         # define which assemblies are fuel and which are reflector or dummies
@@ -737,16 +737,16 @@ class Source:
                     if axialinfo[1] == assembly['assytype']:
                         assembly['latID']= axialinfo[2]
             elif assembly['burnupID'] == []: #preassign values to reflector assembly types
-                assembly['latID']= [0]*41
+                assembly['latID']= [0]*geom.naxial
                 assembly['burnupID']= 0
-                assembly['buprofile']= [0]*41
-                assembly['bu_clos']= [0]*41
+                assembly['buprofile']= [0]*geom.naxial
+                assembly['bu_clos']= [0]*geom.naxial
                 assembly['nubar']= 0
                 assembly['ERC']= 0
-                assembly['U235']= [0]*41
-                assembly['U238']= [0]*41
-                assembly['Pu239']= [0]*41
-                assembly['Pu241']= [0]*41
+                assembly['U235']= [0]*geom.naxial
+                assembly['U238']= [0]*geom.naxial
+                assembly['Pu239']= [0]*geom.naxial
+                assembly['Pu241']= [0]*geom.naxial
         
         # extract the specific lattice composition: find the corresponding burnup point in lattice library and the composition
         for assembly in assembly_list:
@@ -847,6 +847,54 @@ class Source:
                 for assembly in assembly_list:
                     if assembly['coordinates'] in geom.source:
                         row.append(assembly['buprofile'][i])
+                writer.writerow(row)
+
+        #SANITY CHECK: save U235 composition for each assembly
+        with open(checkspath + f'u235_composition_{self.step}.csv', 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            headers = ['Axial Node'] + [f'Assembly {assembly["coordinates"]}' for assembly in assembly_list if assembly['coordinates'] in asssource]
+            writer.writerow(headers)
+            for i in range(geom.naxial):
+                row = [geom.naxial - i]
+                for assembly in assembly_list:
+                    if assembly['coordinates'] in geom.source:
+                        row.append(assembly['U235'][i])
+                writer.writerow(row)
+
+        #SANITY CHECK: save U238 composition for each assembly
+        with open(checkspath + f'u238_composition_{self.step}.csv', 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            headers = ['Axial Node'] + [f'Assembly {assembly["coordinates"]}' for assembly in assembly_list if assembly['coordinates'] in asssource]
+            writer.writerow(headers)
+            for i in range(geom.naxial):
+                row = [geom.naxial - i]
+                for assembly in assembly_list:
+                    if assembly['coordinates'] in geom.source:
+                        row.append(assembly['U238'][i])
+                writer.writerow(row)
+
+        #SANITY CHECK: save PU239 composition for each assembly
+        with open(checkspath + f'pu239_composition_{self.step}.csv', 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            headers = ['Axial Node'] + [f'Assembly {assembly["coordinates"]}' for assembly in assembly_list if assembly['coordinates'] in asssource]
+            writer.writerow(headers)
+            for i in range(geom.naxial):
+                row = [geom.naxial - i]
+                for assembly in assembly_list:
+                    if assembly['coordinates'] in geom.source:
+                        row.append(assembly['Pu239'][i])
+                writer.writerow(row)
+        
+        #SANITY CHECK: save PU241 composition for each assembly
+        with open(checkspath + f'pu241_composition_{self.step}.csv', 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            headers = ['Axial Node'] + [f'Assembly {assembly["coordinates"]}' for assembly in assembly_list if assembly['coordinates'] in asssource]
+            writer.writerow(headers)
+            for i in range(geom.naxial):
+                row = [geom.naxial - i]
+                for assembly in assembly_list:
+                    if assembly['coordinates'] in geom.source:
+                        row.append(assembly['Pu241'][i])
                 writer.writerow(row)
 
         #SANITY CHECK: plot U235 composition for each assembly
@@ -1134,7 +1182,7 @@ class Source:
         else:
             # iterate on each pin to get source term
             for pin in cycle.pinpowerdata:
-                if ([pin[1], pin[2]] in geom.source) and (pin [0] == self.step+1):
+                if ([pin[1], pin[2]] in geom.source) and (pin [0] == self.step+1) and (pin[6] != 0): # only consider locations with non-zero power:
                     c += 1
                     print('Computing source for assembly layer n. ' + str(c))
                     for assembly in assembly_list:
@@ -1286,11 +1334,13 @@ class Source:
                 # write source for pin
                 print('Writing source for pin ...' + str(index))
 
-                # compute pin coordinates
-                x_core = (pin[2] - (geom.nass + 1) // 2) * geom.ass_pitch
-                y_core = ((geom.nass + 1) // 2 - pin[1]) * geom.ass_pitch
-                x_pin = x_core + (pin[5] - (geom.npin + 1) // 2) * geom.pin_pitch
-                y_pin = y_core + ((geom.npin + 1) // 2 - pin[4]) * geom.pin_pitch
+                # compute pin coordinates (UPDATED)
+                cA = (geom.nass + 1) / 2    # per 15 -> 8.0
+                cP = (geom.npin + 1) / 2    # per 14 -> 7.5
+                x_core = (pin[2] - cA) * geom.ass_pitch
+                y_core = (cA - pin[1]) * geom.ass_pitch
+                x_pin = x_core + (pin[5] - cP) * geom.pin_pitch
+                y_pin = y_core + (cP - pin[4]) * geom.pin_pitch
                 z_pin = z_core_flip[pin[3]-1]
                 node_height= geom.meshheight[pin[3]-1]
                 
@@ -1431,7 +1481,7 @@ class Source:
 
         # create a dictionary to store assembly information based on the assembly location
         for assy in cycle.assyradial:
-            assembly= {'coordinates': [assy[0],assy[1]], 'assytype':assy[2], 'r-f-d':[], 'burnupID':[], 'nz':np.linspace(41,1,1), 'latID':[], 'buprofile':[], 'bu_clos':[], 'nubar':[], 'ERC':[], 'U235':[], 'U238':[], 'Pu239':[], 'Pu241':[], 'nu': [], 'erf':[], 'chi':[], 'F':[]}
+            assembly= {'coordinates': [assy[0],assy[1]], 'assytype':assy[2], 'r-f-d':[], 'burnupID':[], 'nz':np.linspace(geom.naxial,1,1), 'latID':[], 'buprofile':[], 'bu_clos':[], 'nubar':[], 'ERC':[], 'U235':[], 'U238':[], 'Pu239':[], 'Pu241':[], 'nu': [], 'erf':[], 'chi':[], 'F':[]}
             assembly_list.append(assembly)
 
         # define which assemblies are fuel and which are reflector or dummies
@@ -1461,16 +1511,16 @@ class Source:
                     if axialinfo[1] == assembly['assytype']:
                         assembly['latID']= axialinfo[2]
             elif assembly['burnupID'] == []: #preassign values to reflector assembly types
-                assembly['latID']= [0]*41
+                assembly['latID']= [0]*geom.naxial
                 assembly['burnupID']= 0
-                assembly['buprofile']= [0]*41
-                assembly['bu_clos']= [0]*41
+                assembly['buprofile']= [0]*geom.naxial
+                assembly['bu_clos']= [0]*geom.naxial
                 assembly['nubar']= 0
                 assembly['ERC']= 0
-                assembly['U235']= [0]*41
-                assembly['U238']= [0]*41
-                assembly['Pu239']= [0]*41
-                assembly['Pu241']= [0]*41
+                assembly['U235']= [0]*geom.naxial
+                assembly['U238']= [0]*geom.naxial
+                assembly['Pu239']= [0]*geom.naxial
+                assembly['Pu241']= [0]*geom.naxial
         
         # extract the specific lattice composition: find the corresponding burnup point in lattice library and the composition
         for assembly in assembly_list:
@@ -1924,11 +1974,13 @@ class Source:
                 # write source for pin
                 print('Writing source for pin ...' + str(index))
 
-                # compute pin coordinates
-                x_core = (pin[2] - (geom.nass + 1) // 2) * geom.ass_pitch
-                y_core = ((geom.nass + 1) // 2 - pin[1]) * geom.ass_pitch
-                x_pin = x_core + (pin[5] - (geom.npin + 1) // 2) * geom.pin_pitch
-                y_pin = y_core + ((geom.npin + 1) // 2 - pin[4]) * geom.pin_pitch
+                # compute pin coordinates (UPDATED)
+                cA = (geom.nass + 1) / 2    # per 15 -> 8.0
+                cP = (geom.npin + 1) / 2    # per 14 -> 7.5
+                x_core = (pin[2] - cA) * geom.ass_pitch
+                y_core = (cA - pin[1]) * geom.ass_pitch
+                x_pin = x_core + (pin[5] - cP) * geom.pin_pitch
+                y_pin = y_core + (cP - pin[4]) * geom.pin_pitch
                 z_pin = z_core_flip[pin[3]-1]
                 node_height= geom.meshheight[pin[3]-1]
                 
@@ -3114,11 +3166,13 @@ class Source:
                 # write source for pin
                 print('Writing source for pin ...' + str(index))
 
-                # compute pin coordinates
-                x_core = (pin[2] - (geom.nass + 1) // 2) * geom.ass_pitch
-                y_core = ((geom.nass + 1) // 2 - pin[1]) * geom.ass_pitch
-                x_pin = x_core + (pin[5] - (geom.npin + 1) // 2) * geom.pin_pitch
-                y_pin = y_core + ((geom.npin + 1) // 2 - pin[4]) * geom.pin_pitch
+                # compute pin coordinates (UPDATED)
+                cA = (geom.nass + 1) / 2
+                cP = (geom.npin + 1) / 2
+                x_core = (pin[2] - cA) * geom.ass_pitch
+                y_core = (cA - pin[1]) * geom.ass_pitch
+                x_pin = x_core + (pin[5] - cP) * geom.pin_pitch
+                y_pin = y_core + (cP - pin[4]) * geom.pin_pitch
                 z_pin = (geom.z_core[pin[3]] + geom.z_core[pin[3]+1])/2
                 node_height= geom.meshheight[pin[3]]
                 
@@ -3237,12 +3291,13 @@ class Source:
                 # write source for pin
                 print('Writing source for pin ...' + str(index))
 
-                # compute pin coordinates
-                x_core = (pin[2] - (geom.nass + 1) // 2) * geom.ass_pitch
-                y_core = ((geom.nass + 1) // 2 - pin[1]) * geom.ass_pitch
-                x_pin = x_core + (pin[5] - (geom.npin + 1) // 2) * geom.pin_pitch
-                y_pin = y_core + ((geom.npin + 1) // 2 - pin[4]) * geom.pin_pitch
-                # single 2D axial node: z is the node centre, spanning the whole (nominal) core height
+                # compute pin coordinates (UPDATED)
+                cA = (geom.nass + 1) / 2
+                cP = (geom.npin + 1) / 2
+                x_core = (pin[2] - cA) * geom.ass_pitch
+                y_core = (cA - pin[1]) * geom.ass_pitch
+                x_pin = x_core + (pin[5] - cP) * geom.pin_pitch
+                y_pin = y_core + (cP - pin[4]) * geom.pin_pitch
                 z_pin = (geom.z_core[pin[3]] + geom.z_core[pin[3]+1])/2
                 node_height= geom.meshheight[pin[3]]
                 
