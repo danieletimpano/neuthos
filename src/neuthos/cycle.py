@@ -344,37 +344,39 @@ class Cycle:
             found_exposure= False
             found_matrix= False
             i= 0
-            k= 0
+            ncol= 0
             n= 0
             m= -1
         for line in lines:
             if (' EXP 3D MAP 1.0E+00' in line) and (found_exposure== False) and (found_matrix== False):
                 found_exposure= True
-                i= 0 # line index 
-                k= 0 # column shifter
-                n= 0 # block index
+                i= 0 # line index
+                ncol= 0 # number of columns in the current block
+                n= 0 # index of the first assembly of the current block
                 m+=1 # burnup step index
                 print('found exposure!')
-            
+
             elif (found_exposure == True) and (found_matrix== False) and ('k lb' in line):
+                # the header lists the assembly numbers of the block, so it gives both
+                # the column offset and the block width (the last block is a partial one)
+                cols= [int(c) for c in line.split()[2:]]
+                n= cols[0] - 1
+                ncol= len(cols)
                 found_matrix= True
                 i= 0
 
-            elif (found_exposure== True) and (found_matrix== True) and (i<geom.naxial) and (n+k<(self.nassembly_with_reflectors-1)):
+            elif (found_exposure== True) and (found_matrix== True) and (i<geom.naxial):
                 parts= line.split()
-                for k in range(10):
+                for k in range(ncol):
                     self.exposure[i,n + k,m] = float(parts[1 + k])
                 i += 1
 
-            elif (found_exposure== True) and (found_matrix== True) and (i==geom.naxial) and (n+k<(self.nassembly_with_reflectors-1)):
+            elif (found_exposure== True) and (found_matrix== True) and (i==geom.naxial):
                 found_matrix= False
                 i= 0
-                n += 10
-                k= 9
-
-            elif (found_exposure== True) and (found_matrix== True) and (i==0) and (n+k==(self.nassembly_with_reflectors+8)): # ERROR: it should be +8 not + 9
-                found_exposure= False
-                found_matrix= False
+                # the map is over once the last assembly has been read
+                if n + ncol >= self.nassembly_with_reflectors:
+                    found_exposure= False
 
     def extract_asspower(self, geom: "Geometry", out: "Outputs", folderpath: Union[str, Path]) -> None:
         """
@@ -472,6 +474,9 @@ class Cycle:
     def extract_pinpower(self, geom: "Geometry", out: "Outputs", folderpath: Union[str, Path]) -> None:
         """
             Extracts 3D pinpower from PARCS .parcs_pin files.
+            Notes:
+            - In the PARCS methodology pin powers are not filtered for guide tube and instrumentation tubes locations. The filter is in build_source_pin which excludes zero power locations.
+
         """   
 
         print('The average power density is:')
@@ -520,6 +525,9 @@ class Cycle:
                         x_index = int(values.pop(0))
                         for y_index, value in zip(y_indices, values):
                             self.pinpowerdata.append((case_number, i, j, k, x_index, y_index, value*self.avgpowdens*math.pi*(geom.pin_radius)**2*geom.meshheight[k-1]*(self.cycleinfopow[case_number-1]/100),value)) # ALTERNATIVE using node volume considering the whole assembly cls.nodevolume[k-1]/225
+
+        # Sort the pin power data based on i, j, k (to keep the same order as VERA for readability)
+        self.pinpowerdata.sort(key=lambda x: (x[1], x[2], x[3]))  
 
         # SANITY CHECK 
         outpath = Path(os.path.join(out.base_dir, 'sanity_checks/pin_source'))
@@ -618,6 +626,8 @@ class Cycle:
     def extract_pinpower2D(self, geom: "Geometry", out: "Outputs", folderpath: Union[str, Path]) -> None:
         """
             Extracts 2D pinpower from PARCS .parcs_pin files.
+            Notes:
+            - In the PARCS methodology pin powers are not filtered for guide tube and instrumentation tubes locations. The filter is in build_source_pin which excludes zero power locations.
         """   
 
         print('The average power density is:')
@@ -667,6 +677,9 @@ class Cycle:
                                 for y_index, value in zip(y_indices, values):
                                     if value != 0: # check if the pin power is not zero
                                         self.pinpowerdata2D.append((case_number, i, j, k, x_index, y_index, value*self.avgpowdens*math.pi*(geom.pin_radius)**2*self.cycleinfopow[case_number-1]/100)) 
+
+        # Sort the pin power data based on i, j, k (to keep the same order as VERA for readability)
+        self.pinpowerdata2D.sort(key=lambda x: (x[1], x[2], x[3]))
 
         # SANITY CHECK 
         outpath = Path(os.path.join(out.base_dir, 'sanity_checks/pin_source'))
@@ -1348,11 +1361,11 @@ class Cycle:
 
             Notes
             -----
-            - Pin powers are assumed to be at full power (powlevel = 1).
             - The output power is expressed in W/cm (linear power, no axial mesh weighting).
             - If self.explicitdeploption is True, the pin-wise U-235, U-238, Pu-239 and Pu-241
               number densities are read from the same state point (axial slice 0) and appended
               to each tuple, matching the layout produced by extract_pinpowerVERA.
+            - In the VERA methodology pin powers are already filtered so that guide tubes and instrumentation tubes are filtered out at this stage.
         """
 
         print('The average power density is:')
@@ -1363,6 +1376,7 @@ class Cycle:
         print('Step 2.0: extracting pin power level ...')
         with h5py.File(filepath, 'r') as h5file:
             pin_powers = h5file[f'STATE_{step+1:04d}/pin_powers'][:]
+            powlevel= h5file[f'STATE_{step+1:04d}/power'][()]/100
             if self.explicitdeploption:
                 u235 = h5file[f'STATE_{step+1:04d}/pin_isotopes_U-235'][:]
                 u238 = h5file[f'STATE_{step+1:04d}/pin_isotopes_U-238'][:]
@@ -1370,7 +1384,6 @@ class Cycle:
                 pu241 = h5file[f'STATE_{step+1:04d}/pin_isotopes_Pu-241'][:]
             case_number= step # steps are counted from 0
             k= 0 #2D case
-            powlevel= 1 # FULL POWER ASSUMPTION
             for coord_info in geom.coordinatesVERA_with_index:
                 # burnup statepoint, VERA unique assembly index, assembly row index, assembly column index, assembly z index, pin row index, pin column index, pin x-coordinate, pin y-coordinate, power
                 if pin_powers[coord_info[2]-1, coord_info[3]-1, 0, coord_info[6]] != 0: # check if the pin power is not zero
@@ -1428,10 +1441,10 @@ class Cycle:
 
             Notes
             -----
-            - Pin powers are assumed to be at full power (powlevel = 1).
             - The output power is weighted by the axial mesh height, so it is expressed in W.
             - If self.explicitdeploption is True, the pin-wise U-235, U-238, Pu-239 and Pu-241
               number densities are read from the same state point and appended to each tuple.
+            - In the VERA methodology pin powers are already filtered so that guide tubes and instrumentation tubes are filtered out at this stage.
         """
 
         print('The average power density is:')
@@ -1442,13 +1455,13 @@ class Cycle:
         print('Step 2.0: extracting pin power level ...')
         with h5py.File(filepath, 'r') as h5file:
             pin_powers = h5file[f'STATE_{step+1:04d}/pin_powers'][:]
+            powlevel= h5file[f'STATE_{step+1:04d}/power'][()]/100
             if self.explicitdeploption:
                 u235 = h5file[f'STATE_{step+1:04d}/pin_isotopes_U-235'][:]
                 u238 = h5file[f'STATE_{step+1:04d}/pin_isotopes_U-238'][:]
                 pu239 = h5file[f'STATE_{step+1:04d}/pin_isotopes_Pu-239'][:]
                 pu241 = h5file[f'STATE_{step+1:04d}/pin_isotopes_Pu-241'][:]
             case_number= step # case numbers are counted from zero
-            powlevel= 1 # FULL POWER ASSUMPTION
             for coord_info in geom.coordinatesVERA_with_index:
                 # burnup statepoint, VERA unique assembly index, assembly row index, assembly column index, assembly z index, pin row index, pin column index, pin x-coordinate, pin y-coordinate, power
                 if pin_powers[coord_info[2]-1, coord_info[3]-1, coord_info[8], coord_info[6]] != 0: # check if the pin power is not zero
