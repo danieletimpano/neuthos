@@ -89,9 +89,30 @@ class Geometry:
     def compute_radial_coordinates_PARCS(self) -> None:
         """
         Compute (i,j,m,n,x_pin,y_pin) for each pin inside each ass_pitch.
-        Indices are 1-based to match typical PARCS-style indexing.
         """
         print("Computing core PARCS coordinates ...")
+
+        self.coordinates.clear()
+
+        a_mid = (self.nass + 1) / 2
+        p_mid = (self.npin + 1) / 2
+
+        for i in range(1, self.nass + 1):
+            for j in range(1, self.nass + 1):
+                x_core = (j - a_mid) * self.ass_pitch
+                y_core = (a_mid - i) * self.ass_pitch
+
+                for m in range(1, self.npin + 1):
+                    for n in range(1, self.npin + 1):
+                        x_pin = x_core + (n - p_mid) * self.pin_pitch
+                        y_pin = y_core + (p_mid - m) * self.pin_pitch
+                        self.coordinates.append((i, j, m, n, x_pin, y_pin))
+
+    def compute_radial_coordinates_CMS(self) -> None:
+        """
+        Compute (i,j,m,n,x_pin,y_pin) for each pin inside each ass_pitch.
+        """
+        print("Computing core CMS coordinates ...")
 
         self.coordinates.clear()
 
@@ -175,6 +196,55 @@ class Geometry:
         # Node volumes (real node volume)
         a2 = (self.ass_pitch ** 2)
         self.nodevolume = [a2 * h for h in self.meshheight]
+
+    def read_axial_mesh_from_cms(
+        self,
+        filepath: Union[str, Path], # users can pass str or Path
+        header_token: str = "Axial Nodal Boundaries (cm)",
+        axial_shift: float = 0.0
+        
+    ) -> None:
+        """
+        Parse axial mesh information from a CMS out file section that begins with `Axial Nodal Boundaries (cm)`.
+
+        - Reads exactly `naxial_nodes`+1 rows after the header (neglect the first one).
+        - Flips heights to bottom-to-top order (assuming the code provides this info as top-to-bottom).
+        - Computes node volumes: ass_pitch^2 * height.
+        """
+        filepath = Path(filepath)
+
+        self.z_core.clear()
+        self.nodevolume.clear()
+        mesh_h: List[float] = []
+
+        lines = filepath.read_text().splitlines()
+
+        for line in lines:
+            if header_token in line:
+                axial_info = lines[lines.index(line)+3:lines.index(line)+2+self.naxial]
+                for info in axial_info:
+                    mesh = info.split()
+                    mesh_h.append(float(mesh[1]))
+
+            elif header_token not in line:
+                continue
+
+        # Flip heights to bottom-to-top order (your original behavior)
+        self.z_core = np.flip(np.array(mesh_h, dtype=float))
+        self.meshheight = np.diff(self.z_core)
+
+        # Apply an axial shift
+        self.z_core = self.z_core + axial_shift
+
+        # Node volumes (real node volume)
+        a2 = (self.ass_pitch ** 2)
+        self.nodevolume = [a2 * h for h in self.meshheight]
+
+        if len(self.meshheight) != (self.naxial-2):
+            raise ValueError(
+                f"Number of nodes in axial mesh ({len(self.meshheight)}) does not match expected count ({self.naxial-2}). "
+                f"Check header_token and file format: {filepath}"
+            )
 
     def compute_2D_coordinates_VERA_qtr(
         self,
