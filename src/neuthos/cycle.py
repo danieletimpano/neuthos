@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Tuple, Union
 from matplotlib import pyplot as plt
+from neuthos.geometry import Geometry
 import numpy as np
 import h5py
 import re
@@ -127,10 +128,10 @@ class Cycle:
     pinpowerdataVERA: List[Tuple] = field(default_factory=list)                              # List of tuples (step, vera_index, i, j, k, m, n, x_pin, y_pin, power_value, normalized_power[, U235, U238, Pu239, Pu241]) for 3D VERA pin power data
     pinpowerdataVERA2D: List[Tuple] = field(default_factory=list)                            # List of tuples (step, vera_index, i, j, k, m, n, x_pin, y_pin, power_value, normalized_power) for 2D VERA pin power data
 
-    # PARCS related methods
+    # PARCS and CMS related methods
 
     def extract_cycle_info(
-            self, filepath: Union[str, Path]) -> None: 
+            self, filepath: Union[str, Path], power_vec: List[float] = None, days_vec: List[float] = None, exp_vec: List[float] = None) -> None: 
         """
         Extract general cycle information from a PARCS depletion summary file.
         The information extracted includes power levels, days, and exposure for each step in the cycle.
@@ -185,6 +186,13 @@ class Cycle:
             print(self.cycleinfodays)
             print('The cycle corresponding exposure are:')
             print(self.cycleinfoexp)
+
+        elif filepath.endswith("useroption"):
+            print(f'Taking cycle information from userinput')
+
+            self.cycleinfopow = power_vec
+            self.cycleinfodays = days_vec
+            self.cycleinfoexp = exp_vec
 
     def extract_coolant_info(
             self,  geom: "Geometry", filepath: Union[str, Path]) -> None:
@@ -277,6 +285,21 @@ class Cycle:
                             continue
                     self.assyaxial.append(['REFL', assy_type, assy_geom[::-1]]) # NOTE: reverse the list to have the latttice from top to bottom, REASON: burnup profiles are provided from top to bottom
 
+    def extract_assyaxial_cms(
+            self, geom: "Geometry") -> None:
+        """
+        Builds an axial description of the assemblies in CMS from a radial configuration file.
+        """
+
+        print('Extracting assembly axial configuration ...')
+
+        for assy_type_info in self.assyradial:
+
+            assy_type = assy_type_info[2]  # Extract the assembly type from the tuple
+
+            if assy_type not in [assy[1] for assy in self.assyaxial]:  # Check if the assembly type is already processed
+                self.assyaxial.append(['FUEL', assy_type, [assy_type] * geom.naxial])  # Append a new entry with the assembly type and axial configuration
+
     def extract_assyradial(
             self, geom: "Geometry", filepath: Union[str, Path]) -> None:
         """
@@ -306,6 +329,40 @@ class Cycle:
                 x_index += 1
                 for y_index, value in zip(y_indices, values):
                         self.assyradial.append((x_index, y_index, value))
+
+    def extract_assyradial_cms(
+            self, geom: "Geometry", filepath: Union[str, Path]) -> None:
+        """
+        Extracts assembly radial configuration from a CMS regular coremap input file.
+        """
+
+        print('Extracting assembly radial configuration ...')
+
+        with open(filepath, 'r') as f:
+            lines = f.readlines()
+
+        found_radial_conf = False
+        assemblies = []
+
+        for line in lines:
+
+            if "FUE.SER" in line:
+                found_radial_conf = True
+                i = 0
+            elif found_radial_conf and i < geom.naxial:
+                values = list(map(str, line.split()[2:]))
+                for value in values:
+                    assemblies.append(value[:2])
+            elif found_radial_conf and i == geom.naxial:
+                found_radial_conf = False
+                break
+
+        position_count = 0
+        for position in geom.coremap:
+            x_index= position[0]
+            y_index= position[1]
+            self.assyradial.append((x_index, y_index, assemblies[position_count]))
+            position_count += 1
 
     def extract_exposure(
             self, geom: "Geometry", filepath: Union[str, Path]) -> None:
@@ -377,6 +434,199 @@ class Cycle:
                 # the map is over once the last assembly has been read
                 if n + ncol >= self.nassembly_with_reflectors:
                     found_exposure= False
+
+    def extract_exposure_cms(
+            self, geom: "Geometry", filepath: Union[str, Path], cases: List[int] = None,
+            axial_mesh: List[float] = None, interpolate: bool = False) -> None:
+        """
+
+        Extracts assembly exposure data from a CMS (SIMULATE) .sum summary file.
+
+        Produces the same output as extract_exposure: the 3D array self.exposure
+        (naxial, nassembly_with_reflectors, nsteps) and the assembly list self.assyexp.
+
+        Only the EXP 3D MAP blocks preceded by a SUMMARY card are read, and among those only the
+        ones whose case identifier - the first number of the line following the SUMMARY card - is
+        listed in cases (e.g. cases=[2,3]). The selected blocks are stored in the order they are
+        met, one burnup step each.
+
+        Every assembly of a block is written as a header line
+        ('A-  06  8011  8011  1  6', whose two last numbers are the (x_index, y_index) core
+        position) followed by its axial exposure profile from bottom to top; the profile is stored
+        from top to bottom, as extract_exposure does for the PARCS maps.
+
+        The exposure covers the active fuel nodes only: the first and the last axial node of the
+        exposure array are the top and bottom axial reflectors and are left at zero, so a profile
+        spans geom.naxial - 2 nodes.
+
+        Parameters
+        ----------
+        geom : Geometry
+            Geometry object providing the axial node count (naxial, the two axial reflector nodes
+            included) and, when interpolating, the target axial node boundaries (z_core, which
+            bounds the active nodes only, so naxial - 1 values).
+        filepath : Union[str, Path]
+            Path to the CMS .sum summary file.
+        cases : List[int], optional
+            Case identifiers of the SUMMARY cards to extract (default: every case).
+        axial_mesh : List[float], optional
+            Node boundaries of the active axial mesh of the file, so one value more than the
+            number of exposures written per assembly (default: the geom active mesh, i.e.
+            geom.naxial - 2 values per assembly).
+        interpolate : bool, optional
+            Whether to interpolate the profiles from axial_mesh onto the active part of the
+            geom.z_core mesh (geom.naxial - 2 nodes). Both meshes are node boundaries and the
+            exposures are treated as node centred values, so the interpolation is carried out
+            between the centres of the two meshes. Nodes of the target mesh lying outside the
+            file mesh take the closest file value.
+
+        Returns
+        -------
+        None
+            Populates self.exposure and self.assyexp.
+        """
+
+        # initialize exposure array
+        self.exposure = np.zeros(
+            (
+                geom.naxial,
+                self.nassembly_with_reflectors,
+                self.nsteps,
+            ),
+            dtype=float
+        )
+
+        print('Extracting assembly exposure data ...')
+
+        # take all the assemblies
+        assy= self.assyradial
+        assy_sel= []
+        j= 1
+        # remove from this list the assemblies that have value = 0 (CMS assembly types are labels, PARCS ones are integers)
+        for i in range(len(assy)):
+            if str(assy[i][2]).strip() not in ('0', '', '-'):
+                assy_sel.append((assy[i][0], assy[i][1], j))  # assign to each assembly a number going from 1 to the number of assemblies remaining in the list
+                j += 1
+        # save the list class property
+        self.assyexp= assy_sel
+
+        # column of the exposure array holding each (x_index, y_index) core position
+        assy_column= {(a[0], a[1]): a[2] - 1 for a in assy_sel}
+
+        # the CMS map indexes the fuel region only (1 to the number of fuel rows), whereas the
+        # neuthos core map counts the radial reflector rows, so the two frames are realigned on
+        # their first assembly row and column (as extract_assyradial_VERA does for the VERA maps)
+        offset_x= min(a[0] for a in assy_sel) - 1 if assy_sel else 0
+        offset_y= min(a[1] for a in assy_sel) - 1 if assy_sel else 0
+        print(f'CMS fuel map inserted in the neuthos core map with offset ({offset_x}, {offset_y})')
+
+        # the first and the last axial node are the top and bottom axial reflectors: the exposure
+        # is given on the active nodes only and the two reflector nodes are left at zero
+        nactive= geom.naxial - 2
+        active= slice(1, geom.naxial - 1)
+
+        # number of exposure values written per assembly
+        nsource= len(axial_mesh) - 1 if axial_mesh is not None else nactive
+
+        if interpolate:
+            if axial_mesh is None:
+                print('No axial_mesh given: the axial mesh of the file is needed to interpolate.')
+                raise SystemExit
+            source_bounds= np.sort(np.asarray(axial_mesh, dtype=float))
+            # geom.z_core already holds the boundaries of the active nodes only (naxial - 1 values)
+            target_bounds= np.sort(np.asarray(geom.z_core, dtype=float))
+            if len(target_bounds) != nactive + 1:
+                print(f'geom.z_core holds {len(target_bounds)} node boundaries, {nactive + 1} expected.')
+                raise SystemExit
+            # the exposures are node centred values: interpolate between the centres of the two meshes
+            source_centres= 0.5 * (source_bounds[:-1] + source_bounds[1:])
+            target_centres= 0.5 * (target_bounds[:-1] + target_bounds[1:])
+            print(f'Interpolating the exposure from {nsource} to {nactive} active axial nodes ({geom.naxial} nodes with the two axial reflectors)')
+        elif nsource != nactive:
+            print(f'The file holds {nsource} axial values per assembly, {nactive} active nodes expected: set interpolate=True.')
+            raise SystemExit
+
+        with open(filepath, 'r') as f:
+            lines= f.readlines()
+
+        case= None            # case identifier of the SUMMARY card being read
+        foundcaseid= False
+        foundstatepoint= False
+        foundassembly= False
+        m= -1                 # burnup step index
+        col= 0                # column of the current assembly
+        nread= 0              # assemblies read in the current map
+        nskipped= 0           # assemblies of the file that are not listed in assyradial
+        profile= []           # axial profile of the current assembly, from bottom to top
+
+        for line in lines:
+
+            if line.strip().startswith('SUMMARY'):
+                # the case identifier is the first number of the line following the card
+                case= None
+                foundcaseid= True
+
+            elif foundcaseid == True:
+                data= line.split()
+                case= int(float(data[0])) if data else None
+                foundcaseid= False
+
+            elif ('EXP 3D MAP' in line) and (foundstatepoint == False) and (case is not None) and ((cases is None) or (case in cases)):
+                m += 1
+                # the map is over once the last burnup step has been read
+                if m >= self.nsteps:
+                    break
+                foundstatepoint= True
+                nread= 0
+                print(f'found exposure of SUMMARY case {case}, burnup step {m + 1}!')
+
+            elif (foundstatepoint == True) and ('END' in line):
+                # foundassembly is still True only if the last profile was left incomplete
+                if foundassembly == True:
+                    print(f'Assembly ({x}, {y}) holds {len(profile)} axial values, {nsource} expected: check axial_mesh.')
+                    raise SystemExit
+                foundstatepoint= False
+
+            elif (foundstatepoint == True) and re.match(r'\s*[A-Z]-\s+\d+', line):
+                # foundassembly is still True only if the previous profile was left incomplete
+                if foundassembly == True:
+                    print(f'Assembly ({x}, {y}) holds {len(profile)} axial values, {nsource} expected: check axial_mesh.')
+                    raise SystemExit
+                data= line.split()
+                # shift the fuel region indexes of the file onto the neuthos core map frame
+                x= int(data[4]) + offset_x
+                y= int(data[5]) + offset_y
+                if assy_column:
+                    col= assy_column.get((x, y))
+                else:
+                    # assyradial not available: number the assemblies as they appear in the file
+                    col= nread
+                    if m == 0:
+                        self.assyexp.append((x, y, col + 1))
+                nread += 1
+                profile= []
+                if col is None:
+                    # the position is not listed in assyradial: nothing to store
+                    nskipped += 1
+                    foundassembly= False
+                    continue
+                # positions with no room in the exposure array are not stored
+                foundassembly= col < self.nassembly_with_reflectors
+
+            elif (foundstatepoint == True) and (foundassembly == True):
+                # the axial profile of an assembly is written over several lines, from bottom to top
+                profile.extend(float(value) for value in line.split())
+                if len(profile) >= nsource:
+                    values= np.asarray(profile[:nsource], dtype=float)
+                    if interpolate:
+                        values= np.interp(target_centres, source_centres, values)
+                    # store the profile from top to bottom, as extract_exposure does, on the
+                    # active nodes only: the two axial reflector nodes are left at zero
+                    self.exposure[active, col, m]= values[::-1]
+                    foundassembly= False
+
+        if nskipped:
+            print(f'{nskipped} assembly positions of the file are not listed in assyradial and were skipped')
 
     def extract_asspower(self, geom: "Geometry", out: "Outputs", folderpath: Union[str, Path]) -> None:
         """
@@ -740,7 +990,28 @@ class Cycle:
         print('The reflector lattice types are:')
         print(self.refllat)
 
-    # Polaris related methods
+    def extract_lattype_cms(
+            self) -> None:
+        """
+        Builds an equivalent lattice type data structure from a the simple CMS assyradial info.
+        """
+
+        for lat_type in self.assyaxial:
+            latfeat= [lat_type[1], lat_type[1], 'fuel', '-', '-', '-', '-'] # enrichment, bpy, sg and reference are irrelevant
+            self.lattype.append((latfeat))
+        
+        for lat in self.lattype: #save refl and fuel assembly types
+            if lat[2] == 'refl':
+                self.refllat.append(lat[0])
+            elif lat[2] == 'fuel':
+                self.fuellat.append(lat[0])
+        
+        print('The fuel lattice types are:')
+        print(self.fuellat)
+        print('The reflector lattice types are:')
+        print(self.refllat)
+
+    # Polaris and CASMO related methods
 
     def extract_spectrum(
             self, sp, file_content, ngroups) -> List[Tuple[float, float]]:
@@ -1051,6 +1322,100 @@ class Cycle:
                             latcomp= np.append(latcomp, np.flip(chi_vector))
 
                         index += 1
+
+                self.latcomp.append((latcomp))
+
+    def extract_latcomp_cms3(
+            self, geom: "Geometry", filepath: Union[str, Path]) -> None:
+        """
+        Extracts lattice composition from a CASMO-4E output file, organising the output equivalently to SCALE.
+        """
+        print('Extracting lattice composition ...')
+
+        for lattice in self.lattype:
+
+            if lattice[2] == 'fuel':
+                #path to standard polaris benchmark output
+                path = os.path.join(filepath, 'c4Reg' + lattice[0] + '.out')
+                print('Reading lattice file: ' + path)
+
+                with open(path, 'r') as f:
+                    lines = f.readlines()
+                    latcomp= [lattice[0]]
+                    index= 0
+                    nubar= 0
+                    found_startresult= False
+
+                    self.latburn= [0.0, 5.0, 10.0, 15.0, 20.0, 30.0, 40.0, 50.0, 60]
+                    index = 0
+        
+                for lineno, line in enumerate(lines):
+
+                    if ('AVERAGED NUMBER DENSITIES OF BURNABLE NUCLIDES (ATOMS/CM**3)' in line) or ("Averaged number densities of burnable nuclides (atoms/cm**3)" in line):
+                        found_startresult= True
+                        latcomp= np.append(latcomp, self.latburn[index])
+                    elif (found_startresult==True) and index < len(self.latburn):
+                        block = lines[lineno:lineno+11]  # average number density block is 10 lines long
+                        # find the float values immediately after these four nuclides card "U-235 =", "U-238 =", "Pu-239=", "Pu-241="
+                        for bline in block:
+                            if "U-235 =" in bline:
+                                latcomp= np.append(latcomp, float(bline.split()[5]))   # save u-235
+                                latcomp = np.append(latcomp, float(bline.split()[11])) # save u-238
+                            if "Pu-239=" in bline:
+                                latcomp= np.append(latcomp, float(bline.split()[5]))  # save pu-239
+                                latcomp = np.append(latcomp, float(bline.split()[9])) # save pu-241
+                        index += 1
+                        found_startresult= False
+                    elif (found_startresult==False) and index == len(self.latburn):
+                        break
+
+                self.latcomp.append((latcomp))
+
+    def extract_latcomp_cms5(
+            self, geom: "Geometry", filepath: Union[str, Path]) -> None:
+        """
+        Extracts lattice composition from a CASMO-5 output file, organising the output equivalently to SCALE.
+        """
+        print('Extracting lattice composition ...')
+
+        for lattice in self.lattype:
+
+            if lattice[2] == 'fuel':
+                #path to standard polaris benchmark output
+                path = os.path.join(filepath, 'c4Reg' + lattice[0] + '.out')
+                print('Reading lattice file: ' + path)
+
+                with open(path, 'r') as f:
+                    lines = f.readlines()
+                    latcomp= [lattice[0]]
+                    index= 0
+                    nubar= 0
+                    found_startresult= False
+
+                    self.latburn= [0.0, 0.1, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0, 9.5, 
+                                   10.0, 11.0, 12.5, 15.0, 17.5, 20.0, 22.50, 25.0, 27.50, 30.0, 32.50, 35.0, 37.50, 40.0, 42.50, 45.0, 47.50, 
+                                   50.0, 52.5, 55.0, 57.5, 60]
+                    index = 0
+        
+                for lineno, line in enumerate(lines):
+
+                    if ('AVERAGED NUMBER DENSITIES OF BURNABLE NUCLIDES (ATOMS/CM**3)' in line) or ("Averaged number densities of burnable nuclides (atoms/cm**3)" in line):
+                        found_startresult= True
+                        latcomp= np.append(latcomp, self.latburn[index])
+                    elif (found_startresult==True) and index < len(self.latburn):
+                        block = lines[lineno:lineno+11]  # average number density block is 10 lines long
+                        # find the float values immediately after these four nuclides card "U-235 =", "U-238 =", "Pu-239=", "Pu-241="
+                        for bline in block:
+                            if "U-235 =" in bline:
+                                latcomp= np.append(latcomp, float(bline.split()[5]))   # save u-235
+                                latcomp = np.append(latcomp, float(bline.split()[14])) # save u-238
+                            if "Pu-239=" in bline:
+                                latcomp= np.append(latcomp, float(bline.split()[1]))  # save pu-239
+                                latcomp = np.append(latcomp, float(bline.split()[5])) # save pu-241
+                        index += 1
+                        found_startresult= False
+                    elif (found_startresult==False) and index == len(self.latburn):
+                        break
 
                 self.latcomp.append((latcomp))
 
@@ -1495,4 +1860,119 @@ class Cycle:
 
         with open(outpath / f'sanity_check_VERA3Dpin_{step}.txt', 'w') as f:
             f.write(f'Average pin power: {total_power/count if count else 0.0}\n')
+            f.write(f'Count: {count}')
+
+    def extract_pinpowerCMS(
+            self, geom: "Geometry", out: "Outputs", filepath: Union[str, Path], step: int,
+            initial_case: int = 2, depletion_case: int = 3) -> None:
+        """
+            Extracts 3D pinpower from a CMS (SIMULATE) output file.
+
+            Produces the same output as extract_pinpower: tuples
+            (case_number, i_index, j_index, k_index, x_index, y_index, power_value, relative_power_value)
+            appended to self.pinpowerdata.
+
+            The statepoints are counted from 0 in the order they are written in the file, as
+            extract_exposure_cms does for the exposure maps: step 0 is the initial case block
+            ('Case  2 Step  0', the beginning of cycle point) and step k > 0 is the (k-1)-th
+            depletion case block ('Case  3 Step ' + str(k-1)). The power level of a statepoint
+            is therefore self.cycleinfopow[step].
+
+            Parameters
+            ----------
+            initial_case : int, optional
+                Case identifier of the beginning of cycle block written before the depletion
+                ones and stored as step 0 (default: 2). Set it to None to number the steps over
+                the depletion case only, so that step k is the 'Case  3 Step ' + str(k) block.
+            depletion_case : int, optional
+                Case identifier of the depletion blocks (default: 3).
+        """
+
+        # the case block holding the requested statepoint ('Case  2 Step  0' for step 0 and
+        # 'Case  3 Step ' + str(step-1) for the following ones)
+        if initial_case is None:
+            case_id, case_step = depletion_case, step
+        elif step == 0:
+            case_id, case_step = initial_case, 0
+        else:
+            case_id, case_step = depletion_case, step - 1
+
+        case_header = f'Case {case_id:2d} Step {case_step:2d}'
+
+        print('The average power density is:')
+        self.corevol = geom.nfuelpins * math.pi * (geom.pin_radius)**2 * (geom.active_height)        # cm3
+        self.avgpowdens= self.asspower / (self.corevol)                                              # W/cm3
+        print(self.avgpowdens)                                                                       # W/cm3
+
+        print('The power level vector is:')
+        print(self.cycleinfopow)
+
+        print(f'Extracting pin power data of step {step} from the "{case_header}" blocks ...')
+
+        with open(filepath, 'r') as f:
+            lines= f.readlines()
+
+        found_case = False
+        found_location = False
+        found_pxp = False
+        found_section = False
+        stopping = 0
+
+        for line in lines:
+
+            if (case_header in line) and (found_case == False):
+                found_case = True
+
+            elif (found_case == True) and ('IA,JA,K' in line):
+                found_location = True
+                data = list(map(int, re.findall(r'\d+', line)))
+                assembly_i = int(data[2])
+                assembly_j = int(data[3])
+                assembly_k = int(data[4])
+
+            elif (found_case == True) and (found_location == True) and ('3PXP' in line):
+                print('Assembly: ', assembly_i, assembly_j, assembly_k)
+                print('Found 3D Pin Power Section')
+                found_pxp = True
+                pin_x= 0
+
+            elif (found_case == True)  and (found_location == True) and (found_pxp == True) and ("---" in line):
+                #print ('Found power section for pin line ', pin_x+1)
+                found_section = True
+
+            elif (found_case == True) and (found_location == True) and (found_pxp == True) and (found_section == True) and (pin_x < geom.npin):
+                #print(line)
+                pin_x += 1
+                data_floats = list(map(float, re.findall(r'\d+\.\d+', line)))
+                for pin_y in range(len(data_floats)):
+                    self.pinpowerdata.append((step, assembly_i, assembly_j, assembly_k, pin_x, pin_y+1, data_floats[pin_y]*self.avgpowdens*math.pi*(geom.pin_radius)**2*geom.meshheight[assembly_k-1]*(self.cycleinfopow[step]/100), data_floats[pin_y]))
+                stopping += len(data_floats)
+                found_section = False
+
+            elif (found_case == True) and (found_location == True) and (found_pxp == True) and (found_section == True) and (pin_x == geom.npin):
+                found_case = False
+                found_location = False
+                found_pxp = False
+                found_section = False
+                pin_x = 0
+
+            elif (stopping == geom.npin*geom.npin*geom.naxial*self.nassembly_with_reflectors):
+                break
+
+        # Sort the pin power data based on i, j, k (to keep the same order as VERA for readability)
+        self.pinpowerdata.sort(key=lambda x: (x[1], x[2], x[3]))
+
+        # SANITY CHECK: total power (check for one burnup step)
+        outpath = Path(os.path.join(out.base_dir, 'sanity_checks/pin_source'))
+        outpath.mkdir(parents=True, exist_ok=True)
+
+        total_power= 0
+        count = 0
+        for power in self.pinpowerdata:
+            if (power[0] == step):
+                count += 1
+                total_power += power[6]
+
+        with open(outpath / f'sanity_check_CMSpin_{step}.txt', 'w') as f:
+            f.write(f'Total power: {total_power}\n')
             f.write(f'Count: {count}')

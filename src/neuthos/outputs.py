@@ -51,6 +51,34 @@ class Outputs:
                 writer.writerow([i, j, m, n, x_pin, y_pin])
 
         return outputpath
+
+    def write_CMS_pin_coordinates(
+        self,
+        geom: "Geometry",
+        outputpath: Union[str, Path],
+    ) -> Path:
+        """
+        Write CMS pin-level coordinates from a Geometry instance to a CSV file.
+
+        The output file is created at the given path (relative to the output base
+        directory, if configured) and contains one row per pin with indices and
+        Cartesian coordinates.
+        """
+        outputpath = Path(outputpath)
+
+        # Route relative paths under base_dir (so that outputs can be grouped)
+        if not outputpath.is_absolute():
+            outputpath = self.base_dir / outputpath
+
+        outputpath.parent.mkdir(parents=True, exist_ok=True)
+
+        with outputpath.open("w", newline="") as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(["i", "j", "m", "n", "x_pin", "y_pin"])
+            for (i, j, m, n, x_pin, y_pin) in geom.coordinates:
+                writer.writerow([i, j, m, n, x_pin, y_pin])
+
+        return outputpath
     
     def write_VERA_pin_coordinates(
         self,
@@ -465,10 +493,7 @@ class Outputs:
 
             # Substitute remaining zeros with nan and plot nan as white values
             source_matrix[source_matrix == 0] = np.nan
-            if sums != 0:
-                avg = massimo / sums
-            else: 
-                print("Warning: No source data found for the specified mid-core plane. Do not trust the produced plot.")
+            avg = massimo / sums
 
             cax = ax.imshow(source_matrix / avg, cmap='jet', vmin=0.5, vmax=1.2)
             ax.set_xticks(np.arange(0, geom.nass * geom.npin, geom.npin))
