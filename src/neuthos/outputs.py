@@ -51,6 +51,34 @@ class Outputs:
                 writer.writerow([i, j, m, n, x_pin, y_pin])
 
         return outputpath
+
+    def write_CMS_pin_coordinates(
+        self,
+        geom: "Geometry",
+        outputpath: Union[str, Path],
+    ) -> Path:
+        """
+        Write CMS pin-level coordinates from a Geometry instance to a CSV file.
+
+        The output file is created at the given path (relative to the output base
+        directory, if configured) and contains one row per pin with indices and
+        Cartesian coordinates.
+        """
+        outputpath = Path(outputpath)
+
+        # Route relative paths under base_dir (so that outputs can be grouped)
+        if not outputpath.is_absolute():
+            outputpath = self.base_dir / outputpath
+
+        outputpath.parent.mkdir(parents=True, exist_ok=True)
+
+        with outputpath.open("w", newline="") as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(["i", "j", "m", "n", "x_pin", "y_pin"])
+            for (i, j, m, n, x_pin, y_pin) in geom.coordinates:
+                writer.writerow([i, j, m, n, x_pin, y_pin])
+
+        return outputpath
     
     def write_VERA_pin_coordinates(
         self,
@@ -251,6 +279,34 @@ class Outputs:
                     writer.writerow(power)
         
         return outputpath
+    
+    def write_pinpowerVERA_to_csv(
+            self, cycle: "Cycle", outputpath: Union[str, Path], flag: str = '3D') -> Path:
+        """
+        Write pin power data to a CSV file.
+
+        The output file is created at the given path (relative to the output base
+        directory, if configured) and contains one row per pin with its power data.
+        """
+        
+        print('Saving pin power information to .csv ...')
+
+        outputpath = Path(outputpath)
+        # Route relative paths under base_dir (so that outputs can be grouped)
+        if not outputpath.is_absolute():
+            outputpath = self.base_dir / outputpath
+
+        with open(outputpath, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(['case_number', 'vera_index', 'assembly_row', 'assembly_column', 'assembly_z', 'pin_row', 'pin_column', 'pin_x', 'pin_y', 'node_power', 'pin_power_factor'])
+            if flag == '2D':
+                for power in cycle.pinpowerdataVERA2D:
+                    writer.writerow(power)
+            elif flag == '3D':
+                for power in cycle.pinpowerdataVERA:
+                    writer.writerow(power)
+
+        return outputpath
             
     def write_asssourceinfo_to_csv(
             self, source: "Source", outputpath: Union[str, Path]) -> Path:
@@ -297,11 +353,19 @@ class Outputs:
             writer = csv.writer(csvfile)
             writer.writerow(['case_number', 'i', 'j', 'k', 'x_index', 'y_index', 'node_power','nsource'])
             if flag == '2D':
-                for source in source.sourcepin2D:
-                    writer.writerow(source)
+                if source.sourcepin2D: # implicit treatment of the code selection
+                    for source in source.sourcepin2D:
+                        writer.writerow(source)
+                else:
+                    for source in source.sourcepinVERA2D:
+                        writer.writerow(source)
             elif flag == '3D':
-                for source in source.sourcepin:
-                    writer.writerow(source)
+                if source.sourcepin: # implicit treatment of the code selection
+                    for source in source.sourcepin:
+                        writer.writerow(source)
+                else:
+                    for source in source.sourcepinVERA:
+                        writer.writerow(source)
 
         return outputpath
 
@@ -408,11 +472,15 @@ class Outputs:
             # Create a matrix to store the source values
             source_matrix = np.zeros((geom.nass * geom.npin, geom.nass * geom.npin))
 
-            # check which one between sourcepin and sourcepin2D is not empty and use it for plotting
+            # implicit treatment of the code selection - check which one between sourcepin and sourcepin2D is not empty and use it for plotting
             if source.sourcepin2D:
                 source_list = source.sourcepin2D
-            else:
+            elif source.sourcepinVERA2D:
+                source_list = source.sourcepinVERA2D
+            elif source.sourcepin:
                 source_list = source.sourcepin
+            else:
+                source_list = source.sourcepinVERA
 
             for pin in source_list:
                 if pin[3] == geom.naxial // 2:  # Only for midplane in 2D
@@ -448,6 +516,12 @@ class Outputs:
             plt.savefig(outpath / ('pin_source_definition_t' + str(time) + '.png'), bbox_inches='tight')
 
         elif flag== '3D':
+            
+            # implicit treatment of the code choice
+            if source.sourcepin:
+                source_list = source.sourcepin
+            else:
+                source_list = source.sourcepinVERA
 
             #make a 3D checkerboard plot for the burnup profile, considering only the quarter checkerboard that is indicated in asso
             fig = plt.figure(dpi=300, figsize=(10, 6))
