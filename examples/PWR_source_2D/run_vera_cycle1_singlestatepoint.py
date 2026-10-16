@@ -40,7 +40,7 @@ inputsource= [
 
 # Define reactor geometry
 geom = nt.Geometry(
-    naxial=32,
+    naxial=1,
     nass=17,
     npin=15,
     latsym= "se",
@@ -56,70 +56,29 @@ geom = nt.Geometry(
     nitubesqtr= 1
 )
 
-# Compute source coordinates from PARCS
-geom.compute_radial_coordinates_PARCS()
-geom.read_axial_mesh_from_parcs("parcs_files/TP_cyc1_HFP3D.parcs_out")
-out.write_PARCS_pin_coordinates(geom, "00.parcs_pin_coordinates.csv")
+# Compute source coordinates from VERA (pass the .inp so the axial extent / core height is read)
+geom.compute_2D_coordinates_VERA_qtr("vera_files_2D/tp3_2D_hfp.inp")
+out.write_VERA_pin_coordinates(geom, "00.vera_pin_coordinates.csv")
 
 # Extract basic cycle information
 cycle = nt.Cycle(
     nassembly_with_reflectors= 221,
     polarisoption= 0,                    # 0 uses literature assumptions for nubar/sigma_f/Er
-    nsteps= 6,
+    nsteps= 1,
     asspower= 14.0127e6
 )
-cycle.extract_cycle_info("parcs_files/TP_cyc1_HFP3D.parcs_dpl")
-cycle.extract_coolant_info(geom, "parcs_files/TP_cyc1_HFP3D.parcs_cyc-01")
-out.write_custom_csv(cycle.coolant_density[0], "01.coolant_density_0.csv")
 
-# Extract assembly axial and radial configuration
-cycle.extract_assyaxial("parcs_files/depl_assm.geom")
+# # Extract assembly axial and radial configuration
+cycle.extract_assyaxial_VERA(geom, "vera_files_2D/tp3_2D_hfp.inp")
 out.write_assyaxial(cycle, "02.assembly_axial_configuration.csv")
-cycle.extract_assyradial(geom, "parcs_files/c1_dep_30nodes.inp")
+cycle.extract_assyradial_VERA(geom, "vera_files_2D/tp3_2D_hfp.inp")
 out.write_assyradial(cycle, "03.assembly_radial_configuration.csv")
 
-# Extract lattice composition
-cycle.extract_lattype("parcs_files/pmax.dir")
-out.write_lattype_to_csv(cycle, "04.lattice_type_data.csv")
-cycle.extract_latcomp_scale63(geom,"parcs_files/library")
-out.write_latcomp_to_csv(cycle, "05.lattice_composition_data.csv")
-cycle.extract_exposure(geom, "parcs_files/TP_cyc1_HFP3D.parcs_cyc-01")
-out.write_exposureindex_to_csv(cycle, "06.cycle_exposure.csv")
-out.write_custom_csv(cycle.exposure[:, :, 5], "07.exposure_step0.csv")  # Save exposure at step 0 as example
-
-# Extract assembly power data
-cycle.extract_asspower(geom, out, "parcs_files")
-out.write_asspower_to_csv(cycle, "08.assembly_power_data.csv")
-
 # Extract pin power data
-cycle.extract_pinpower(geom, out, "parcs_files")
-out.write_pinpower_to_csv(cycle, "09.pin_power_data.csv", '3D')
+cycle.extract_pinpowerVERA_2D(geom, out, "vera_files_2D/tp3_2D_hfp.h5")
+out.write_pinpowerVERA_to_csv(cycle, "04.vera_pin_power_data.csv", '2D')
 
-# Build 3D assembly source
-assembly_source = nt.Source(
-    step = 0,
-    bins = np.linspace(0, 20, 200),
-    truncoption= True,
-    trunc_ass_X= [[2,9],[3,9]],
-    trunc_ass_Y= [[9,2],[9,3],[9,4]],
-    assytype_to_mcmaterial= {"10": "fuel_1",
-                             "20": "fuel_2",
-                             "22": "fuel_2",
-                             "30": "fuel_3",
-                             "32": "fuel_3",
-                             "40": "fuel_4",
-                             "50": "fuel_5",
-                             "60": "fuel_6"}
-)
-assembly_source.build_source_ass(cycle, geom, out)
-out.write_asssourceinfo_to_csv(assembly_source, "09.assembly_source_info.csv")
-out.visualize_source_ass(geom, assembly_source, '3D')
-out.visualize_source_ass(geom, assembly_source, '2D')
-assembly_source.write_source_ass(
-    cycle, geom, out, "serpent_files/LWR-09-main_avg.ser" # provide path to sample input to write set srcrate
-)
-
-# Build 3d pin source
+# Build 2d pin source
 pin_source = nt.Source(
     step= 0,
     bins= np.linspace(0, 20, 200),
@@ -129,19 +88,14 @@ pin_source = nt.Source(
     trunc_ass_Y= [[9,2],[9,3],[9,4]],
     trunc_pin_X= [[x,y] for x in np.linspace(1,15,15).astype(int) for y in np.linspace(9,15,7).astype(int)],
     trunc_pin_Y= [[x,y] for x in np.linspace(9,15,7).astype(int) for y in np.linspace(1,15,15).astype(int)],
-    assytype_to_mcmaterial= {"10": "fuel_1",
-                             "20": "fuel_2",
-                             "22": "fuel_2",
-                             "30": "fuel_3",
-                             "32": "fuel_3",
-                             "40": "fuel_4",
-                             "50": "fuel_5",
-                             "60": "fuel_6"}
+    assytype_to_mcmaterial= {"1": "fuel_1",
+                             "2": "fuel_2",
+                             "3": "fuel_2"}
 )
 
-pin_source.build_source_pin(cycle, geom, out)
-out.write_pinsourceinfo_to_csv(pin_source, "09.pin_source_info.csv", '3D')
+pin_source.build_source_pinVERA2D(cycle, geom, out)
+out.write_pinsourceinfo_to_csv(pin_source, "05.pin_source_info.csv", '2D')
 out.visualize_source_pin(geom, pin_source, '2D')
-pin_source.write_source_pin(
-    cycle, geom, out, "serpent_files/LWR-09-main_avg.ser" # provide path to sample input to write set srcrate
+pin_source.write_source_pinVERA2D(
+        cycle, geom, out, "serpent_files/LWR-09-main_avg.ser" # provide path to sample input to write set srcrate
 )

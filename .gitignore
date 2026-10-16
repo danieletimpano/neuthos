@@ -6,4 +6,11 @@ examples/PWR_source_2D/parcs_files_2D
 examples/PWR_source_2D/serpent_files
 examples/PWR_source_2D/output*
 docs/build
-
+*__pycache__*
+*runme_veractf_memcontrol*
+runme_vera_memcontrol
+legacy/*
+examples/PP*
+# guide figures of examples/PWR_source_3D/PARCS_SOURCE_GUIDE.md are tracked (only these images)
+!examples/PWR_source_3D/guide_figures/
+!examples/PWR_source_3D/guide_figures/*.png

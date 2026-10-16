@@ -9,6 +9,13 @@ description = "Neutron Source Definition and TH Damage Assessment"
 authors = [{name = "Daniele Timpano"}]
 readme = "README.md"
 requires-python = ">=3.10"
+dependencies = [
+    "numpy",
+    "scipy",
+    "matplotlib",
+    "pandas",
+    "h5py",
+]
 
 [tool.setuptools]
 package-dir = {"" = "src"}
