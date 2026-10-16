@@ -912,9 +912,9 @@ class Source:
                 writer.writerow(row)
 
         #SANITY CHECK: save U235 composition for each assembly
-        with open(checkspath + f'u235_composition_{self.step}.csv', 'w', newline='') as csvfile:
+        with open(checkspath / f'u235_composition_{self.step}.csv', 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
-            headers = ['Axial Node'] + [f'Assembly {assembly["coordinates"]}' for assembly in assembly_list if assembly['coordinates'] in asssource]
+            headers = ['Axial Node'] + [f'Assembly {assembly["coordinates"]}' for assembly in assembly_list if assembly['coordinates'] in geom.source]
             writer.writerow(headers)
             for i in range(geom.naxial):
                 row = [geom.naxial - i]
@@ -924,9 +924,9 @@ class Source:
                 writer.writerow(row)
 
         #SANITY CHECK: save U238 composition for each assembly
-        with open(checkspath + f'u238_composition_{self.step}.csv', 'w', newline='') as csvfile:
+        with open(checkspath / f'u238_composition_{self.step}.csv', 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
-            headers = ['Axial Node'] + [f'Assembly {assembly["coordinates"]}' for assembly in assembly_list if assembly['coordinates'] in asssource]
+            headers = ['Axial Node'] + [f'Assembly {assembly["coordinates"]}' for assembly in assembly_list if assembly['coordinates'] in geom.source]
             writer.writerow(headers)
             for i in range(geom.naxial):
                 row = [geom.naxial - i]
@@ -936,9 +936,9 @@ class Source:
                 writer.writerow(row)
 
         #SANITY CHECK: save PU239 composition for each assembly
-        with open(checkspath + f'pu239_composition_{self.step}.csv', 'w', newline='') as csvfile:
+        with open(checkspath / f'pu239_composition_{self.step}.csv', 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
-            headers = ['Axial Node'] + [f'Assembly {assembly["coordinates"]}' for assembly in assembly_list if assembly['coordinates'] in asssource]
+            headers = ['Axial Node'] + [f'Assembly {assembly["coordinates"]}' for assembly in assembly_list if assembly['coordinates'] in geom.source]
             writer.writerow(headers)
             for i in range(geom.naxial):
                 row = [geom.naxial - i]
@@ -948,9 +948,9 @@ class Source:
                 writer.writerow(row)
         
         #SANITY CHECK: save PU241 composition for each assembly
-        with open(checkspath + f'pu241_composition_{self.step}.csv', 'w', newline='') as csvfile:
+        with open(checkspath / f'pu241_composition_{self.step}.csv', 'w', newline='') as csvfile:
             writer = csv.writer(csvfile)
-            headers = ['Axial Node'] + [f'Assembly {assembly["coordinates"]}' for assembly in assembly_list if assembly['coordinates'] in asssource]
+            headers = ['Axial Node'] + [f'Assembly {assembly["coordinates"]}' for assembly in assembly_list if assembly['coordinates'] in geom.source]
             writer.writerow(headers)
             for i in range(geom.naxial):
                 row = [geom.naxial - i]
@@ -4484,7 +4484,7 @@ class Source:
             avg_srcrate= sum(wsrcrate)/sum(corexpw)
 
         # read the template main file used to write the averaged source rate
-        with open(sourcefiles[min(sourcefiles)], 'r') as f:
+        with open(mainfiles[min(mainfiles)], 'r') as f:
             lines= f.readlines()
 
         # create main file based on average srcrate
