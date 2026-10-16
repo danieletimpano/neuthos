@@ -16,6 +16,4 @@ Module contents
 ---------------
 
 .. automodule:: neuthos
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   :no-members:
