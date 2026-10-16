@@ -43,15 +43,10 @@ autodoc_default_options = {
 }
 napoleon_google_docstring = True
 napoleon_numpy_docstring = True
+napoleon_use_ivar = True    # class "Attributes" sections as a field list: autodoc documents the dataclass fields
 
-# If docs build fails because deps are missing, keep these.
-# Remove ones you *do* have installed to get better signatures.
-autodoc_mock_imports = [
-    "numpy",
-    "pandas",
-    "matplotlib",
-    "scipy",
-]
+# No autodoc_mock_imports: the workflow installs the real dependencies (pip install -e .), and a
+# mocked numpy breaks the real h5py imported by cycle.py, which leaves cycle/outputs/source empty.
 
 # -- Options for HTML output -------------------------------------------------
 html_logo = "_static/neuthos_logo.png"
