@@ -95,13 +95,18 @@ out.write_asspower_to_csv(cycle, "08.assembly_power_data.csv")
 cycle.extract_pinpower(geom, out, "parcs_files")
 out.write_pinpower_to_csv(cycle, "09.pin_power_data.csv", '3D')
 
+
 # Build 3D assembly source
 assembly_source = nt.Source(
     step = 0,
     bins = np.linspace(0, 20, 200),
     truncoption= True,
-    trunc_ass_X= [[2,9],[3,9]],
-    trunc_ass_Y= [[9,2],[9,3],[9,4]],
+    trunc_ass_X= [[15,9],[16,9]],
+    trunc_ass_Y= [[9,14],[9,15],[9,16]],
+    trunc_pin_X= [],
+    trunc_pin_Y= [],
+    trunc_pinsym_X= [],
+    trunc_pinsym_Y= [],
     assytype_to_mcmaterial= {"10": "fuel_1",
                              "20": "fuel_2",
                              "22": "fuel_2",

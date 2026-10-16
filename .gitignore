@@ -9,4 +9,8 @@ docs/build
 *__pycache__*
 *runme_veractf_memcontrol*
 runme_vera_memcontrol
-*/legacy*
+legacy/*
+examples/PP*
+# guide figures of examples/PWR_source_3D/PARCS_SOURCE_GUIDE.md are tracked (only these images)
+!examples/PWR_source_3D/guide_figures/
+!examples/PWR_source_3D/guide_figures/*.png
