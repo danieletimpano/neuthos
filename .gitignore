@@ -12,6 +12,7 @@ docs/build
 runme_vera_memcontrol
 legacy/*
 examples/PP*
+edit_logs/
 # guide figures of examples/PWR_source_3D/PARCS_SOURCE_GUIDE.md are tracked (only these images)
 !examples/PWR_source_3D/guide_figures/
 !examples/PWR_source_3D/guide_figures/*.png
