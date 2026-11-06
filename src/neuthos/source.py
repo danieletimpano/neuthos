@@ -2301,7 +2301,7 @@ class Source:
             f.writelines(lines)
 
     def build_source_pin2D(
-                    self, cycle: "Cycle", geom: "Geometry", out: "Outputs") -> None:
+                    self, cycle: "Cycle", geom: "Geometry", out: "Outputs", parcsmodel: str = 'parcs2dmodel') -> None:
         """
         Build 2D pin-level neutron source terms from cycle and geometry data.
         
@@ -2322,6 +2322,11 @@ class Source:
         out : Outputs
             Outputs object for managing output directories and file paths for plots
             and sanity check outputs.
+        parcsmodel : str, optional
+            'parcs2dmodel' (default): single-plane PARCS 2D model.
+            'parcs3dmodel': PARCS 3D model collapsed to 2D (k = 0 pin powers). F is weighted by the
+            assembly node power (cycle.extract_asspower must be run first); the spectrum uses the
+            composition averaged over the fuel nodes, as in build_source_pin.
         
         Returns
         -------
@@ -2352,6 +2357,15 @@ class Source:
         """
 
         print('Step 8.1: preparing data for source term ...')
+
+        # axial nodes with fuel: the single node of a PARCS 2D model, or all nodes except the first and last (reflectors) of a PARCS 3D model
+        if parcsmodel == 'parcs2dmodel':
+            fuel_start, fuel_end = 0, 1
+        elif parcsmodel == 'parcs3dmodel':
+            fuel_start, fuel_end = 1, geom.naxial-1
+            if not cycle.asspowerdata:
+                print('PARCS 3D model: run cycle.extract_asspower before build_source_pin2D (assembly node powers are needed to collapse F).')
+                raise SystemExit
 
         # list of dictionaries to store the assembly information
         assembly_list= []
@@ -2463,7 +2477,7 @@ class Source:
         ax = fig.add_subplot(111, projection='3d')
         for assembly in assembly_list:
             if assembly['coordinates'] in geom.source:
-                avg_burnup = np.mean(assembly['buprofile'][0]) # NB: just one axial node in 2D models
+                avg_burnup = np.mean(assembly['buprofile'][fuel_start:fuel_end])
                 for i in range(geom.naxial): # NB: just one axial node in 2D models
                     # the values of the burnup profile are represented by the colormap
                     ax.bar3d(assembly['coordinates'][0], assembly['coordinates'][1], i, 1, 1, 1, shade=True, color=plt.cm.plasma(assembly['buprofile'][i]), edgecolor= 'black', linewidth= 0.2)
@@ -2472,7 +2486,7 @@ class Source:
         legend_elements = []
         for assembly in assembly_list:
             if assembly['coordinates'] in geom.source:
-                avg_burnup = np.mean(assembly['buprofile'][0]) # NB: just one axial node in 2D models
+                avg_burnup = np.mean(assembly['buprofile'][fuel_start:fuel_end])
                 legend_elements.append(f'Assembly {assembly["coordinates"]}: {avg_burnup:.2f} MWd/kgHM')
 
         # Add the legend to the plot
@@ -2643,7 +2657,7 @@ class Source:
             if assembly['r-f-d'] == 'FUEL':
 
 
-                for i in range(1): #N.B. just one axial node in 2D model
+                for i in range(fuel_start, fuel_end):
 
                     # average assembly neutron multiplication factor (axially discretized)
                     assembly['nu'].append(np.sum(nu_235*(sigma_f_235*assembly['U235'][i])/(np.sum(sigma_f_235*assembly['U235'][i]+sigma_f_238*assembly['U238'][i]+sigma_f_239*assembly['Pu239'][i]+sigma_f_241*assembly['Pu241'][i]))+
@@ -2658,19 +2672,26 @@ class Source:
                     # assembly conversion factor (axially discretized)
                     if (cycle.polarisoption == 0):
                         print("Polaris option selected: using nubar and ERF from literature assumptions")
-                        assembly['F'].append(assembly['nu'][i]/(assembly['erf'][i]*C))
+                        assembly['F'].append(assembly['nu'][-1]/(assembly['erf'][-1]*C)) # nu and erf of node i (just appended)
                     elif (cycle.polarisoption == 1):
                         print("Polaris option selected: using nubar and ERF from lattice library")
                         assembly['F'].append(assembly['nubar'][i]/(assembly['ERC'][i]*C))
 
+                if parcsmodel == 'parcs3dmodel':
+                    # collapse F to one value per assembly, weighted by the assembly node power (from bottom to top, as the flipped F)
+                    nodepower= np.zeros(geom.naxial)
+                    for ass in cycle.asspowerdata:
+                        if (ass[0] == self.step+1) and ((ass[1], ass[2]) == (assembly['coordinates'][0], assembly['coordinates'][1])):
+                            nodepower[ass[3]-1]= ass[4]
+                    assembly['F']= [np.sum(np.flip(assembly['F'])*nodepower[fuel_start:fuel_end])/np.sum(nodepower[fuel_start:fuel_end])]
 
 
                 for j in range(len(bin_centers)):
                     # average assembly fission spectrum (1 spectrum per assembly)
-                    assembly['chi'].append(np.sum(hist_235[j]*(nu_235*sigma_f_235*assembly['U235'][0])/(np.sum(nu_235*sigma_f_235*np.average(assembly['U235'][0])+nu_238*sigma_f_238*np.average(assembly['U238'][0])+nu_239*sigma_f_239*np.average(assembly['Pu239'][0])+nu_241*sigma_f_241*np.average(assembly['Pu241'][0])))+
-                                                hist_238[j]*(nu_238*sigma_f_238*assembly['U238'][0])/(np.sum(nu_235*sigma_f_235*np.average(assembly['U235'][0])+nu_238*sigma_f_238*np.average(assembly['U238'][0])+nu_239*sigma_f_239*np.average(assembly['Pu239'][0])+nu_241*sigma_f_241*np.average(assembly['Pu241'][0])))+
-                                                hist_239[j]*(nu_239*sigma_f_239*assembly['Pu239'][0])/(np.sum(nu_235*sigma_f_235*np.average(assembly['U235'][0])+nu_238*sigma_f_238*np.average(assembly['U238'][0])+nu_239*sigma_f_239*np.average(assembly['Pu239'][0])+nu_241*sigma_f_241*np.average(assembly['Pu241'][0])))+
-                                                hist_241[j]*(nu_241*sigma_f_241*assembly['Pu241'][0])/(np.sum(nu_235*sigma_f_235*np.average(assembly['U235'][0])+nu_238*sigma_f_238*np.average(assembly['U238'][0])+nu_239*sigma_f_239*np.average(assembly['Pu239'][0])+nu_241*sigma_f_241*np.average(assembly['Pu241'][0])))))
+                    assembly['chi'].append(np.sum(hist_235[j]*(nu_235*sigma_f_235*np.average(assembly['U235'][fuel_start:fuel_end]))/(np.sum(nu_235*sigma_f_235*np.average(assembly['U235'][fuel_start:fuel_end])+nu_238*sigma_f_238*np.average(assembly['U238'][fuel_start:fuel_end])+nu_239*sigma_f_239*np.average(assembly['Pu239'][fuel_start:fuel_end])+nu_241*sigma_f_241*np.average(assembly['Pu241'][fuel_start:fuel_end])))+
+                                                hist_238[j]*(nu_238*sigma_f_238*np.average(assembly['U238'][fuel_start:fuel_end]))/(np.sum(nu_235*sigma_f_235*np.average(assembly['U235'][fuel_start:fuel_end])+nu_238*sigma_f_238*np.average(assembly['U238'][fuel_start:fuel_end])+nu_239*sigma_f_239*np.average(assembly['Pu239'][fuel_start:fuel_end])+nu_241*sigma_f_241*np.average(assembly['Pu241'][fuel_start:fuel_end])))+
+                                                hist_239[j]*(nu_239*sigma_f_239*np.average(assembly['Pu239'][fuel_start:fuel_end]))/(np.sum(nu_235*sigma_f_235*np.average(assembly['U235'][fuel_start:fuel_end])+nu_238*sigma_f_238*np.average(assembly['U238'][fuel_start:fuel_end])+nu_239*sigma_f_239*np.average(assembly['Pu239'][fuel_start:fuel_end])+nu_241*sigma_f_241*np.average(assembly['Pu241'][fuel_start:fuel_end])))+
+                                                hist_241[j]*(nu_241*sigma_f_241*np.average(assembly['Pu241'][fuel_start:fuel_end]))/(np.sum(nu_235*sigma_f_235*np.average(assembly['U235'][fuel_start:fuel_end])+nu_238*sigma_f_238*np.average(assembly['U238'][fuel_start:fuel_end])+nu_239*sigma_f_239*np.average(assembly['Pu239'][fuel_start:fuel_end])+nu_241*sigma_f_241*np.average(assembly['Pu241'][fuel_start:fuel_end])))))
                 
                 print('Normalizing weighted fission spectrum ...')
                 # integrate raw fission spectrum
@@ -2765,7 +2786,7 @@ class Source:
             f.write('Total source rate: ' + str(np.sum([x[7] for x in self.sourcepin2D])))
 
     def write_source_pin2D(
-            self, cycle: "Cycle", geom: "Geometry", out: "Outputs", filepath: Union[str, Path]) -> None:
+            self, cycle: "Cycle", geom: "Geometry", out: "Outputs", filepath: Union[str, Path], parcsmodel: str = 'parcs2dmodel') -> None:
         """
         Write pin-level neutron source terms to external source file format.
         
@@ -2785,6 +2806,10 @@ class Source:
             Outputs object for managing output directories and file paths.
         filepath : Union[str, Path]
             Path to the Serpent main input file to be updated with source strength normalization.
+        parcsmodel : str, optional
+            'parcs2dmodel' (default): the source plane is the PARCS 2D model node.
+            'parcs3dmodel': PARCS 3D model collapsed to 2D; the source is placed in the same 1 cm plane
+            as the PARCS 2D model (z = 0.5 cm, height 1 cm), since srcrate is per cm of core height.
         
         Returns
         -------
@@ -2863,6 +2888,9 @@ class Source:
                 y_pin = y_core + (cP - pin[4]) * geom.pin_pitch
                 z_pin = z_core_flip[pin[3]-1]
                 node_height= geom.meshheight[pin[3]-1]
+                if parcsmodel == 'parcs3dmodel': # same 1 cm source plane as the PARCS 2D model
+                    z_pin = 0.5
+                    node_height= 1.0
                 
                 # compute pin boundaries
                 x_min= x_pin - geom.pin_pitch/2

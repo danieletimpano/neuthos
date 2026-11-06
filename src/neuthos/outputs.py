@@ -473,8 +473,10 @@ class Outputs:
             source_matrix = np.zeros((geom.nass * geom.npin, geom.nass * geom.npin))
 
             # implicit treatment of the code selection - check which one between sourcepin and sourcepin2D is not empty and use it for plotting
+            plane = geom.naxial // 2
             if source.sourcepin2D:
                 source_list = source.sourcepin2D
+                plane = 0 # PARCS 2D source (2D or collapsed 3D model): pins are stored at k = 0
             elif source.sourcepinVERA2D:
                 source_list = source.sourcepinVERA2D
             elif source.sourcepin:
@@ -483,7 +485,7 @@ class Outputs:
                 source_list = source.sourcepinVERA
 
             for pin in source_list:
-                if pin[3] == geom.naxial // 2:  # Only for midplane in 2D
+                if pin[3] == plane:  # Only for midplane in 2D
                     time = pin[0]
                     x_core = (pin[1] - 1) * geom.npin + (pin[4] - 1)
                     y_core = (pin[2] - 1) * geom.npin + (pin[5] - 1)
